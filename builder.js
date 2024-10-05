@@ -4,6 +4,8 @@ const maxNodeSize = 100;
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
 
+let animationFrameId;
+
 function resizecanvas2() {
 	canvas2.width = window.innerWidth;
 	canvas2.height = window.innerHeight;
@@ -66,6 +68,7 @@ class NodeInfo {
 class Player2 {
 	constructor(nodes) {
 		this.nodes = nodes;
+		this.time = 0;
 	}
 
 	draw() {
@@ -139,6 +142,21 @@ class Player2 {
 		ctx2.beginPath();
 		ctx2.arc(mouthX, mouthY, mouthWidth, 0, Math.PI, false);
 		ctx2.fill();
+	}
+
+	animateNodes() {
+		this.time += 0.05;
+
+		const amplitude = 100;
+
+		for (let i = 0; i < this.nodes.length; i++) {
+			this.nodes[i].position.y =
+				window.innerHeight / 2 + amplitude * Math.sin(this.time + i);
+		}
+
+		this.draw();
+
+		animationFrameId = requestAnimationFrame(() => this.animateNodes());
 	}
 
 	resizeNode(mouseX, delta) {
@@ -243,6 +261,8 @@ const player2 = new Player2(nodes);
 
 window.addEventListener("resize", resizecanvas2);
 resizecanvas2();
+
+player2.animateNodes();
 
 canvas2.addEventListener("wheel", (event) => {
 	const delta = event.deltaY > 0 ? -5 : 5;
