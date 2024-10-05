@@ -121,17 +121,25 @@ class Player2 {
 
 const nodes = [
 	new Node(50, "red", {
-		x: (window.innerWidth / 4) * 1,
+		x: (window.innerWidth / 6) * 1,
 		y: window.innerHeight / 2,
 	}),
 	new Node(50, "green", {
-		x: (window.innerWidth / 4) * 2,
+		x: (window.innerWidth / 6) * 2,
 		y: window.innerHeight / 2,
 	}),
 	new Node(50, "blue", {
-		x: (window.innerWidth / 4) * 3,
+		x: (window.innerWidth / 6) * 3,
 		y: window.innerHeight / 2,
 	}),
+	new Node(50, "yellow", {
+		x: (window.innerWidth / 6) * 4,
+		y: window.innerHeight / 2,
+	}),
+  new Node(50, "magenta", {
+		x: (window.innerWidth / 6) * 5,
+		y: window.innerHeight / 2,
+	})
 ];
 const player2 = new Player2(nodes);
 
