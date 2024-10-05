@@ -33,7 +33,7 @@ class Node {
 	}
 }
 
-class Player {
+class Player2 {
 	constructor(nodes) {
 		this.nodes = nodes;
 	}
@@ -134,7 +134,7 @@ const nodes = [
 		y: window.innerHeight / 2,
 	}),
 ];
-const player2 = new Player(nodes);
+const player2 = new Player2(nodes);
 
 window.addEventListener("resize", resizecanvas2);
 resizecanvas2();
