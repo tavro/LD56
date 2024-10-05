@@ -1,5 +1,5 @@
-const minCircleSize = 10;
-const maxCircleSize = 100;
+const minNodeSize = 10;
+const maxNodeSize = 100;
 
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
@@ -79,36 +79,36 @@ class Player2 {
 		ctx2.fill();
 	}
 
-	resizeCircle(mouseX, delta) {
-		let circleIndex = -1;
+	resizeNode(mouseX, delta) {
+		let nodeIndex = -1;
 		const spacing = canvas2.width / (this.nodes.length + 1);
 
 		for (let i = 0; i < this.nodes.length; i++) {
 			const radius = this.nodes[i].size;
 
 			if (mouseX >= this.nodes[i].position.x - radius && mouseX <= this.nodes[i].position.x + radius) {
-				circleIndex = i;
+				nodeIndex = i;
 				break;
 			}
 		}
 
-		if (circleIndex !== -1) {
+		if (nodeIndex !== -1) {
 			const newSize = Math.min(
-				Math.max(this.nodes[circleIndex].size + delta, minCircleSize),
-				maxCircleSize
+				Math.max(this.nodes[nodeIndex].size + delta, minNodeSize),
+				maxNodeSize
 			);
 
-			this.nodes[circleIndex].size = newSize;
+			this.nodes[nodeIndex].size = newSize;
 
 			for (let i = 0; i < this.nodes.length; i++) {
-				if (i !== circleIndex) {
-					const distance = spacing * (circleIndex + 1) - spacing * (i + 1);
-					const totalRadius = this.nodes[circleIndex].size + this.nodes[i].size;
+				if (i !== nodeIndex) {
+					const distance = spacing * (nodeIndex + 1) - spacing * (i + 1);
+					const totalRadius = this.nodes[nodeIndex].size + this.nodes[i].size;
 
 					if (distance < totalRadius) {
-						this.nodes[circleIndex].size = Math.max(
+						this.nodes[nodeIndex].size = Math.max(
 							totalRadius - this.nodes[i].size,
-							minCircleSize
+							minNodeSize
 						);
 					}
 				}
@@ -140,5 +140,5 @@ resizecanvas2();
 
 canvas2.addEventListener("wheel", (event) => {
 	const delta = event.deltaY > 0 ? -5 : 5;
-	player2.resizeCircle(event.clientX, delta);
+	player2.resizeNode(event.clientX, delta);
 });
