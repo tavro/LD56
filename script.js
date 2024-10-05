@@ -80,20 +80,14 @@ function generateAssignmentHTML(tasks) {
     const amount = document.createElement('p');
 
     const zeroSpan = document.createElement('span');
-    zeroSpan.id = 'taskAmount'; // TODO: Fix this
+    zeroSpan.id = task.id + 'Amount';
     zeroSpan.textContent = '0';
 
     amount.appendChild(zeroSpan);
     amount.appendChild(document.createTextNode(` of ${task.amount}`));
     
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = task.completed;
-    checkbox.disabled = true;
-
     taskContainer.appendChild(title);
     taskContainer.appendChild(amount);
-    taskContainer.appendChild(checkbox);
 
     container.appendChild(taskContainer);
   });
