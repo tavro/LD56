@@ -83,7 +83,7 @@ function generateMailPreviews(mailObj) {
 }
 
 const htmlOutput = generateMailPreviews(mailObj);
-document.querySelector('#mail-inbox').append(htmlOutput);
+document.querySelector('#mail-inbox').insertAdjacentHTML('beforeend', htmlOutput);
 
 // === LISTENERS ===
 
