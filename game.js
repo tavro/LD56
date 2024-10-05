@@ -36,7 +36,7 @@ class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
 		this.aspectRatio = canvas.width / canvas.height;
-		this.size = 20;
+		this.size = 50;
 		console.log("Created Camera");
 	}
 
@@ -49,10 +49,12 @@ class Camera {
 	}
 
 	followTarget(targetCoords) {
-		const offsetX = (this.size / 2) * this.aspectRatio;
-		const offsetY = (this.size / 2);
-		const newDelta = this.position.difference(targetCoords.add(new Vector2(-offsetX, -offsetY))).scale(0.1)
-		this.position = this.position.add(newDelta)
+		const offsetX = (this.size) * this.aspectRatio / 2;
+		const offsetY = this.size / 2;
+		const newDelta = this.position
+			.difference(targetCoords.add(new Vector2(-offsetX, -offsetY)))
+			.scale(0.1);
+		this.position = this.position.add(newDelta);
 	}
 }
 
@@ -165,9 +167,7 @@ class Player {
 		this.headPosition;
 		this.color = "blue";
 
-		this.max_speed = 5;
-
-		this.controlForce = 1 / 100;
+		this.controlForce = 1 / 30;
 
 		this.nodes = [
 			new Node(1, "red", new Vector2(5, 5)),
@@ -248,26 +248,85 @@ class Player {
 	}
 }
 
-// ____________ Game Logic
-function GameInit() {
-	console.log("Organism Game: Initialized");
+function spawnFood(
+	exploredRect,
+	east = false,
+	west = false,
+	north = false,
+	south = false
+) {
+	if (east) {
+		for (let i = 0; i < exploredRect.getDimensions().y / 8; i++) {
+			const lineStart = exploredRect.right;
+			const lineEnd = exploredRect.right + camera.size * camera.aspectRatio;
+			const randomY =
+				exploredRect.top + Math.random() * exploredRect.getDimensions().y;
+			const randomX =
+				exploredRect.right + Math.random() * (lineEnd - lineStart);
+			let newFood = new Food(new Vector2(randomX, randomY));
+			foods.push(newFood);
+		}
+	}
+	if (west) {
+		for (let i = 0; i < exploredRect.getDimensions().y / 8; i++) {
+			const lineStart = exploredRect.left;
+			const lineEnd = exploredRect.left - camera.size * camera.aspectRatio;
+			const randomY =
+				exploredRect.top + Math.random() * exploredRect.getDimensions().y;
+			const randomX = exploredRect.left + Math.random() * (lineEnd - lineStart);
+			let newFood = new Food(new Vector2(randomX, randomY));
+			foods.push(newFood);
+		}
+	}
+
+	if (south) {
+		for (let i = 0; i < exploredRect.getDimensions().x / 8; i++) {
+			const lineStart = exploredRect.bottom;
+			const lineEnd = exploredRect.bottom + camera.size * camera.aspectRatio;
+			const randomX =
+				exploredRect.left + Math.random() * exploredRect.getDimensions().x;
+			const randomY =
+				exploredRect.bottom + Math.random() * (lineEnd - lineStart);
+			let newFood = new Food(new Vector2(randomX, randomY));
+			foods.push(newFood);
+		}
+	}
+
+	if (north) {
+		for (let i = 0; i < exploredRect.getDimensions().x / 8; i++) {
+			const lineStart = exploredRect.top;
+			const lineEnd = exploredRect.top - camera.size * camera.aspectRatio;
+			const randomX =
+				exploredRect.left + Math.random() * exploredRect.getDimensions().x;
+			const randomY = exploredRect.top + Math.random() * (lineEnd - lineStart);
+			let newFood = new Food(new Vector2(randomX, randomY));
+			foods.push(newFood);
+		}
+	}
 }
 
+// ____________ Game Logic
 function GameUpdate() {
 	player.update();
 	camera.followTarget(player.headPosition);
 
-	if (keyboard.IsKeyHeld("d")) {
-		camera.addCameraPosition(new Vector2(5 / 60.0, 0.0));
+	if (player.headPosition.x > areaExpoloredRect.right) {
+		areaExpoloredRect.right =
+			player.headPosition.x + (camera.size * camera.aspectRatio) / 2;
+		spawnFood(areaExpoloredRect, true, false, false, false);
 	}
-	if (keyboard.IsKeyHeld("a")) {
-		camera.addCameraPosition(new Vector2(-5 / 60.0, 0.0));
+	if (player.headPosition.x < areaExpoloredRect.left) {
+		areaExpoloredRect.left =
+			player.headPosition.x - (camera.size * camera.aspectRatio) / 2;
+		spawnFood(areaExpoloredRect, false, true, false, false);
 	}
-	if (keyboard.IsKeyHeld("s")) {
-		camera.addCameraPosition(new Vector2(0.0, 5 / 60.0));
+	if (player.headPosition.y > areaExpoloredRect.bottom) {
+		areaExpoloredRect.bottom = player.headPosition.y + camera.size / 2;
+		spawnFood(areaExpoloredRect, false, false, false, true);
 	}
-	if (keyboard.IsKeyHeld("w")) {
-		camera.addCameraPosition(new Vector2(0.0, -5 / 60.0));
+	if (player.headPosition.y < areaExpoloredRect.top) {
+		areaExpoloredRect.top = player.headPosition.y - camera.size / 2;
+		spawnFood(areaExpoloredRect, false, false, true, false);
 	}
 
 	foods.forEach((food) => {
@@ -293,6 +352,8 @@ let keyboard = new KeyboardManager();
 
 let foods = [];
 
+let areaExpoloredRect = new Rect();
+
 for (let i = 0; i < 20; i++) {
 	let newFood = new Food(new Vector2(i * 1.2, 3));
 	foods.push(newFood);
@@ -315,7 +376,9 @@ canvas.addEventListener("mouseup", () => {
 window.addEventListener("resize", () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	worldToPixelFactor = window.innerHeight / 100;
+	worldToPixelFactor = window.innerHeight;
+	camera.aspectRatio = canvas.width / canvas.height;
+
 });
 
 document.addEventListener("keydown", (event) => {
@@ -334,7 +397,6 @@ function animate() {
 	requestAnimationFrame(animate);
 }
 
-GameInit();
 animate();
 
 // __________________ Character builder

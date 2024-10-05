@@ -33,6 +33,19 @@ class Vector2 {
 	}
 }
 
+class Rect {
+	constructor(top = 0, left = 0, bottom = 0, right = 0) {
+		this.right = right
+		this.left = left
+		this.top = top
+		this.bottom = bottom
+	}
+
+	getDimensions() {
+		return new Vector2(this.right - this.left, this.bottom - this.top)
+	}
+}
+
 class KeyboardManager {
 	keysPressed = {};
 
