@@ -7,16 +7,19 @@ canvas.height = window.innerHeight;
 // ______________ Global Functions
 function mousePositionToWorldCoords() {
 	result = new Vector2(0, 0);
-	result.x = camera.position.x + mousePosition.x;
-	result.y = camera.position.y + mousePosition.y;
+	result.x =
+		camera.position.x + (mousePosition.x * camera.size) / worldToPixelFactor;
+	result.y =
+		camera.position.y + (mousePosition.y * camera.size) / worldToPixelFactor;
 	return result;
+	d;
 }
 
 function drawCircle(context, position, radius, color) {
 	context.beginPath();
 	context.arc(
-		position.x - camera.position.x,
-		position.y - camera.position.y,
+		((position.x - camera.position.x) / camera.size) * worldToPixelFactor,
+		((position.y - camera.position.y) / camera.size) * worldToPixelFactor,
 		(radius / camera.size) * worldToPixelFactor,
 		0,
 		Math.PI * 2
@@ -26,22 +29,30 @@ function drawCircle(context, position, radius, color) {
 	context.closePath();
 }
 
-const worldToPixelFactor = 100;
+let worldToPixelFactor = window.innerHeight;
 
 // ______________ Classes
 class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
-		this.size = 10;
+		this.aspectRatio = canvas.width / canvas.height;
+		this.size = 20;
 		console.log("Created Camera");
 	}
 
+	setCameraPosition(value) {
+		this.position = this.position.add(value);
+	}
+
+	addCameraPosition(value) {
+		this.position = this.position.add(new Vector2(value.x, value.y));
+	}
+
 	followTarget(targetCoords) {
-		// const cameraCenterX = targetCoords.x - this.size2.x/2
-		// const cameraCenterY = targetCoords.y - this.size2.y/2
-		// const cameraCenter = new Vector2(cameraCenterX, cameraCenterY)
-		// const delta = this.position.difference(cameraCenter).scale(0.1)
-		// this.position = this.position.add(delta)
+		const offsetX = (this.size / 2) * this.aspectRatio;
+		const offsetY = (this.size / 2);
+		const newDelta = this.position.difference(targetCoords.add(new Vector2(-offsetX, -offsetY))).scale(0.1)
+		this.position = this.position.add(newDelta)
 	}
 }
 
@@ -73,8 +84,8 @@ class MassObject {
 class Food extends MassObject {
 	constructor(position) {
 		super();
-		this.position = position.scale(worldToPixelFactor);
-		this.size = 2;
+		this.position = position;
+		this.size = 0.5;
 		this.color = "green";
 		this.isEaten = false;
 	}
@@ -87,26 +98,25 @@ class Food extends MassObject {
 		this.updatePhysics();
 		this.checkDistanceToPlayer(player);
 
-		this.accelerateToPoint(
-			this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
-			0.2,
-			true
-		);
+		// this.accelerateToPoint(
+		// 	this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
+		// 	0.2,
+		// 	true
+		// );
 	}
 
 	draw(context) {
 		if (this.isEaten) {
 			return;
 		}
-		drawCircle(context, this.position, this.size, this.color)
+		drawCircle(context, this.position, this.size, this.color);
 	}
 
 	checkDistanceToPlayer(player) {
 		const distance = this.position.distance(player.headPosition);
-		if (distance < 100) {
+		if (distance < 1) {
 			this.eat();
 			player.giveFood();
-			console.log("nom nom");
 		}
 	}
 
@@ -118,7 +128,7 @@ class Food extends MassObject {
 class Node extends MassObject {
 	constructor(size, color, position) {
 		super();
-		this.position = position; // { x: number, y: number }
+		this.position = position;
 
 		this.size = size;
 		this.color = color;
@@ -126,7 +136,7 @@ class Node extends MassObject {
 	}
 
 	draw(context) {
-		drawCircle(context, this.position, this.size, this.color)
+		drawCircle(context, this.position, this.size, this.color);
 	}
 
 	containsPoint(x, y) {
@@ -141,7 +151,8 @@ class Node extends MassObject {
 			const distanceToParent = this.parent.position
 				.difference(this.position)
 				.magnitude();
-			if (distanceToParent > this.size * 2) {
+
+			if (distanceToParent > this.size) {
 				this.accelerateToPoint(this.parent.position, 0.01, true);
 			}
 		}
@@ -156,10 +167,12 @@ class Player {
 
 		this.max_speed = 5;
 
+		this.controlForce = 1 / 100;
+
 		this.nodes = [
-			new Node(10, "red", new Vector2(0, 0)),
-			new Node(10, "green", new Vector2(4, 0)),
-			new Node(10, "blue", new Vector2(6, 0)),
+			new Node(1, "red", new Vector2(5, 5)),
+			new Node(1, "green", new Vector2(7, 5)),
+			new Node(1, "blue", new Vector2(9, 5)),
 		];
 
 		this.mainNode = this.nodes[0];
@@ -171,7 +184,11 @@ class Player {
 
 	update() {
 		if (isMouseDown) {
-			this.mainNode.accelerateToPoint(mousePositionToWorldCoords(), 1, false);
+			this.mainNode.accelerateToPoint(
+				mousePositionToWorldCoords(),
+				this.controlForce,
+				false
+			);
 		}
 
 		this.nodes.forEach((node) => {
@@ -241,16 +258,16 @@ function GameUpdate() {
 	camera.followTarget(player.headPosition);
 
 	if (keyboard.IsKeyHeld("d")) {
-		camera.position.x += 20;
+		camera.addCameraPosition(new Vector2(5 / 60.0, 0.0));
 	}
 	if (keyboard.IsKeyHeld("a")) {
-		camera.position.x -= 20;
+		camera.addCameraPosition(new Vector2(-5 / 60.0, 0.0));
 	}
 	if (keyboard.IsKeyHeld("s")) {
-		camera.position.y += 20;
+		camera.addCameraPosition(new Vector2(0.0, 5 / 60.0));
 	}
 	if (keyboard.IsKeyHeld("w")) {
-		camera.position.y -= 20;
+		camera.addCameraPosition(new Vector2(0.0, -5 / 60.0));
 	}
 
 	foods.forEach((food) => {
@@ -277,9 +294,7 @@ let keyboard = new KeyboardManager();
 let foods = [];
 
 for (let i = 0; i < 20; i++) {
-	let newFood = new Food(
-		new Vector2(Math.random() * 10, Math.random() * 10)
-	);
+	let newFood = new Food(new Vector2(i * 1.2, 3));
 	foods.push(newFood);
 }
 
@@ -300,6 +315,7 @@ canvas.addEventListener("mouseup", () => {
 window.addEventListener("resize", () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
+	worldToPixelFactor = window.innerHeight / 100;
 });
 
 document.addEventListener("keydown", (event) => {
