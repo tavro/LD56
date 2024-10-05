@@ -14,6 +14,10 @@ function checkAssignments(amount) {
 		// Finished with assignments
 		console.log("Finished assignments");
     activeAssignments = [];
+		const temp = document.querySelector("#assignment-container");
+		if(temp) {
+			temp.style.display = "none";
+		}
     awaitingMail = true;
 		return true;
 	}
@@ -43,6 +47,10 @@ Object.defineProperty(data, "mouthAmount", {
 	},
 	set(value) {
 		mouthAmount = value;
+		const elem = document.querySelector("#mouthAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(mouthAmount);
 	},
 });
@@ -53,7 +61,10 @@ Object.defineProperty(data, "foodAmount", {
 	},
 	set(value) {
 		foodAmount = value;
-		// document.querySelector("#taskAmount").innerHTML = foodAmount;
+		const elem = document.querySelector("#foodAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(foodAmount);
 	},
 });
@@ -64,6 +75,10 @@ Object.defineProperty(data, "warmAmount", {
 	},
 	set(value) {
 		warmAmount = value;
+		const elem = document.querySelector("#warmthAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(warmAmount);
 	},
 });
@@ -74,6 +89,10 @@ Object.defineProperty(data, "coldAmount", {
 	},
 	set(value) {
 		coldAmount = value;
+		const elem = document.querySelector("#coldAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(coldAmount);
 	},
 });
@@ -84,6 +103,10 @@ Object.defineProperty(data, "virusAmount", {
 	},
 	set(value) {
 		virusAmount = value;
+		const elem = document.querySelector("#virusAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(virusAmount);
 	},
 });
@@ -94,6 +117,10 @@ Object.defineProperty(data, "radioactivityAmount", {
 	},
 	set(value) {
 		radioactivityAmount = value;
+		const elem = document.querySelector("#radioactivityAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(radioactivityAmount);
 	},
 });
@@ -104,6 +131,10 @@ Object.defineProperty(data, "killAmount", {
 	},
 	set(value) {
 		killAmount = value;
+		const elem = document.querySelector("#killAmount");
+		if(elem) {
+			elem.innerHTML = foodAmount;
+		}
 		checkAssignments(killAmount);
 	},
 });

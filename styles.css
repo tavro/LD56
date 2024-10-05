@@ -237,5 +237,6 @@ canvas {
   border-radius: 5px;
   display: none;
   z-index: 1000;
+  width: 512px;
   transition: opacity 0.5s;
 }
