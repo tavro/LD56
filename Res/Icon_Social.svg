@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 129 129" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-1634,-358)">
+        <g id="Icon_Social" transform="matrix(0.5,0,0,0.5,1634.96,178.828)">
+            <rect x="0" y="359" width="256" height="256" style="fill:none;"/>
+            <g transform="matrix(2,0,0,2,-1891,-353.657)">
+                <path d="M1035.75,408.809C1048.88,419.174 1062,447.796 1062,471L957,471C957,442.646 970.125,419.174 983.25,408.809C996.375,398.443 1022.62,398.443 1035.75,408.809Z" style="fill:white;stroke:black;stroke-width:10px;"/>
+            </g>
+            <g transform="matrix(2,0,0,2,-1876.23,-330.343)">
+                <circle cx="1002.11" cy="378" r="28" style="fill:white;stroke:black;stroke-width:10px;"/>
+            </g>
+        </g>
+    </g>
+</svg>

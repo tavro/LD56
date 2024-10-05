@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 129 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-823,-359)">
+        <g id="Icon_Inbox" transform="matrix(0.5,0,0,0.5,823.08,179.5)">
+            <rect x="0" y="359" width="256" height="256" style="fill:none;"/>
+            <g transform="matrix(2.16822,0,0,1.46674,-715.956,-139.107)">
+                <path d="M402.678,367L428.238,367L441.238,401L441.238,440.913L337.238,440.913L337.238,401L350.238,367L376.721,367" style="fill:white;stroke:black;stroke-width:10.8px;"/>
+            </g>
+            <g transform="matrix(2.16822,0,0,1.86284,-730.617,-252.044)">
+                <path d="M448,388L448,459L344,459L344,388L370,388L383,410L409,410L422,388L448,388Z" style="fill:white;stroke:black;stroke-width:9.89px;"/>
+            </g>
+            <g transform="matrix(2.16822,0,0,2.29271,-715.956,-470.424)">
+                <path d="M389.537,367L389.537,391.191L379,391.191L389.537,401.836L400.289,391.191L389.537,391.191" style="fill:none;stroke:black;stroke-width:8.96px;"/>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 129 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,-662,-359)">
+        <g id="Icon_StarYellow" transform="matrix(0.5,0,0,0.5,662.441,179.5)">
+            <rect x="0" y="359" width="256" height="256" style="fill:none;"/>
+            <g transform="matrix(0.983907,0,0,0.983907,2.05986,17.7682)">
+                <path d="M128,367L154.942,449.918L242.127,449.918L171.593,501.164L198.534,584.082L128,532.836L57.466,584.082L84.407,501.164L13.873,449.918L101.058,449.918L128,367Z" style="fill:rgb(248,232,55);stroke:black;stroke-width:20.33px;"/>
+            </g>
+        </g>
+    </g>
+</svg>
