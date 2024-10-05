@@ -93,6 +93,10 @@ function generateMailPreviews(key, category) {
 				document.querySelector("#om-content").innerHTML =
 					mailObj[mailId].content;
 				changeScreen("mail-wrapper", "opened-mail");
+        if(mailObj[mailId].important && mailObj[mailId].assignments.length > 0 && mailObj[mailId].email.includes("noreply")) {
+          activeAssignments.push(mailObj[mailId].assignments);
+          console.log(activeAssignments);
+        }
 			});
 		}
 
