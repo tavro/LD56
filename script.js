@@ -10,6 +10,10 @@ const builderAppId = "builder";
 // === FUNCTIONS ===
 
 function changeScreen(curId, othId) {
+  if(othId == "mail-wrapper") {
+    clearMailInbox(); // TODO: Reset rest of state
+    generateMailPreviews(undefined, "primary");
+  }
 	const cur = document.querySelector("#" + curId);
 	const oth = document.querySelector("#" + othId);
 	cur.style.display = "none";
@@ -35,7 +39,7 @@ function htmlToPlainString(html) {
 
 function generateHtml(mail, id) {
 	return `
-  <div class="mail-preview" id="${id}">
+  <div class="mail-preview ${mail.read ? "read": ""}" id="${id}">
   <div class="mp-icons-wrapper">
   <img src="${
 		mail.favorite ? "res/Icon_Favorites_2.svg" : "res/Icon_Favorites.svg"
@@ -143,9 +147,12 @@ function generateMailPreviews(key, category) {
 		const favoriteButton = document.querySelector(
 			"#" + mailId + "-favorite-btn"
 		);
+
 		if (favoriteButton) {
 			favoriteButton.addEventListener("click", () => {
 				mailObj[mailId].favorite = !mailObj[mailId].favorite;
+        clearMailInbox();
+        generateMailPreviews(key, category);
 			});
 		}
 
@@ -155,6 +162,8 @@ function generateMailPreviews(key, category) {
 		if (importantButton) {
 			importantButton.addEventListener("click", () => {
 				mailObj[mailId].important = !mailObj[mailId].important;
+        clearMailInbox();
+        generateMailPreviews(key, category);
 			});
 		}
 	}
@@ -261,4 +270,12 @@ document.querySelector("#back1").addEventListener("click", function () {
 
 document.querySelector("#back2").addEventListener("click", function () {
 	changeScreen("mail-wrapper", "os-wrapper");
+});
+
+document.querySelector("#back3").addEventListener("click", function () {
+	changeScreen("telescope-wrapper", "os-wrapper");
+});
+
+document.querySelector("#back4").addEventListener("click", function () {
+	changeScreen("builder-wrapper", "os-wrapper");
 });

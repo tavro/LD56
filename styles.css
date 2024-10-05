@@ -167,11 +167,15 @@ body {
   margin-right: 8px;
 }
 
+.read {
+  background-color: #D3D3D3;
+}
+
 /* === TELESCOPE STYLING === */
 
 #telescope-wrapper {
   display: none;
-  background-color: yellow;
+  flex-direction: column;
   height: 100vh; 
 }
 
@@ -182,7 +186,7 @@ canvas {
 
 #builder-wrapper {
   display: none;
-  background-color: red;
+  flex-direction: column;
   height: 100vh; 
 }
 
