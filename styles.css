@@ -182,7 +182,7 @@ canvas {
 
 #builder-wrapper {
   display: none;
-  background-color: red;
+  flex-direction: column;
   height: 100vh; 
 }
 

@@ -270,3 +270,7 @@ document.querySelector("#back2").addEventListener("click", function () {
 document.querySelector("#back3").addEventListener("click", function () {
 	changeScreen("telescope-wrapper", "os-wrapper");
 });
+
+document.querySelector("#back4").addEventListener("click", function () {
+	changeScreen("builder-wrapper", "os-wrapper");
+});
