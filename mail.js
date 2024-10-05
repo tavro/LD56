@@ -1,6 +1,6 @@
 var currentKey = 2;
 const mailQueue = [
-  {
+	{
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
 		topic: "Next steps for planting your organism",
@@ -17,20 +17,24 @@ const mailQueue = [
 		read: false,
 		favorite: false,
 		important: true,
-    assignments: [
-      {
-        title: "Become warmth resistant",
-        amount: 1,
-        condition: function(warmAmount) { return warmAmount >= 1; },
-        completed: false
-      },
-      {
-        title: "Become cold resistant",
-        amount: 1,
-        condition: function(coldAmount) { return coldAmount >= 1; },
-        completed: false
-      },
-    ]
+		assignments: [
+			{
+				title: "Become warmth resistant",
+				amount: 1,
+				condition: function (warmAmount) {
+					return warmAmount >= 1;
+				},
+				completed: false,
+			},
+			{
+				title: "Become cold resistant",
+				amount: 1,
+				condition: function (coldAmount) {
+					return coldAmount >= 1;
+				},
+				completed: false,
+			},
+		],
 	},
 	{
 		email: "noreply@tinylabs.org",
@@ -50,20 +54,24 @@ const mailQueue = [
 		read: false,
 		favorite: false,
 		important: true,
-    assignments: [
-      {
-        title: "Gain virus immunity",
-        amount: 1,
-        condition: function(virusAmount) { return virusAmount >= 1; },
-        completed: false
-      },
-      {
-        title: "Gain radioactivity immunity",
-        amount: 1,
-        condition: function(radioactivityAmount) { return radioactivityAmount >= 1; },
-        completed: false
-      },
-    ]
+		assignments: [
+			{
+				title: "Gain virus immunity",
+				amount: 1,
+				condition: function (virusAmount) {
+					return virusAmount >= 1;
+				},
+				completed: false,
+			},
+			{
+				title: "Gain radioactivity immunity",
+				amount: 1,
+				condition: function (radioactivityAmount) {
+					return radioactivityAmount >= 1;
+				},
+				completed: false,
+			},
+		],
 	},
 	{
 		email: "noreply@tinylabs.org",
@@ -83,15 +91,17 @@ const mailQueue = [
 		read: false,
 		favorite: false,
 		important: true,
-    assignments: [
-      {
-        title: "Kill 5 other organisms",
-        amount: 5,
-        condition: function(killAmount) { return killAmount >= 5; },
-        completed: false
-      },
-    ]
-	}
+		assignments: [
+			{
+				title: "Kill 5 other organisms",
+				amount: 5,
+				condition: function (killAmount) {
+					return killAmount >= 5;
+				},
+				completed: false,
+			},
+		],
+	},
 ];
 
 const mailObj = {
@@ -116,35 +126,48 @@ const mailObj = {
 		read: false,
 		favorite: false,
 		important: true,
-    assignments: [
-      /*{
+		assignments: [
+			/*{
         title: "Attach Mouth",
         amount: 1,
         condition: function(mouthAmount) { return mouthAmount >= 1; },
         completed: false
       },*/
-      {
-        title: "Eat food",
-        amount: 10,
-        condition: function(foodAmount) { return foodAmount >= 10; },
-        completed: false
-      },
-    ]
+			{
+				title: "Eat food",
+				amount: 10,
+				condition: function (foodAmount) {
+					return foodAmount >= 10;
+				},
+				completed: false,
+			},
+		],
 	},
 };
 
 function handleMail() {
-  mailObj["mail" + currentKey] = mailQueue.pop();
-  currentKey++;
+	mailObj["mail" + currentKey] = mailQueue.pop();
+	currentKey++;
 }
 
 function checkAwaitingMail() {
 	const interval = setInterval(() => {
-			if (awaitingMail) {
-					handleMail();
-					awaitingMail = false;
-					clearInterval(interval);
-			}
+		if (awaitingMail) {
+			handleMail();
+			const overlay = document.getElementById("overlay");
+
+			overlay.style.display = "block";
+			overlay.style.opacity = "1";
+
+			setTimeout(function () {
+				overlay.style.opacity = "0";
+				setTimeout(function () {
+					overlay.style.display = "none";
+				}, 500);
+			}, 3000);
+			awaitingMail = false;
+			clearInterval(interval);
+		}
 	}, 1000);
 }
 checkAwaitingMail();
