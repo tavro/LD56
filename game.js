@@ -20,7 +20,10 @@ class Camera {
 		console.log("Created Camera");
 	}
 
-	followTarget(targetCoords) {}
+	followTarget(targetCoords) {
+		const delta = this.position.difference(targetCoords).scale(0.1)
+		this.position = this.position.add(delta)
+	}
 }
 
 class MassObject {
@@ -180,7 +183,7 @@ class Player {
 	}
 
 	giveFood() {
-		foodAmount++;
+		data.foodAmount++;
 	}
 
 	draw() {
