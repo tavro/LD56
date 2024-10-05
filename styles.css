@@ -167,6 +167,10 @@ body {
   margin-right: 8px;
 }
 
+.read {
+  background-color: #D3D3D3;
+}
+
 /* === TELESCOPE STYLING === */
 
 #telescope-wrapper {

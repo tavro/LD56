@@ -39,7 +39,7 @@ function htmlToPlainString(html) {
 
 function generateHtml(mail, id) {
 	return `
-  <div class="mail-preview" id="${id}">
+  <div class="mail-preview ${mail.read ? "read": ""}" id="${id}">
   <div class="mp-icons-wrapper">
   <img src="${
 		mail.favorite ? "res/Icon_Favorites_2.svg" : "res/Icon_Favorites.svg"
