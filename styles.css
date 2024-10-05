@@ -52,7 +52,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 256px;
+  width: 320px;
   margin: 8px;
 }
 
@@ -91,22 +91,34 @@ body {
   color: gray;
 }
 
+.sender {
+  width: 256px;
+}
+
 .mp-icons-wrapper {
 }
 
 .mp-text-wrapper {
   display: flex;
   flex-direction: row;
+  width: 512px;
 }
 
 .timestamp {
   margin-right: 8px;
 }
 
+/* === TELESCOPE STYLING === */
+
 #telescope-wrapper {
   display: none;
   background-color: yellow;
   height: 100vh; 
+}
+
+canvas {
+  display: block;
+  background-color: #f0f0f0;
 }
 
 #builder-wrapper {
