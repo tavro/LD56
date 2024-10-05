@@ -54,12 +54,11 @@ class KeyboardManager {
 			if (key in this.keyDownCallbackList) {
 				console.log("calling func");
 				const funcs = this.keyDownCallbackList[key];
-				console.log(funcs)
-				funcs.forEach((func => 
-				{
-					console.log(func)
+				console.log(funcs);
+				funcs.forEach((func) => {
+					console.log(func);
 					func();
-				}))
+				});
 			}
 		}
 	}
@@ -71,12 +70,11 @@ class KeyboardManager {
 			console.log("key up: " + key);
 			if (key in this.keyUpCallbackList) {
 				const funcs = this.keyUpCallbackList[key];
-				console.log(funcs)
-				funcs.forEach((func => 
-				{
-					console.log(func)
+				console.log(funcs);
+				funcs.forEach((func) => {
+					console.log(func);
 					func();
-				}))
+				});
 			}
 		}
 	}
@@ -89,21 +87,28 @@ class Vector2 {
 		this.y = y;
 	}
 
+	difference(other) {
+		return new Vector2(other.x - this.x, other.y - this.y);
+	}
+
 	add(other) {
-		return new Vector2(this.x + other.x, this.y + other.y)
+		return new Vector2(this.x + other.x, this.y + other.y);
 	}
 
 	scale(value) {
-		return new Vector2(this.x * value, this.y * value)
+		return new Vector2(this.x * value, this.y * value);
 	}
 
-	getMagnitude() {
-		return Math.sqrt(this.x * this.x + this.y * this.y)
+	magnitude() {
+		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
 
 	normalized() {
-		const magnitude = this.getMagnitude()
-		return new Vector2(this.scale(1/magnitude).x, this.scale(1/magnitude).y)
+		const magnitude = this.magnitude();
+		return new Vector2(
+			this.scale(1 / magnitude).x,
+			this.scale(1 / magnitude).y
+		);
 	}
 }
 
@@ -115,6 +120,67 @@ class Camera {
 	}
 }
 
+class MassObject {
+	velocity = new Vector2(0, 0);
+	position = new Vector2(500, 200);
+	acceleration = new Vector2(0, 0);
+	drag = 0.9;
+
+	updatePhysics() {
+		this.velocity = this.velocity.add(this.acceleration).scale(this.drag);
+		this.position = this.position.add(this.velocity);
+
+		this.acceleration = new Vector2(0, 0);
+	}
+
+	accelerateToPoint(targetCoords, force, isSpringy) {
+		const delta = this.position.difference(targetCoords);
+		if (isSpringy) {
+			this.acceleration = new Vector2(delta.x, delta.y).scale(force);
+		} else {
+			this.acceleration = new Vector2(delta.x, delta.y).normalized().scale(force);
+		}
+	}
+}
+
+class Node extends MassObject {
+	constructor(size, color, position) {
+		super();
+		this.position = position; // { x: number, y: number }
+
+		this.size = size;
+		this.color = color;
+		this.parent = null;
+	}
+
+	draw(ctx) {
+		ctx.beginPath();
+		ctx.arc(this.position.x - camera.position.x, this.position.y - camera.position.y, this.size, 0, Math.PI * 2);
+		ctx.fillStyle = this.color;
+		ctx.fill();
+		ctx.closePath();
+	}
+
+	containsPoint(x, y) {
+		const distance = Math.sqrt(
+			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
+		);
+		return distance <= this.size;
+	}
+
+	update() {
+		if (this.parent) {
+			const distanceToParent = this.parent.position
+				.difference(this.position)
+				.magnitude();
+			if (distanceToParent > this.size * 2) {
+				this.accelerateToPoint(this.parent.position, 0.01, true);
+			}
+		}
+		this.updatePhysics();
+	}
+}
+
 class Player {
 	constructor() {
 		this.radius = 50;
@@ -122,53 +188,75 @@ class Player {
 
 		this.max_speed = 5;
 		this.turn_speed = 0.5;
-		
-		this.force = 100
-		this.velocity = new Vector2(0, 0);
-		this.position = new Vector2(500, 200);
-		this.acceleration = new Vector2(0, 0);
-		this.drag = 0.9
+
+		this.nodes = [
+			new Node(50, "red", new Vector2(200, 300)),
+			new Node(50, "green", new Vector2(400, 300)),
+			new Node(50, "blue", new Vector2(600, 300)),
+		];
+
+		this.mainNode = this.nodes[0];
+
+		for (let i = this.nodes.length - 1; i > 0; i--) {
+			this.nodes[i].parent = this.nodes[i - 1];
+		}
 	}
 
-	Update() {
+	update() {
 		if (isMouseDown) {
-			this.MoveToPoint();
+			this.mainNode.accelerateToPoint(mousePositionToWorldCoords(), 1, false);
 		}
 
-		this.velocity = this.velocity.add(this.acceleration).scale(this.drag)
-		this.position = this.position.add(this.velocity)
-
-		this.acceleration = new Vector2(0, 0)
-	}
-
-	MoveToPoint() {
-		if (isMouseDown) {
-			const world_coords = mousePositionToWorldCoords();
-
-			const delta_x = world_coords.x - this.position.x
-			const delta_y = world_coords.y - this.position.y
-			console.log("delta x: " + delta_x)
-			const distance = Math.sqrt(delta_x * delta_x + delta_y * delta_y)
-
-			this.acceleration = new Vector2(delta_x, delta_y).normalized()
-		}
+		this.nodes.forEach((node) => {
+			node.update();
+		});
 	}
 
 	Draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
 
+		for (let i = 0; i < this.nodes.length; i++) {
+			this.nodes[i].draw(ctx);
+
+			if (i > 0) {
+				this.drawConnectingShape(
+					this.nodes[i - 1].position.x,
+					this.nodes[i - 1].position.y,
+					this.nodes[i].position.x,
+					this.nodes[i].position.y,
+					this.nodes[i - 1].size,
+					this.nodes[i].size,
+					this.nodes[i - 1].color,
+					this.nodes[i].color
+				);
+			}
+		}
+	}
+
+	drawConnectingShape(x1, y1, x2, y2, size1, size2, color1, color2) {
+		const controlHeight = 20;
+
+		const x1w = x1 - camera.position.x
+		const y1w = y1 - camera.position.y
+
+		const x2w = x2 - camera.position.x
+		const y2w = y2 - camera.position.y
+
+		const gradient = ctx.createLinearGradient(x1w, y1w, x2w, y2w);
+		gradient.addColorStop(0, color1);
+		gradient.addColorStop(1, color2);
+
 		ctx.beginPath();
-		ctx.arc(
-			this.position.x - camera.position.x,
-			this.position.y - camera.position.y,
-			this.radius,
-			0,
-			Math.PI * 2,
-			false
-		);
-		ctx.fillStyle = this.color;
-		ctx.fill();
+		ctx.moveTo(x1w, 	y1w - size1);
+		ctx.lineTo(x1w + (x2w - x1w) / 2, y1w - size1 - controlHeight);
+		ctx.lineTo(x2w, 	y2w - size2);
+		ctx.lineTo(x2w, 	y2w + size2);
+		ctx.lineTo(x1w + (x2w - x1w) / 2, y1w + size1 + controlHeight);
+		ctx.lineTo(x1w, 	y1w + size1);
 		ctx.closePath();
+
+		ctx.fillStyle = gradient;
+		ctx.fill();
 	}
 }
 
@@ -178,21 +266,20 @@ function GameInit() {
 }
 
 function GameUpdate() {
-	player.Update();
+	player.update();
 
-	// if (keyboard.IsKeyHeld("d")) {
-	// 	camera.position.x += 20
-	// }
-	// if (keyboard.IsKeyHeld("a")) {
-	// 	camera.position.x -= 20
-	// }
-	// if (keyboard.IsKeyHeld("w")) {
-	// 	camera.position.y -= 20
-	// }
-	// if (keyboard.IsKeyHeld("s")) {
-	// 	camera.position.y += 20
-	// }
-
+	if (keyboard.IsKeyHeld("d")) {
+		camera.position.x += 20
+	}
+	if (keyboard.IsKeyHeld("a")) {
+		camera.position.x -= 20
+	}
+	if (keyboard.IsKeyHeld("s")) {
+		camera.position.y += 20
+	}
+	if (keyboard.IsKeyHeld("w")) {
+		camera.position.y -= 20
+	}
 }
 
 function GameDraw() {

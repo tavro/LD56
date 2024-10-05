@@ -10,28 +10,28 @@ function resizecanvas2() {
 	player2.draw();
 }
 
-class Node {
-	constructor(size, color, position) {
-		this.size = size;
-		this.color = color;
-		this.position = position; // { x: number, y: number }
-	}
+// class Node {
+// 	constructor(size, color, position) {
+// 		this.size = size;
+// 		this.color = color;
+// 		this.position = position; // { x: number, y: number }
+// 	}
 
-	draw(ctx) {
-		ctx.beginPath();
-		ctx.arc(this.position.x, this.position.y, this.size, 0, Math.PI * 2);
-		ctx.fillStyle = this.color;
-		ctx.fill();
-		ctx.closePath();
-	}
+// 	draw(ctx) {
+// 		ctx.beginPath();
+// 		ctx.arc(this.position.x, this.position.y, this.size, 0, Math.PI * 2);
+// 		ctx.fillStyle = this.color;
+// 		ctx.fill();
+// 		ctx.closePath();
+// 	}
 
-	containsPoint(x, y) {
-		const distance = Math.sqrt(
-			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
-		);
-		return distance <= this.size;
-	}
-}
+// 	containsPoint(x, y) {
+// 		const distance = Math.sqrt(
+// 			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
+// 		);
+// 		return distance <= this.size;
+// 	}
+// }
 
 class Player2 {
 	constructor(nodes) {
