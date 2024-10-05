@@ -150,16 +150,17 @@ body {
 }
 
 .sender {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 32px;
   width: 256px;
-}
-
-.mp-icons-wrapper {
 }
 
 .mp-text-wrapper {
   display: flex;
   flex-direction: row;
-  width: 512px;
+  width: 624px;
 }
 
 .timestamp {
