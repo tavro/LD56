@@ -13,6 +13,10 @@ body {
 
 /* === MAIL STYLING === */
 
+#mm-inbox {
+  font-weight: bold;
+}
+
 #mail-wrapper {
   display: none;
   flex-direction: row;
@@ -57,6 +61,8 @@ body {
 }
 
 .category2 img {
+  width: 32px;
+  height: 32px;
   margin-right: 8px;
 }
 

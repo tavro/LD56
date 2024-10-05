@@ -1,6 +1,7 @@
 // === GLOBALS ===
 
 var filter = "inbox";
+var category = "primary";
 
 const mailAppId = "mail";
 const telescopeAppId = "telescope";
@@ -12,7 +13,7 @@ const mailObj = {
 		topic: "Become a member today",
 		content: "Blah blah blah",
 		timestamp: "11:00",
-    category: "",
+    category: "social",
 		read: false,
 		favorite: false,
 		important: false,
@@ -22,7 +23,7 @@ const mailObj = {
 		topic: "You're fired",
 		content: "Blah blah blah",
 		timestamp: "13:37",
-    category: "",
+    category: "primary",
 		read: false,
 		favorite: true,
 		important: false,
@@ -32,7 +33,7 @@ const mailObj = {
 		topic: "Sign up to our new letter",
 		content: "Blah blah blah",
 		timestamp: "14:50",
-    category: "",
+    category: "primary",
 		read: false,
 		favorite: false,
 		important: true,
@@ -42,7 +43,7 @@ const mailObj = {
 		topic: "Get your research paper funded",
 		content: "Blah blah blah",
 		timestamp: "15:22",
-    category: "",
+    category: "campaigns",
 		read: true,
 		favorite: false,
 		important: false,
@@ -62,19 +63,19 @@ function clickApp(id) {
 	changeScreen("os-wrapper", id + "-wrapper");
 }
 
-function generateMailPreviews(key) {
+function generateMailPreviews(key, category) {
 	let mailHtml = "";
 
 	for (const mailId in mailObj) {
 		if (mailObj.hasOwnProperty(mailId)) {
 			const mail = mailObj[mailId];
 			if (key) {
-				if (mail[key]) {
+				if (mail[key] && mail.category == category) {
 					mailHtml += `
           <div class="mail-preview">
           <div class="mp-icons-wrapper">
-          <img src="https://picsum.photos/16/16" />
-          <img src="https://picsum.photos/16/16" />
+          <img src="${mail.favorite ? 'res/Icon_Favorites_2.svg' : 'res/Icon_Favorites.svg'}" />
+          <img src="${mail.important ? 'res/Icon_StarYellow.svg' : 'res/Icon_StarWhite.svg'}" />
           </div>
           <div class="sender">${mail.sender}</div>
           <div class="mp-text-wrapper">
@@ -86,20 +87,22 @@ function generateMailPreviews(key) {
           `;
 				}
 			} else {
-				mailHtml += `
-        <div class="mail-preview">
-        <div class="mp-icons-wrapper">
-        <img src="https://picsum.photos/16/16" />
-        <img src="https://picsum.photos/16/16" />
-        </div>
-        <div class="sender">${mail.sender}</div>
-        <div class="mp-text-wrapper">
-        <div class="topic"><p>${mail.topic || "No Topic"}&nbsp;</p></div>
-        <div class="content"><p>- ${mail.content || "No Content"}</p></div>
-        </div>
-        <div class="timestamp">${mail.timestamp || "No Time"}</div>
-        </div>
-        `;
+        if(mail.category == category) {
+          mailHtml += `
+          <div class="mail-preview">
+          <div class="mp-icons-wrapper">
+          <img src="${mail.favorite ? 'res/Icon_Favorites_2.svg' : 'res/Icon_Favorites.svg'}" />
+          <img src="${mail.important ? 'res/Icon_StarYellow.svg' : 'res/Icon_StarWhite.svg'}" />
+          </div>
+          <div class="sender">${mail.sender}</div>
+          <div class="mp-text-wrapper">
+          <div class="topic"><p>${mail.topic || "No Topic"}&nbsp;</p></div>
+          <div class="content"><p>- ${mail.content || "No Content"}</p></div>
+          </div>
+          <div class="timestamp">${mail.timestamp || "No Time"}</div>
+          </div>
+          `;
+        }
 			}
 		}
 	}
@@ -118,11 +121,11 @@ function filterInbox() {
 	switch (filter) {
 		case "important":
 		case "favorite":
-			generateMailPreviews(filter);
+			generateMailPreviews(filter, category);
 			break;
 		case "inbox":
 		default:
-			generateMailPreviews(undefined);
+			generateMailPreviews(undefined, category);
 			break;
 	}
 }
@@ -149,15 +152,48 @@ document
 
 document.querySelector("#mm-inbox").addEventListener("click", function () {
 	filter = "inbox";
+  document.querySelector("#mm-inbox").style.fontWeight = "bold";
+  document.querySelector("#mm-favorites").style.fontWeight = "100";
+  document.querySelector("#mm-important").style.fontWeight = "100";
 	filterInbox();
 });
 
 document.querySelector("#mm-favorites").addEventListener("click", function () {
 	filter = "favorite";
+  document.querySelector("#mm-favorites").style.fontWeight = "bold";
+  document.querySelector("#mm-inbox").style.fontWeight = "100";
+  document.querySelector("#mm-important").style.fontWeight = "100";
 	filterInbox();
 });
 
 document.querySelector("#mm-important").addEventListener("click", function () {
 	filter = "important";
+  document.querySelector("#mm-important").style.fontWeight = "bold";
+  document.querySelector("#mm-favorites").style.fontWeight = "100";
+  document.querySelector("#mm-inbox").style.fontWeight = "100";
+	filterInbox();
+});
+
+document.querySelector("#category-primary").addEventListener("click", function () {
+	category = "primary"
+  document.querySelector("#category-primary").style.borderBottom = "2px solid black";
+  document.querySelector("#category-campaigns").style.borderBottom = "none";
+  document.querySelector("#category-social").style.borderBottom = "none";
+  filterInbox();
+});
+
+document.querySelector("#category-campaigns").addEventListener("click", function () {
+	category = "campaigns"
+  document.querySelector("#category-campaigns").style.borderBottom = "2px solid black";
+  document.querySelector("#category-primary").style.borderBottom = "none";
+  document.querySelector("#category-social").style.borderBottom = "none";
+	filterInbox();
+});
+
+document.querySelector("#category-social").addEventListener("click", function () {
+	category = "social"
+  document.querySelector("#category-campaigns").style.borderBottom = "none";
+  document.querySelector("#category-primary").style.borderBottom = "none";
+  document.querySelector("#category-social").style.borderBottom = "2px solid black";
 	filterInbox();
 });
