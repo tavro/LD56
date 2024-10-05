@@ -18,6 +18,7 @@ class NodeInfo {
 		this.color = color;
 		this.position = position; // { x: number, y: number }
 		this.type = null; // 'fins' or 'arms'
+		this.xVelocity = (Math.random() - 0.5) * 2;
 	}
 
 	draw(ctx) {
@@ -78,43 +79,53 @@ class Player2 {
 			this.nodes[i].draw(ctx2);
 
 			if (i > 0) {
-				this.drawConnectingShape(
-					this.nodes[i - 1].position.x,
-					this.nodes[i - 1].position.y,
-					this.nodes[i].position.x,
-					this.nodes[i].position.y,
-					this.nodes[i - 1].size,
-					this.nodes[i].size,
-					this.nodes[i - 1].color,
-					this.nodes[i].color
-				);
+				this.drawInterpolatedCircles(this.nodes[i - 1], this.nodes[i]);
 			}
 		}
 
 		this.nodes[0].drawEyes(ctx2);
-
 		this.drawTail(this.nodes[this.nodes.length - 1]);
 		this.drawMouth(this.nodes[0]);
 	}
 
-	drawConnectingShape(x1, y1, x2, y2, size1, size2, color1, color2) {
-		const controlHeight = 20;
+	drawInterpolatedCircles(node1, node2) {
+		const numberOfCircles = 50;
+		const dx = (node2.position.x - node1.position.x) / numberOfCircles;
+		const dy = (node2.position.y - node1.position.y) / numberOfCircles;
 
-		const gradient = ctx2.createLinearGradient(x1, y1, x2, y2);
-		gradient.addColorStop(0, color1);
-		gradient.addColorStop(1, color2);
+		for (let i = 0; i <= numberOfCircles; i++) {
+			const x = node1.position.x + i * dx;
+			const y = node1.position.y + i * dy;
 
-		ctx2.beginPath();
-		ctx2.moveTo(x1, y1 - size1);
-		ctx2.lineTo(x1 + (x2 - x1) / 2, y1 - size1 - controlHeight);
-		ctx2.lineTo(x2, y2 - size2);
-		ctx2.lineTo(x2, y2 + size2);
-		ctx2.lineTo(x1 + (x2 - x1) / 2, y1 + size1 + controlHeight);
-		ctx2.lineTo(x1, y1 + size1);
-		ctx2.closePath();
+			const factor = i / numberOfCircles;
 
-		ctx2.fillStyle = gradient;
-		ctx2.fill();
+			const size = this.interpolateSize(node1.size, node2.size, factor);
+			const color = this.interpolateColors(node1.color, node2.color, factor);
+
+			ctx2.beginPath();
+			ctx2.arc(x, y, size, 0, Math.PI * 2);
+			ctx2.fillStyle = color;
+			ctx2.fill();
+			ctx2.closePath();
+		}
+	}
+
+	interpolateColors(color1, color2, factor) {
+		const rgb1 = this.hexToRgb(color1);
+		const rgb2 = this.hexToRgb(color2);
+		const result = rgb1.map((c1, i) =>
+			Math.round(c1 + factor * (rgb2[i] - c1))
+		);
+		return `rgb(${result[0]}, ${result[1]}, ${result[2]})`;
+	}
+
+	interpolateSize(size1, size2, factor) {
+		return size1 + (size2 - size1) * factor;
+	}
+
+	hexToRgb(hex) {
+		const bigint = parseInt(hex.replace(/^#/, ""), 16);
+		return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 	}
 
 	drawTail(node) {
@@ -134,7 +145,6 @@ class Player2 {
 
 	drawMouth(node) {
 		const mouthWidth = node.size * 0.5;
-		const mouthHeight = node.size * 0.3;
 		const mouthX = node.position.x;
 		const mouthY = node.position.y + node.size * 0.2;
 
@@ -147,11 +157,20 @@ class Player2 {
 	animateNodes() {
 		this.time += 0.05;
 
-		const amplitude = 100;
+		const amplitude = 150;
 
 		for (let i = 0; i < this.nodes.length; i++) {
 			this.nodes[i].position.y =
 				window.innerHeight / 2 + amplitude * Math.sin(this.time + i);
+
+			this.nodes[i].position.x += this.nodes[i].xVelocity;
+
+			if (
+				this.nodes[i].position.x < 0 ||
+				this.nodes[i].position.x > canvas2.width
+			) {
+				this.nodes[i].xVelocity *= -1;
+			}
 		}
 
 		this.draw();
@@ -235,23 +254,23 @@ class Player2 {
 }
 
 const nodes = [
-	new NodeInfo(50, "red", {
+	new NodeInfo(50, "#FF0000", {
 		x: (window.innerWidth / 6) * 1,
 		y: window.innerHeight / 2,
 	}),
-	new NodeInfo(50, "green", {
+	new NodeInfo(50, "#00FF00", {
 		x: (window.innerWidth / 6) * 2,
 		y: window.innerHeight / 2,
 	}),
-	new NodeInfo(50, "blue", {
+	new NodeInfo(50, "#0000FF", {
 		x: (window.innerWidth / 6) * 3,
 		y: window.innerHeight / 2,
 	}),
-	new NodeInfo(50, "yellow", {
+	new NodeInfo(50, "#FFFF00", {
 		x: (window.innerWidth / 6) * 4,
 		y: window.innerHeight / 2,
 	}),
-	new NodeInfo(50, "magenta", {
+	new NodeInfo(50, "#FF00FF", {
 		x: (window.innerWidth / 6) * 5,
 		y: window.innerHeight / 2,
 	}),
