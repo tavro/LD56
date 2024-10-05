@@ -60,6 +60,43 @@ function generateHtml(mail, id) {
   `;
 }
 
+function generateAssignmentHTML(tasks) {
+  const container = document.createElement('div');
+  const containerTitle = document.createElement('h2');
+  containerTitle.textContent = "Assignments";
+  container.appendChild(containerTitle);
+
+  tasks[0].forEach(task => {
+    const taskContainer = document.createElement('div');
+    taskContainer.classList.add('task-item');
+
+    const title = document.createElement('h3');
+    title.textContent = task.title;
+    
+    const amount = document.createElement('p');
+
+    const zeroSpan = document.createElement('span');
+    zeroSpan.id = 'taskAmount';
+    zeroSpan.textContent = '0';
+
+    amount.appendChild(zeroSpan);
+    amount.appendChild(document.createTextNode(` of ${task.amount}`));
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+    checkbox.disabled = true;
+
+    taskContainer.appendChild(title);
+    taskContainer.appendChild(amount);
+    taskContainer.appendChild(checkbox);
+
+    container.appendChild(taskContainer);
+  });
+
+  return container.innerHTML;
+}
+
 function generateMailPreviews(key, category) {
 	let mailHtml = "";
 
@@ -93,10 +130,13 @@ function generateMailPreviews(key, category) {
 				document.querySelector("#om-content").innerHTML =
 					mailObj[mailId].content;
 				changeScreen("mail-wrapper", "opened-mail");
-        if(mailObj[mailId].important && mailObj[mailId].assignments.length > 0 && mailObj[mailId].email.includes("noreply")) {
+        if(mailObj[mailId].important && mailObj[mailId].assignments.length > 0 && mailObj[mailId].email.includes("noreply") && !mailObj[mailId].read) {
           activeAssignments.push(mailObj[mailId].assignments);
+          document.querySelector("#assignment-container").style.display = "block";
+          document.querySelector("#assignment-container").innerHTML = generateAssignmentHTML(activeAssignments);
           console.log(activeAssignments);
         }
+        mailObj[mailId].read = true;
 			});
 		}
 

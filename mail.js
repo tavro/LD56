@@ -21,12 +21,12 @@ const mailObj = {
 		favorite: false,
 		important: true,
     assignments: [
-      {
+      /*{
         title: "Attach Mouth",
         amount: 1,
         condition: function(mouthAmount) { return mouthAmount >= 1; },
         completed: false
-      },
+      },*/
       {
         title: "Eat food",
         amount: 10,

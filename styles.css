@@ -208,3 +208,15 @@ canvas {
   font-style: Sans-serif;
   text-transform: uppercase;
 }
+
+#assignment-container {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+}

@@ -9,6 +9,7 @@ function checkAssignments(amount) {
 	}
 
   // Finished with assignments
+  console.log("Finished assignments");
 	return true;
 }
 
@@ -36,6 +37,7 @@ Object.defineProperty(data, "foodAmount", {
 	},
 	set(value) {
 		foodAmount = value;
+    document.querySelector("#taskAmount").innerHTML = foodAmount;
 		checkAssignments(foodAmount);
 	},
 });
