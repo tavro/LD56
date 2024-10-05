@@ -15,6 +15,7 @@ class NodeInfo {
 		this.size = size;
 		this.color = color;
 		this.position = position; // { x: number, y: number }
+		this.type = null; // 'fins' or 'arms'
 	}
 
 	draw(ctx) {
@@ -30,6 +31,35 @@ class NodeInfo {
 			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
 		);
 		return distance <= this.size;
+	}
+
+	drawEyes(ctx) {
+		const eyeSize = this.size * 0.1;
+		const eyeY = this.position.y - this.size * 0.2;
+
+		ctx.beginPath();
+		ctx.arc(this.position.x - this.size * 0.3, eyeY, eyeSize, 0, Math.PI * 2);
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.arc(this.position.x + this.size * 0.3, eyeY, eyeSize, 0, Math.PI * 2);
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.closePath();
+
+		const pupilSize = eyeSize * 0.5;
+		ctx.fillStyle = "black";
+		ctx.beginPath();
+		ctx.arc(this.position.x - this.size * 0.3, eyeY, pupilSize, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.arc(this.position.x + this.size * 0.3, eyeY, pupilSize, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.closePath();
 	}
 }
 
@@ -58,8 +88,9 @@ class Player2 {
 			}
 		}
 
-		this.drawTail(this.nodes[this.nodes.length - 1]);
+		this.nodes[0].drawEyes(ctx2);
 
+		this.drawTail(this.nodes[this.nodes.length - 1]);
 		this.drawMouth(this.nodes[0]);
 	}
 
@@ -117,7 +148,10 @@ class Player2 {
 		for (let i = 0; i < this.nodes.length; i++) {
 			const radius = this.nodes[i].size;
 
-			if (mouseX >= this.nodes[i].position.x - radius && mouseX <= this.nodes[i].position.x + radius) {
+			if (
+				mouseX >= this.nodes[i].position.x - radius &&
+				mouseX <= this.nodes[i].position.x + radius
+			) {
 				nodeIndex = i;
 				break;
 			}
@@ -159,11 +193,24 @@ class Player2 {
 			}
 		}
 
+		const newColor = prompt(
+			"Enter a color (name or hex code):",
+			this.nodes[nodeIndex].color
+		);
+		if (newColor) {
+			this.nodes[nodeIndex].color = newColor;
+			this.draw();
+		}
 		if (nodeIndex !== -1) {
-			const newColor = prompt("Enter a color (name or hex code):", this.nodes[nodeIndex].color);
-			if (newColor) {
-				this.nodes[nodeIndex].color = newColor;
-				this.draw();
+			if (nodeIndex !== 0 && nodeIndex !== this.nodes.length - 1) {
+				const typeChoice = prompt(
+					"Choose between 'fins' or 'arms':",
+					this.nodes[nodeIndex].type
+				);
+				if (typeChoice === "fins" || typeChoice === "arms") {
+					this.nodes[nodeIndex].type = typeChoice;
+					alert(`You have selected ${typeChoice} for node ${nodeIndex + 1}.`);
+				}
 			}
 		}
 	}
@@ -189,8 +236,9 @@ const nodes = [
 	new NodeInfo(50, "magenta", {
 		x: (window.innerWidth / 6) * 5,
 		y: window.innerHeight / 2,
-	})
+	}),
 ];
+
 const player2 = new Player2(nodes);
 
 window.addEventListener("resize", resizecanvas2);
