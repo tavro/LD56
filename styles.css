@@ -171,7 +171,7 @@ body {
 
 #telescope-wrapper {
   display: none;
-  background-color: yellow;
+  flex-direction: column;
   height: 100vh; 
 }
 

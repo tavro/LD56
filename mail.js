@@ -1,3 +1,39 @@
+var currentKey = 2;
+const mailQueue = [
+  {
+		email: "noreply@tinylabs.org",
+		sender: "Tiny Labs",
+		topic: "Next steps for planting your organism",
+		content: `<div>
+    <h2>Hello Mr. Doctor,</h2>
+    <p>Great job on completing your first assignments!</p>
+    <p>As we move forward, we will be planting the organism in both very warm and cold locations. It is essential for the organism to be resistant to both temperature extremes. Please place your organism in both warm and cold environments until it becomes fully resistant.</p>
+    <p>Thank you for your continued efforts!</p>
+    <p>Best regards,</p>
+    <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
+    </div>`,
+		timestamp: "13:37",
+		category: "primary",
+		read: false,
+		favorite: false,
+		important: true,
+    assignments: [
+      {
+        title: "Become warmth resistant",
+        amount: 1,
+        condition: function(warmAmount) { return warmAmount >= 1; },
+        completed: false
+      },
+      {
+        title: "Become cold resistant",
+        amount: 1,
+        condition: function(coldAmount) { return coldAmount >= 1; },
+        completed: false
+      },
+    ]
+	}
+];
+
 const mailObj = {
 	mail1: {
 		email: "noreply@tinylabs.org",
@@ -36,3 +72,19 @@ const mailObj = {
     ]
 	},
 };
+
+function handleMail() {
+  mailObj["mail" + currentKey] = mailQueue.pop();
+  currentKey++;
+}
+
+function checkAwaitingMail() {
+	const interval = setInterval(() => {
+			if (awaitingMail) {
+					handleMail();
+					awaitingMail = false;
+					clearInterval(interval);
+			}
+	}, 1000);
+}
+checkAwaitingMail();

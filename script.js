@@ -10,6 +10,10 @@ const builderAppId = "builder";
 // === FUNCTIONS ===
 
 function changeScreen(curId, othId) {
+  if(othId == "mail-wrapper") {
+    clearMailInbox(); // TODO: Reset rest of state
+    generateMailPreviews(undefined, "primary");
+  }
 	const cur = document.querySelector("#" + curId);
 	const oth = document.querySelector("#" + othId);
 	cur.style.display = "none";
@@ -261,4 +265,8 @@ document.querySelector("#back1").addEventListener("click", function () {
 
 document.querySelector("#back2").addEventListener("click", function () {
 	changeScreen("mail-wrapper", "os-wrapper");
+});
+
+document.querySelector("#back3").addEventListener("click", function () {
+	changeScreen("telescope-wrapper", "os-wrapper");
 });
