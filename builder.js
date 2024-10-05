@@ -4,6 +4,8 @@ const maxNodeSize = 100;
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
 
+console.log(x)
+
 function resizecanvas2() {
 	canvas2.width = window.innerWidth;
 	canvas2.height = window.innerHeight;

@@ -4,7 +4,7 @@
 		"topic": "Become a member today",
 		"content": "Blah blah blah",
 		"timestamp": "11:00",
-    "category": "social",
+		"category": "social",
 		"read": false,
 		"favorite": false,
 		"important": false
@@ -14,7 +14,7 @@
 		"topic": "You're fired",
 		"content": "Blah blah blah",
 		"timestamp": "13:37",
-    "category": "primary",
+		"category": "primary",
 		"read": false,
 		"favorite": true,
 		"important": false
@@ -24,7 +24,7 @@
 		"topic": "Sign up to our new letter",
 		"content": "Blah blah blah",
 		"timestamp": "14:50",
-    "category": "primary",
+		"category": "primary",
 		"read": false,
 		"favorite": false,
 		"important": true
@@ -34,9 +34,20 @@
 		"topic": "Get your research paper funded",
 		"content": "Blah blah blah",
 		"timestamp": "15:22",
-    "category": "campaigns",
+		"category": "campaigns",
 		"read": true,
 		"favorite": false,
 		"important": false
+	},
+	"mail5": {
+		"email": "noreply@tinylabs.org",
+		"sender": "Tiny Labs",
+		"topic": "An exiting new start!",
+		"content": "Hello Mr. Doctor. Thank you for participating in this exciting new venture into the future of bio-chemisty! As we have already discussed over the phone, you can now starting feeding the orgranism. We have sent the required materials for you to develop it. The package should already have arrived. Go to your DNA Modificiator and place the given part onto the orgranism. To prove this works, the Organism should be able to consume food. Test this out by using the Microscope.  // Best regards, Milo [CEO of Tiny Labs]",
+		"timestamp": "15:22",
+		"category": "primary",
+		"read": false,
+		"favorite": false,
+		"important": true
 	}
 }
