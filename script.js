@@ -147,9 +147,12 @@ function generateMailPreviews(key, category) {
 		const favoriteButton = document.querySelector(
 			"#" + mailId + "-favorite-btn"
 		);
+
 		if (favoriteButton) {
 			favoriteButton.addEventListener("click", () => {
 				mailObj[mailId].favorite = !mailObj[mailId].favorite;
+        clearMailInbox();
+        generateMailPreviews(key, category);
 			});
 		}
 
@@ -159,6 +162,8 @@ function generateMailPreviews(key, category) {
 		if (importantButton) {
 			importantButton.addEventListener("click", () => {
 				mailObj[mailId].important = !mailObj[mailId].important;
+        clearMailInbox();
+        generateMailPreviews(key, category);
 			});
 		}
 	}
