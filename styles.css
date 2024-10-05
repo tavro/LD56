@@ -9,19 +9,55 @@ body {
   flex-direction: row;
   background-color: blue;
   height: 100vh;
+  width: 100vw;
 }
 
 /* === MAIL STYLING === */
+
+.back-btn-wrapper {
+  margin: 8px;
+  height: 16px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+.back-btn-wrapper:hover {
+  cursor: pointer;
+}
+
+.back-btn-wrapper img {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+#mail-header {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
 
 #opened-mail {
   display: none;
   flex-direction: column;
   background-color: white;
-  height: 100vh;
+}
+
+#mail-info-wrapper {
+  margin: 32px;
 }
 
 #category-primary {
   border-bottom: 2px solid black;
+}
+
+#mm-inbox:hover, #mm-favorites:hover, #mm-important:hover {
+  cursor: pointer;
+}
+
+#category-primary:hover, #category-campaigns:hover, #category-social:hover {
+  cursor: pointer;
 }
 
 #mm-inbox {
@@ -75,6 +111,11 @@ body {
   width: 32px;
   height: 32px;
   margin-right: 8px;
+}
+
+.mail-preview:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .mail-preview {

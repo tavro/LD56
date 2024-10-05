@@ -21,7 +21,7 @@
 					<img src="res/Icon_Builder.svg" />
 					<h1>DNA</h1>
 				</div>
-        <!--
+				<!--
         <div class="app">
 					<img src="res/Icon_Browser.svg" />
 					<h1>Web Browser</h1>
@@ -29,14 +29,27 @@
         -->
 			</div>
 		</div>
-    <div id="opened-mail">
-      <h1 id="om-topic">Topic</h1>
-      <h2 id="om-sender">Sender</h2>
-      <p id="om-timestamp">13:37</p>
-      <div id="om-content">Test test test test</div>
-    </div>
+		<div id="opened-mail">
+			<div id="mail-header">
+				<div class="back-btn-wrapper" id="back1">
+					<img src="res/Icon_Back.svg" />
+					<div>go back</div>
+				</div>
+			</div>
+			<div id="mail-info-wrapper">
+				<h1 id="om-topic">Topic</h1>
+				<h2 id="om-sender">Sender</h2>
+				<p id="om-timestamp">13:37</p>
+				<div id="om-content">Test test test test</div>
+			</div>
+		</div>
 		<div id="mail-wrapper">
 			<div id="mail-menu">
+				<div class="back-btn-wrapper" id="back2">
+					<img src="res/Icon_Back.svg" />
+					<div>go back</div>
+				</div>
+				<hr />
 				<div class="category1">
 					<img src="res/Icon_Inbox.svg" />
 					<p id="mm-inbox">Inbox</p>
@@ -63,18 +76,18 @@
 						<img src="res/Icon_Campaigns.svg" />
 						<div class="c2-text-wrapper">
 							<p>Campaigns</p>
-              <p class="summary">Sender - Topic</p>
+							<p class="summary">Sender - Topic</p>
 						</div>
 					</div>
 					<div class="category2" id="category-social">
 						<img src="res/Icon_Social.svg" />
 						<div class="c2-text-wrapper">
 							<p>Social</p>
-              <p class="summary">Sender - Topic</p>
+							<p class="summary">Sender - Topic</p>
 						</div>
 					</div>
 				</div>
-        <!--
+				<!--
 				<div class="mail-preview">
 					<div class="mp-icons-wrapper">
             <img src="https://picsum.photos/16/16" />
@@ -91,11 +104,11 @@
 			</div>
 		</div>
 		<div id="telescope-wrapper">
-      <canvas id="canvas"></canvas>
-    </div>
+			<canvas id="canvas"></canvas>
+		</div>
 		<div id="builder-wrapper">
-      <canvas id="canvas2"></canvas>
-    </div>
+			<canvas id="canvas2"></canvas>
+		</div>
 		<script src="script.js"></script>
 		<script src="game.js"></script>
 		<script src="builder.js"></script>

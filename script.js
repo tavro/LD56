@@ -10,8 +10,8 @@ const builderAppId = "builder";
 const mailObj = {
 	mail1: {
 		sender: "Science4You",
-		topic: "Become a member today",
-		content: "Blah blah blah",
+		topic: "Become a member today Become a member today Become a member today Become a member today",
+		content: "This is some very long content for testing the mail preview functionality, lets collapse this. Or truncate or whatever...",
 		timestamp: "11:00",
     category: "social",
 		read: false,
@@ -63,6 +63,13 @@ function clickApp(id) {
 	changeScreen("os-wrapper", id + "-wrapper");
 }
 
+function truncateString(str, maxLength) {
+  if (str.length <= maxLength) {
+      return str;
+  }
+  return str.slice(0, maxLength) + '...';
+}
+
 function generateHtml(mail, id) {
   return `
   <div class="mail-preview" id="${id}">
@@ -72,8 +79,8 @@ function generateHtml(mail, id) {
   </div>
   <div class="sender">${mail.sender}</div>
   <div class="mp-text-wrapper">
-  <div class="topic"><p>${mail.topic || "No Topic"}&nbsp;</p></div>
-  <div class="content"><p>- ${mail.content || "No Content"}</p></div>
+  <div class="topic"><p>${truncateString(mail.topic, 32) || "No Topic"}&nbsp;</p></div>
+  <div class="content"><p>- ${truncateString(mail.content, 32) || "No Content"}</p></div>
   </div>
   <div class="timestamp">${mail.timestamp || "No Time"}</div>
   </div>
@@ -200,4 +207,12 @@ document.querySelector("#category-social").addEventListener("click", function ()
   document.querySelector("#category-primary").style.borderBottom = "none";
   document.querySelector("#category-social").style.borderBottom = "2px solid black";
 	filterInbox();
+});
+
+document.querySelector("#back1").addEventListener("click", function () {
+	changeScreen("opened-mail", "mail-wrapper");
+});
+
+document.querySelector("#back2").addEventListener("click", function () {
+	changeScreen("mail-wrapper", "os-wrapper");
 });
