@@ -19,6 +19,8 @@ class Camera {
 		this.size = 10;
 		console.log("Created Camera");
 	}
+
+	followTarget(targetCoords) {}
 }
 
 class MassObject {
@@ -39,8 +41,65 @@ class MassObject {
 		if (isSpringy) {
 			this.acceleration = new Vector2(delta.x, delta.y).scale(force);
 		} else {
-			this.acceleration = new Vector2(delta.x, delta.y).normalized().scale(force);
+			this.acceleration = new Vector2(delta.x, delta.y)
+				.normalized()
+				.scale(force);
 		}
+	}
+}
+
+class Food extends MassObject {
+	constructor(position) {
+		super();
+		this.position = position;
+		this.size = Math.random() * 10 + 10;
+		this.color = "green";
+		this.isEaten = false;
+	}
+
+	update(player) {
+		if (this.isEaten) {
+			return;
+		}
+
+		this.updatePhysics();
+		this.checkDistanceToPlayer(player);
+
+		this.accelerateToPoint(
+			this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
+			0.2,
+			true
+		);
+	}
+
+	draw() {
+		if (this.isEaten) {
+			return;
+		}
+		ctx.beginPath();
+		ctx.arc(
+			this.position.x - camera.position.x,
+			this.position.y - camera.position.y,
+			this.size,
+			0,
+			Math.PI * 2
+		);
+		ctx.fillStyle = this.color;
+		ctx.fill();
+		ctx.closePath();
+	}
+
+	checkDistanceToPlayer(player) {
+		const distance = this.position.distance(player.headPosition);
+		if (distance < 20) {
+			this.eat();
+			player.giveFood();
+			console.log("nom nom");
+		}
+	}
+
+	eat() {
+		this.isEaten = true;
 	}
 }
 
@@ -56,7 +115,13 @@ class Node extends MassObject {
 
 	draw(ctx) {
 		ctx.beginPath();
-		ctx.arc(this.position.x - camera.position.x, this.position.y - camera.position.y, this.size, 0, Math.PI * 2);
+		ctx.arc(
+			this.position.x - camera.position.x,
+			this.position.y - camera.position.y,
+			this.size,
+			0,
+			Math.PI * 2
+		);
 		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
@@ -84,16 +149,15 @@ class Node extends MassObject {
 
 class Player {
 	constructor() {
-		this.radius = 50;
+		this.headPosition;
 		this.color = "blue";
 
 		this.max_speed = 5;
-		this.turn_speed = 0.5;
 
 		this.nodes = [
-			new Node(50, "red", new Vector2(200, 300)),
-			new Node(50, "green", new Vector2(400, 300)),
-			new Node(50, "blue", new Vector2(600, 300)),
+			new Node(20, "red", new Vector2(200, 300)),
+			new Node(15, "green", new Vector2(400, 300)),
+			new Node(10, "blue", new Vector2(600, 300)),
 		];
 
 		this.mainNode = this.nodes[0];
@@ -111,11 +175,15 @@ class Player {
 		this.nodes.forEach((node) => {
 			node.update();
 		});
+
+		this.headPosition = this.mainNode.position;
 	}
 
-	Draw() {
-		ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+	giveFood() {
+		foodAmount++;
+	}
 
+	draw() {
 		for (let i = 0; i < this.nodes.length; i++) {
 			this.nodes[i].draw(ctx);
 
@@ -137,23 +205,23 @@ class Player {
 	drawConnectingShape(x1, y1, x2, y2, size1, size2, color1, color2) {
 		const controlHeight = 20;
 
-		const x1w = x1 - camera.position.x
-		const y1w = y1 - camera.position.y
+		const x1w = x1 - camera.position.x;
+		const y1w = y1 - camera.position.y;
 
-		const x2w = x2 - camera.position.x
-		const y2w = y2 - camera.position.y
+		const x2w = x2 - camera.position.x;
+		const y2w = y2 - camera.position.y;
 
 		const gradient = ctx.createLinearGradient(x1w, y1w, x2w, y2w);
 		gradient.addColorStop(0, color1);
 		gradient.addColorStop(1, color2);
 
 		ctx.beginPath();
-		ctx.moveTo(x1w, 	y1w - size1);
+		ctx.moveTo(x1w, y1w - size1);
 		ctx.lineTo(x1w + (x2w - x1w) / 2, y1w - size1 - controlHeight);
-		ctx.lineTo(x2w, 	y2w - size2);
-		ctx.lineTo(x2w, 	y2w + size2);
+		ctx.lineTo(x2w, y2w - size2);
+		ctx.lineTo(x2w, y2w + size2);
 		ctx.lineTo(x1w + (x2w - x1w) / 2, y1w + size1 + controlHeight);
-		ctx.lineTo(x1w, 	y1w + size1);
+		ctx.lineTo(x1w, y1w + size1);
 		ctx.closePath();
 
 		ctx.fillStyle = gradient;
@@ -168,23 +236,33 @@ function GameInit() {
 
 function GameUpdate() {
 	player.update();
+	camera.followTarget(player.headPosition);
 
 	if (keyboard.IsKeyHeld("d")) {
-		camera.position.x += 20
+		camera.position.x += 20;
 	}
 	if (keyboard.IsKeyHeld("a")) {
-		camera.position.x -= 20
+		camera.position.x -= 20;
 	}
 	if (keyboard.IsKeyHeld("s")) {
-		camera.position.y += 20
+		camera.position.y += 20;
 	}
 	if (keyboard.IsKeyHeld("w")) {
-		camera.position.y -= 20
+		camera.position.y -= 20;
 	}
+
+	foods.forEach((food) => {
+		food.update(player);
+	});
 }
 
 function GameDraw() {
-	player.Draw();
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	player.draw();
+
+	foods.forEach((food) => {
+		food.draw();
+	});
 }
 
 // _____________ Globals
@@ -193,6 +271,15 @@ let player = new Player();
 let isMouseDown = false;
 let camera = new Camera();
 let keyboard = new KeyboardManager();
+
+let foods = [];
+
+for (let i = 0; i < 5; i++) {
+	let newFood = new Food(
+		new Vector2(Math.random() * 1000, Math.random() * 1000)
+	);
+	foods.push(newFood);
+}
 
 // ____________ Events
 canvas.addEventListener("mousemove", (event) => {
@@ -234,4 +321,4 @@ animate();
 
 // __________________ Character builder
 
-const x = 5
+const x = 5;

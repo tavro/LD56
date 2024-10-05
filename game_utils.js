@@ -20,6 +20,10 @@ class Vector2 {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
 
+	distance(other) {
+		return this.difference(other).magnitude()
+	}
+
 	normalized() {
 		const magnitude = this.magnitude();
 		return new Vector2(
