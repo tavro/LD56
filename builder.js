@@ -4,36 +4,34 @@ const maxNodeSize = 100;
 const canvas2 = document.getElementById("canvas2");
 const ctx2 = canvas2.getContext("2d");
 
-console.log(x)
-
 function resizecanvas2() {
 	canvas2.width = window.innerWidth;
 	canvas2.height = window.innerHeight;
 	player2.draw();
 }
 
-// class Node {
-// 	constructor(size, color, position) {
-// 		this.size = size;
-// 		this.color = color;
-// 		this.position = position; // { x: number, y: number }
-// 	}
+class NodeInfo {
+	constructor(size, color, position) {
+		this.size = size;
+		this.color = color;
+		this.position = position; // { x: number, y: number }
+	}
 
-// 	draw(ctx) {
-// 		ctx.beginPath();
-// 		ctx.arc(this.position.x, this.position.y, this.size, 0, Math.PI * 2);
-// 		ctx.fillStyle = this.color;
-// 		ctx.fill();
-// 		ctx.closePath();
-// 	}
+	draw(ctx) {
+		ctx.beginPath();
+		ctx.arc(this.position.x, this.position.y, this.size, 0, Math.PI * 2);
+		ctx.fillStyle = this.color;
+		ctx.fill();
+		ctx.closePath();
+	}
 
-// 	containsPoint(x, y) {
-// 		const distance = Math.sqrt(
-// 			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
-// 		);
-// 		return distance <= this.size;
-// 	}
-// }
+	containsPoint(x, y) {
+		const distance = Math.sqrt(
+			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
+		);
+		return distance <= this.size;
+	}
+}
 
 class Player2 {
 	constructor(nodes) {
@@ -59,6 +57,10 @@ class Player2 {
 				);
 			}
 		}
+
+		this.drawTail(this.nodes[this.nodes.length - 1]);
+
+		this.drawMouth(this.nodes[0]);
 	}
 
 	drawConnectingShape(x1, y1, x2, y2, size1, size2, color1, color2) {
@@ -78,6 +80,33 @@ class Player2 {
 		ctx2.closePath();
 
 		ctx2.fillStyle = gradient;
+		ctx2.fill();
+	}
+
+	drawTail(node) {
+		const tailLength = 20;
+		const tailWidth = 10;
+		const tailX = node.position.x + node.size;
+		const tailY = node.position.y;
+
+		ctx2.fillStyle = node.color;
+		ctx2.beginPath();
+		ctx2.moveTo(tailX, tailY);
+		ctx2.lineTo(tailX + tailLength, tailY - tailWidth);
+		ctx2.lineTo(tailX + tailLength, tailY + tailWidth);
+		ctx2.closePath();
+		ctx2.fill();
+	}
+
+	drawMouth(node) {
+		const mouthWidth = node.size * 0.5;
+		const mouthHeight = node.size * 0.3;
+		const mouthX = node.position.x;
+		const mouthY = node.position.y + node.size * 0.2;
+
+		ctx2.fillStyle = "black";
+		ctx2.beginPath();
+		ctx2.arc(mouthX, mouthY, mouthWidth, 0, Math.PI, false);
 		ctx2.fill();
 	}
 
@@ -119,26 +148,45 @@ class Player2 {
 			this.draw();
 		}
 	}
+
+	changeNodeColor(mouseX, mouseY) {
+		let nodeIndex = -1;
+
+		for (let i = 0; i < this.nodes.length; i++) {
+			if (this.nodes[i].containsPoint(mouseX, mouseY)) {
+				nodeIndex = i;
+				break;
+			}
+		}
+
+		if (nodeIndex !== -1) {
+			const newColor = prompt("Enter a color (name or hex code):", this.nodes[nodeIndex].color);
+			if (newColor) {
+				this.nodes[nodeIndex].color = newColor;
+				this.draw();
+			}
+		}
+	}
 }
 
 const nodes = [
-	new Node(50, "red", {
+	new NodeInfo(50, "red", {
 		x: (window.innerWidth / 6) * 1,
 		y: window.innerHeight / 2,
 	}),
-	new Node(50, "green", {
+	new NodeInfo(50, "green", {
 		x: (window.innerWidth / 6) * 2,
 		y: window.innerHeight / 2,
 	}),
-	new Node(50, "blue", {
+	new NodeInfo(50, "blue", {
 		x: (window.innerWidth / 6) * 3,
 		y: window.innerHeight / 2,
 	}),
-	new Node(50, "yellow", {
+	new NodeInfo(50, "yellow", {
 		x: (window.innerWidth / 6) * 4,
 		y: window.innerHeight / 2,
 	}),
-  new Node(50, "magenta", {
+	new NodeInfo(50, "magenta", {
 		x: (window.innerWidth / 6) * 5,
 		y: window.innerHeight / 2,
 	})
@@ -151,4 +199,11 @@ resizecanvas2();
 canvas2.addEventListener("wheel", (event) => {
 	const delta = event.deltaY > 0 ? -5 : 5;
 	player2.resizeNode(event.clientX, delta);
+});
+
+canvas2.addEventListener("click", (event) => {
+	const mouseX = event.clientX;
+	const mouseY = event.clientY;
+
+	player2.changeNodeColor(mouseX, mouseY);
 });
