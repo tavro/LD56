@@ -3,12 +3,13 @@ const mailQueue = [
 	{
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
-		topic: "Next steps for planting your organism",
+		topic: "To war!",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
-    <p>Great job on completing your first assignments!</p>
-    <p>As we move forward, we will be planting the organism in both very warm and cold locations. It is essential for the organism to be resistant to both temperature extremes. Please place your organism in both warm and cold environments until it becomes fully resistant.</p>
-    <p>Thank you for your continued efforts!</p>
+    <p>GREAT JOB! We at Tiny Labs are super impressed by your work!</p>
+    <p>Now, in the real world, this organism might encounter other organisms and it'll need to defend itself.</p>
+    <p>To prove it's strength, we have sent you some other organisms for it to train against.</p>
+		<p>You are <i>killing</i> it! (no pun intended hehe)</p>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -17,24 +18,14 @@ const mailQueue = [
 		read: false,
 		favorite: false,
 		important: true,
-		assignments: [
-			{
-				title: "Become warmth resistant",
-				amount: 1,
-				condition: function (warmAmount) {
-					return warmAmount >= 1;
-				},
-				completed: false,
-			},
-			{
-				title: "Become cold resistant",
-				amount: 1,
-				condition: function (coldAmount) {
-					return coldAmount >= 1;
-				},
-				completed: false,
-			},
-		],
+    assignments: [
+      {
+        title: "Kill 5 other organisms",
+        amount: 5,
+        condition: function(killAmount) { return killAmount >= 5; },
+        completed: false
+      },
+    ]
 	},
 	{
 		email: "noreply@tinylabs.org",
@@ -73,16 +64,15 @@ const mailQueue = [
 			},
 		],
 	},
-	{
+  {
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
-		topic: "To war!",
+		topic: "Next steps for planting your organism",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
-    <p>GREAT JOB! We at Tiny Labs are super impressed by your work!</p>
-    <p>Now, in the real world, this organism might encounter other organisms and it'll need to defend itself.</p>
-    <p>To prove it's strength, we have sent you some other organisms for it to train against.</p>
-		<p>You are <i>killing</i> it! (no pun intended hehe)</p>
+    <p>Great job on completing your first assignments!</p>
+    <p>As we move forward, we will be planting the organism in both very warm and cold locations. It is essential for the organism to be resistant to both temperature extremes. Please place your organism in both warm and cold environments until it becomes fully resistant.</p>
+    <p>Thank you for your continued efforts!</p>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -91,17 +81,21 @@ const mailQueue = [
 		read: false,
 		favorite: false,
 		important: true,
-		assignments: [
-			{
-				title: "Kill 5 other organisms",
-				amount: 5,
-				condition: function (killAmount) {
-					return killAmount >= 5;
-				},
-				completed: false,
-			},
-		],
-	},
+    assignments: [
+      {
+        title: "Become warmth resistant",
+        amount: 1,
+        condition: function(warmAmount) { return warmAmount >= 1; },
+        completed: false
+      },
+      {
+        title: "Become cold resistant",
+        amount: 1,
+        condition: function(coldAmount) { return coldAmount >= 1; },
+        completed: false
+      },
+    ]
+	}
 ];
 
 const mailObj = {
