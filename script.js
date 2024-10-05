@@ -7,51 +7,6 @@ const mailAppId = "mail";
 const telescopeAppId = "telescope";
 const builderAppId = "builder";
 
-const mailObj = {
-	mail1: {
-		sender: "Science4You",
-		topic:
-			"Become a member today Become a member today Become a member today Become a member today",
-		content:
-			"This is some very long content for testing the mail preview functionality, lets collapse this. Or truncate or whatever...",
-		timestamp: "11:00",
-		category: "social",
-		read: false,
-		favorite: false,
-		important: false,
-	},
-	mail2: {
-		sender: "noreply@science.org",
-		topic: "You're fired",
-		content: "Blah blah blah",
-		timestamp: "13:37",
-		category: "primary",
-		read: false,
-		favorite: true,
-		important: false,
-	},
-	mail3: {
-		sender: "TLDR Science",
-		topic: "Sign up to our new letter",
-		content: "Blah blah blah",
-		timestamp: "14:50",
-		category: "primary",
-		read: false,
-		favorite: false,
-		important: true,
-	},
-	mail4: {
-		sender: "Science2Go",
-		topic: "Get your research paper funded",
-		content: "Blah blah blah",
-		timestamp: "15:22",
-		category: "campaigns",
-		read: true,
-		favorite: false,
-		important: false,
-	},
-};
-
 // === FUNCTIONS ===
 
 function changeScreen(curId, othId) {
@@ -72,6 +27,12 @@ function truncateString(str, maxLength) {
 	return str.slice(0, maxLength) + "...";
 }
 
+function htmlToPlainString(html) {
+  var tempElement = document.createElement("div");
+  tempElement.innerHTML = html;
+  return tempElement.textContent || tempElement.innerText || "";
+}
+
 function generateHtml(mail, id) {
 	return `
   <div class="mail-preview" id="${id}">
@@ -90,7 +51,7 @@ function generateHtml(mail, id) {
 		truncateString(mail.topic, 32) || "No Topic"
 	}&nbsp;</p></div>
   <div class="content"><p>- ${
-		truncateString(mail.content, 32) || "No Content"
+		truncateString(htmlToPlainString(mail.content), 32) || "No Content"
 	}</p></div>
   </div>
   <div class="timestamp">${mail.timestamp || "No Time"}</div>
@@ -126,7 +87,7 @@ function generateMailPreviews(key, category) {
 		if (elem) {
 			elem.addEventListener("click", () => {
 				document.querySelector("#om-topic").innerHTML = mailObj[mailId].topic;
-				document.querySelector("#om-sender").innerHTML = mailObj[mailId].sender;
+				document.querySelector("#om-sender").innerHTML = mailObj[mailId].sender + " (" + mailObj[mailId].email + ")";
 				document.querySelector("#om-timestamp").innerHTML =
 					mailObj[mailId].timestamp;
 				document.querySelector("#om-content").innerHTML =
