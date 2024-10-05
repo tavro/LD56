@@ -12,6 +12,22 @@ function mousePositionToWorldCoords() {
 	return result;
 }
 
+function drawCircle(context, position, radius, color) {
+	context.beginPath();
+	context.arc(
+		position.x - camera.position.x,
+		position.y - camera.position.y,
+		(radius / camera.size) * worldToPixelFactor,
+		0,
+		Math.PI * 2
+	);
+	context.fillStyle = color;
+	context.fill();
+	context.closePath();
+}
+
+const worldToPixelFactor = 100;
+
 // ______________ Classes
 class Camera {
 	constructor() {
@@ -21,14 +37,17 @@ class Camera {
 	}
 
 	followTarget(targetCoords) {
-		const delta = this.position.difference(targetCoords).scale(0.1)
-		this.position = this.position.add(delta)
+		// const cameraCenterX = targetCoords.x - this.size2.x/2
+		// const cameraCenterY = targetCoords.y - this.size2.y/2
+		// const cameraCenter = new Vector2(cameraCenterX, cameraCenterY)
+		// const delta = this.position.difference(cameraCenter).scale(0.1)
+		// this.position = this.position.add(delta)
 	}
 }
 
 class MassObject {
 	velocity = new Vector2(0, 0);
-	position = new Vector2(500, 200);
+	position = new Vector2(0, 0);
 	acceleration = new Vector2(0, 0);
 	drag = 0.9;
 
@@ -54,8 +73,8 @@ class MassObject {
 class Food extends MassObject {
 	constructor(position) {
 		super();
-		this.position = position;
-		this.size = Math.random() * 10 + 10;
+		this.position = position.scale(worldToPixelFactor);
+		this.size = 2;
 		this.color = "green";
 		this.isEaten = false;
 	}
@@ -75,26 +94,16 @@ class Food extends MassObject {
 		);
 	}
 
-	draw() {
+	draw(context) {
 		if (this.isEaten) {
 			return;
 		}
-		ctx.beginPath();
-		ctx.arc(
-			this.position.x - camera.position.x,
-			this.position.y - camera.position.y,
-			this.size,
-			0,
-			Math.PI * 2
-		);
-		ctx.fillStyle = this.color;
-		ctx.fill();
-		ctx.closePath();
+		drawCircle(context, this.position, this.size, this.color)
 	}
 
 	checkDistanceToPlayer(player) {
 		const distance = this.position.distance(player.headPosition);
-		if (distance < 20) {
+		if (distance < 100) {
 			this.eat();
 			player.giveFood();
 			console.log("nom nom");
@@ -116,18 +125,8 @@ class Node extends MassObject {
 		this.parent = null;
 	}
 
-	draw(ctx) {
-		ctx.beginPath();
-		ctx.arc(
-			this.position.x - camera.position.x,
-			this.position.y - camera.position.y,
-			this.size,
-			0,
-			Math.PI * 2
-		);
-		ctx.fillStyle = this.color;
-		ctx.fill();
-		ctx.closePath();
+	draw(context) {
+		drawCircle(context, this.position, this.size, this.color)
 	}
 
 	containsPoint(x, y) {
@@ -158,9 +157,9 @@ class Player {
 		this.max_speed = 5;
 
 		this.nodes = [
-			new Node(20, "red", new Vector2(200, 300)),
-			new Node(15, "green", new Vector2(400, 300)),
-			new Node(10, "blue", new Vector2(600, 300)),
+			new Node(10, "red", new Vector2(0, 0)),
+			new Node(10, "green", new Vector2(4, 0)),
+			new Node(10, "blue", new Vector2(6, 0)),
 		];
 
 		this.mainNode = this.nodes[0];
@@ -186,22 +185,22 @@ class Player {
 		data.foodAmount++;
 	}
 
-	draw() {
+	draw(context) {
 		for (let i = 0; i < this.nodes.length; i++) {
-			this.nodes[i].draw(ctx);
+			this.nodes[i].draw(context);
 
-			if (i > 0) {
-				this.drawConnectingShape(
-					this.nodes[i - 1].position.x,
-					this.nodes[i - 1].position.y,
-					this.nodes[i].position.x,
-					this.nodes[i].position.y,
-					this.nodes[i - 1].size,
-					this.nodes[i].size,
-					this.nodes[i - 1].color,
-					this.nodes[i].color
-				);
-			}
+			// if (i > 0) {
+			// 	this.drawConnectingShape(
+			// 		this.nodes[i - 1].position.x,
+			// 		this.nodes[i - 1].position.y,
+			// 		this.nodes[i].position.x,
+			// 		this.nodes[i].position.y,
+			// 		this.nodes[i - 1].size,
+			// 		this.nodes[i].size,
+			// 		this.nodes[i - 1].color,
+			// 		this.nodes[i].color
+			// 	);
+			// }
 		}
 	}
 
@@ -261,10 +260,10 @@ function GameUpdate() {
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	player.draw();
+	player.draw(ctx);
 
 	foods.forEach((food) => {
-		food.draw();
+		food.draw(ctx);
 	});
 }
 
@@ -277,9 +276,9 @@ let keyboard = new KeyboardManager();
 
 let foods = [];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 20; i++) {
 	let newFood = new Food(
-		new Vector2(Math.random() * 1000, Math.random() * 1000)
+		new Vector2(Math.random() * 10, Math.random() * 10)
 	);
 	foods.push(newFood);
 }
