@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 275 274" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-    <rect id="Browser" x="9.823" y="9" width="256" height="256" style="fill:none;"/>
+    <rect id="Icon_Browser" x="9.823" y="9" width="256" height="256" style="fill:none;"/>
     <g>
+        <circle cx="123.837" cy="124.618" r="108.092" style="fill:white;"/>
         <path d="M37.086,189.327C23.953,171.415 16.195,149.322 16.195,125.43C16.195,65.701 64.687,17.208 124.417,17.208C152.721,17.208 178.502,28.098 197.795,45.912" style="fill:none;stroke:black;stroke-width:10px;"/>
         <path d="M208.392,57.192C223.548,75.816 232.639,99.57 232.639,125.43C232.639,146.457 226.629,161.091 216.235,177.707" style="fill:none;stroke:black;stroke-width:10px;"/>
         <path d="M185.695,213.178C167.218,227.871 149.835,233.652 124.417,233.652C94.992,233.652 68.294,221.884 48.778,202.801" style="fill:none;stroke:black;stroke-width:10px;"/>
@@ -11,6 +12,6 @@
         <path d="M164.071,25.587C195.633,91.608 195.816,157.629 164.071,223.65" style="fill:none;stroke:black;stroke-width:10px;"/>
         <path d="M85.562,25.587C54,91.608 53.817,157.629 85.562,223.65" style="fill:none;stroke:black;stroke-width:10px;"/>
     </g>
-    <path d="M221.03,199.032L194.671,180.508L201.435,220.967M201.435,220.967L204.917,241.796L222.171,223.559L246.359,216.834L221.03,199.032" style="fill:none;stroke:black;stroke-width:10px;"/>
+    <path d="M221.03,199.032L194.671,180.508L201.435,220.967M201.435,220.967L204.917,241.796L222.171,223.559L246.359,216.834L221.03,199.032" style="fill:white;stroke:black;stroke-width:10px;"/>
     <path d="M222.271,223.725L241.586,255.792" style="fill:none;stroke:black;stroke-width:10px;"/>
 </svg>

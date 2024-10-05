@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 136 135" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-    <rect id="Back" x="9.77" y="9" width="116.43" height="116.43" style="fill:none;"/>
-    <path d="M20.945,99.527C70.699,99.527 120.055,104.229 120.055,73.316C120.055,42.404 60.517,39.573 60.517,39.573L60.517,17.595L26.342,41.657L60.517,61.919L60.517,39.573" style="fill:none;stroke:black;stroke-width:10px;"/>
+    <rect id="Icon_Back" x="9.77" y="9" width="116.43" height="116.43" style="fill:none;"/>
+    <path d="M20.945,99.527C70.699,99.527 120.055,104.229 120.055,73.316C120.055,42.404 60.517,39.573 60.517,39.573" style="fill:none;stroke:black;stroke-width:10px;"/>
+    <path d="M60.517,39.573L60.517,17.595L26.342,41.657L60.517,61.919L60.517,39.573" style="fill:white;stroke:black;stroke-width:10px;"/>
 </svg>
