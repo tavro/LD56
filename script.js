@@ -76,7 +76,7 @@ function generateAssignmentHTML(tasks) {
     const amount = document.createElement('p');
 
     const zeroSpan = document.createElement('span');
-    zeroSpan.id = 'taskAmount';
+    zeroSpan.id = 'taskAmount'; // TODO: Fix this
     zeroSpan.textContent = '0';
 
     amount.appendChild(zeroSpan);

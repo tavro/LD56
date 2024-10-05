@@ -37,7 +37,7 @@ Object.defineProperty(data, "foodAmount", {
 	},
 	set(value) {
 		foodAmount = value;
-    document.querySelector("#taskAmount").innerHTML = foodAmount;
+    // document.querySelector("#taskAmount").innerHTML = foodAmount;
 		checkAssignments(foodAmount);
 	},
 });
