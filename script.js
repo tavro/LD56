@@ -63,6 +63,23 @@ function clickApp(id) {
 	changeScreen("os-wrapper", id + "-wrapper");
 }
 
+function generateHtml(mail, id) {
+  return `
+  <div class="mail-preview" id="${id}">
+  <div class="mp-icons-wrapper">
+  <img src="${mail.favorite ? 'res/Icon_Favorites_2.svg' : 'res/Icon_Favorites.svg'}" />
+  <img src="${mail.important ? 'res/Icon_StarYellow.svg' : 'res/Icon_StarWhite.svg'}" />
+  </div>
+  <div class="sender">${mail.sender}</div>
+  <div class="mp-text-wrapper">
+  <div class="topic"><p>${mail.topic || "No Topic"}&nbsp;</p></div>
+  <div class="content"><p>- ${mail.content || "No Content"}</p></div>
+  </div>
+  <div class="timestamp">${mail.timestamp || "No Time"}</div>
+  </div>
+  `;
+}
+
 function generateMailPreviews(key, category) {
 	let mailHtml = "";
 
@@ -71,37 +88,11 @@ function generateMailPreviews(key, category) {
 			const mail = mailObj[mailId];
 			if (key) {
 				if (mail[key] && mail.category == category) {
-					mailHtml += `
-          <div class="mail-preview">
-          <div class="mp-icons-wrapper">
-          <img src="${mail.favorite ? 'res/Icon_Favorites_2.svg' : 'res/Icon_Favorites.svg'}" />
-          <img src="${mail.important ? 'res/Icon_StarYellow.svg' : 'res/Icon_StarWhite.svg'}" />
-          </div>
-          <div class="sender">${mail.sender}</div>
-          <div class="mp-text-wrapper">
-          <div class="topic"><p>${mail.topic || "No Topic"}&nbsp;</p></div>
-          <div class="content"><p>- ${mail.content || "No Content"}</p></div>
-          </div>
-          <div class="timestamp">${mail.timestamp || "No Time"}</div>
-          </div>
-          `;
+					mailHtml += generateHtml(mail, mailId);
 				}
 			} else {
         if(mail.category == category) {
-          mailHtml += `
-          <div class="mail-preview">
-          <div class="mp-icons-wrapper">
-          <img src="${mail.favorite ? 'res/Icon_Favorites_2.svg' : 'res/Icon_Favorites.svg'}" />
-          <img src="${mail.important ? 'res/Icon_StarYellow.svg' : 'res/Icon_StarWhite.svg'}" />
-          </div>
-          <div class="sender">${mail.sender}</div>
-          <div class="mp-text-wrapper">
-          <div class="topic"><p>${mail.topic || "No Topic"}&nbsp;</p></div>
-          <div class="content"><p>- ${mail.content || "No Content"}</p></div>
-          </div>
-          <div class="timestamp">${mail.timestamp || "No Time"}</div>
-          </div>
-          `;
+          mailHtml += generateHtml(mail, mailId);
         }
 			}
 		}
@@ -110,6 +101,19 @@ function generateMailPreviews(key, category) {
 	document
 	.querySelector("#mail-inbox")
 	.insertAdjacentHTML("beforeend", mailHtml);
+
+  for (const mailId in mailObj) {
+    const elem = document.querySelector('#' + mailId);
+    if(elem) {
+      elem.addEventListener('click', () => {
+        document.querySelector('#om-topic').innerHTML = mailObj[mailId].topic;
+        document.querySelector('#om-sender').innerHTML = mailObj[mailId].sender;
+        document.querySelector('#om-timestamp').innerHTML = mailObj[mailId].timestamp;
+        document.querySelector('#om-content').innerHTML = mailObj[mailId].content;
+        changeScreen('mail-wrapper', 'opened-mail');
+      });
+    }
+  }
 }
 
 function clearMailInbox() {
@@ -130,7 +134,7 @@ function filterInbox() {
 	}
 }
 
-const htmlOutput = generateMailPreviews();
+generateMailPreviews(undefined, category);
 
 // === LISTENERS ===
 

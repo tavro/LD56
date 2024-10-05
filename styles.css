@@ -13,6 +13,17 @@ body {
 
 /* === MAIL STYLING === */
 
+#opened-mail {
+  display: none;
+  flex-direction: column;
+  background-color: white;
+  height: 100vh;
+}
+
+#category-primary {
+  border-bottom: 2px solid black;
+}
+
 #mm-inbox {
   font-weight: bold;
 }
