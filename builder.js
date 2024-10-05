@@ -84,10 +84,9 @@ class Player2 {
 		const spacing = canvas2.width / (this.nodes.length + 1);
 
 		for (let i = 0; i < this.nodes.length; i++) {
-			const circleX = spacing * (i + 1);
 			const radius = this.nodes[i].size;
 
-			if (mouseX >= circleX - radius && mouseX <= circleX + radius) {
+			if (mouseX >= this.nodes[i].position.x - radius && mouseX <= this.nodes[i].position.x + radius) {
 				circleIndex = i;
 				break;
 			}
