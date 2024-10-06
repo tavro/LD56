@@ -9,18 +9,18 @@
 	<body>
 		<div id="os-wrapper">
 			<div id="desktop-wrapper">
-				<div class="app" id="mail">
-					<img src="res/Icon_Email.svg" />
-					<h1>Mail</h1>
-				</div>
-				<div class="app" id="telescope">
-					<img src="res/Icon_Organism.svg" />
-					<h1>Telescope</h1>
-				</div>
-				<div class="app" id="builder">
-					<img src="res/Icon_Builder.svg" />
-					<h1>DNA</h1>
-				</div>
+				<div class="app" id="mail" draggable="true">
+					<img src="res/Icon_Email.svg" class="non-draggable non-selectable" />
+					<h1 class="non-selectable">Mail</h1>
+			</div>
+			<div class="app" id="telescope" draggable="true">
+					<img src="res/Icon_Organism.svg" class="non-draggable non-selectable" />
+					<h1 class="non-selectable">Microscope</h1>
+			</div>
+			<div class="app" id="builder" draggable="true">
+					<img src="res/Icon_Builder.svg" class="non-draggable non-selectable" />
+					<h1 class="non-selectable">DNA</h1>
+			</div>
 				<!--
         <div class="app">
 					<img src="res/Icon_Browser.svg" />
@@ -105,17 +105,18 @@
 			</div>
 		</div>
 		<div id="telescope-wrapper">
-      <div class="back-btn-wrapper" id="back3">
+      <div class="back-btn-wrapper-alt" id="back3">
         <img src="res/Icon_Back.svg" />
         <div>go back</div>
       </div>
 			<canvas id="canvas"></canvas>
 		</div>
 		<div id="builder-wrapper">
-      <div class="back-btn-wrapper" id="back4">
+      <div class="back-btn-wrapper-alt" id="back4">
         <img src="res/Icon_Back.svg" />
         <div>go back</div>
       </div>
+			<!--<div class="scratches"></div>-->
 			<canvas id="canvas2"></canvas>
 		</div>
     <div id="assignment-container"></div>
@@ -133,5 +134,6 @@
 		<script src="game_utils.js"></script>
 		<script src="game.js"></script>
 		<script src="builder.js"></script>
+		<!--<script src="microscope.js"></script>-->
 	</body>
 </html>

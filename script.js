@@ -11,11 +11,12 @@ const builderAppId = "builder";
 
 function changeScreen(curId, othId) {
 	soundManager.stopMusic();
-  if(othId == "mail-wrapper") {
-    clearMailInbox();
+	if (othId == "mail-wrapper") {
+		clearMailInbox();
 
 		category = "primary";
-		document.querySelector("#category-primary").style.borderBottom = "2px solid black";
+		document.querySelector("#category-primary").style.borderBottom =
+			"2px solid black";
 		document.querySelector("#category-campaigns").style.borderBottom = "none";
 		document.querySelector("#category-social").style.borderBottom = "none";
 
@@ -23,9 +24,8 @@ function changeScreen(curId, othId) {
 		document.querySelector("#mm-favorites").style.fontWeight = "100";
 		document.querySelector("#mm-important").style.fontWeight = "100";
 
-    generateMailPreviews(undefined, category);
-  }
-	else if(othId == "telescope-wrapper") {
+		generateMailPreviews(undefined, category);
+	} else if (othId == "telescope-wrapper") {
 		soundManager.loadMusic("res/Music/first-draft.mp3");
 		soundManager.setMusicVolume(0.3);
 		soundManager.playMusic();
@@ -42,7 +42,7 @@ function clickApp(id) {
 
 function generateHtml(mail, id) {
 	return `
-  <div class="mail-preview ${mail.read ? "read": ""}" id="${id}">
+  <div class="mail-preview ${mail.read ? "read" : ""}" id="${id}">
   <div class="mp-icons-wrapper">
   <img src="${
 		mail.favorite ? "res/Icon_Favorites_2.svg" : "res/Icon_Favorites.svg"
@@ -68,34 +68,34 @@ function generateHtml(mail, id) {
 }
 
 function generateAssignmentHTML(tasks) {
-  const container = document.createElement('div');
-  const containerTitle = document.createElement('h2');
-  containerTitle.textContent = "Assignments";
-  container.appendChild(containerTitle);
+	const container = document.createElement("div");
+	const containerTitle = document.createElement("h2");
+	containerTitle.textContent = "Assignments";
+	container.appendChild(containerTitle);
 
-  tasks[0].forEach(task => {
-    const taskContainer = document.createElement('div');
-    taskContainer.classList.add('task-item');
+	tasks[0].forEach((task) => {
+		const taskContainer = document.createElement("div");
+		taskContainer.classList.add("task-item");
 
-    const title = document.createElement('h3');
-    title.textContent = task.title;
-    
-    const amount = document.createElement('p');
+		const title = document.createElement("h3");
+		title.textContent = task.title;
 
-    const zeroSpan = document.createElement('span');
-    zeroSpan.id = task.id + 'Amount';
-    zeroSpan.textContent = '0';
+		const amount = document.createElement("p");
 
-    amount.appendChild(zeroSpan);
-    amount.appendChild(document.createTextNode(` of ${task.amount}`));
-    
-    taskContainer.appendChild(title);
-    taskContainer.appendChild(amount);
+		const zeroSpan = document.createElement("span");
+		zeroSpan.id = task.id + "Amount";
+		zeroSpan.textContent = "0";
 
-    container.appendChild(taskContainer);
-  });
+		amount.appendChild(zeroSpan);
+		amount.appendChild(document.createTextNode(` of ${task.amount}`));
 
-  return container.innerHTML;
+		taskContainer.appendChild(title);
+		taskContainer.appendChild(amount);
+
+		container.appendChild(taskContainer);
+	});
+
+	return container.innerHTML;
 }
 
 function generateMailPreviews(key, category) {
@@ -125,19 +125,27 @@ function generateMailPreviews(key, category) {
 		if (elem) {
 			elem.addEventListener("click", () => {
 				document.querySelector("#om-topic").innerHTML = mailObj[mailId].topic;
-				document.querySelector("#om-sender").innerHTML = mailObj[mailId].sender + " (" + mailObj[mailId].email + ")";
+				document.querySelector("#om-sender").innerHTML =
+					mailObj[mailId].sender + " (" + mailObj[mailId].email + ")";
 				document.querySelector("#om-timestamp").innerHTML =
 					mailObj[mailId].timestamp;
 				document.querySelector("#om-content").innerHTML =
 					mailObj[mailId].content;
 				changeScreen("mail-wrapper", "opened-mail");
-        if(mailObj[mailId].important && mailObj[mailId].assignments.length > 0 && mailObj[mailId].email.includes("noreply") && !mailObj[mailId].read) {
-          activeAssignments.push(mailObj[mailId].assignments);
-          document.querySelector("#assignment-container").style.display = "block";
-          document.querySelector("#assignment-container").innerHTML = generateAssignmentHTML(activeAssignments);
-          console.log(activeAssignments);
-        }
-        mailObj[mailId].read = true;
+				if (
+					mailObj[mailId].important &&
+					mailObj[mailId].assignments.length > 0 &&
+					mailObj[mailId].email.includes("noreply") &&
+					!mailObj[mailId].read
+				) {
+					activeAssignments.push(mailObj[mailId].assignments);
+					document.querySelector("#assignment-container").style.display =
+						"block";
+					document.querySelector("#assignment-container").innerHTML =
+						generateAssignmentHTML(activeAssignments);
+					console.log(activeAssignments);
+				}
+				mailObj[mailId].read = true;
 			});
 		}
 
@@ -148,8 +156,8 @@ function generateMailPreviews(key, category) {
 		if (favoriteButton) {
 			favoriteButton.addEventListener("click", () => {
 				mailObj[mailId].favorite = !mailObj[mailId].favorite;
-        clearMailInbox();
-        generateMailPreviews(key, category);
+				clearMailInbox();
+				generateMailPreviews(key, category);
 			});
 		}
 
@@ -159,8 +167,8 @@ function generateMailPreviews(key, category) {
 		if (importantButton) {
 			importantButton.addEventListener("click", () => {
 				mailObj[mailId].important = !mailObj[mailId].important;
-        clearMailInbox();
-        generateMailPreviews(key, category);
+				clearMailInbox();
+				generateMailPreviews(key, category);
 			});
 		}
 	}
@@ -276,3 +284,67 @@ document.querySelector("#back3").addEventListener("click", function () {
 document.querySelector("#back4").addEventListener("click", function () {
 	changeScreen("builder-wrapper", "os-wrapper");
 });
+
+// === APPS ===
+const MIN_DISTANCE = 20;
+let draggedApp = null;
+document.querySelectorAll(".app").forEach((app) => {
+	app.addEventListener("dragstart", function (event) {
+		draggedApp = this;
+	});
+});
+
+document
+	.getElementById("desktop-wrapper")
+	.addEventListener("dragover", function (event) {
+		event.preventDefault();
+	});
+
+document
+	.getElementById("desktop-wrapper")
+	.addEventListener("drop", function (event) {
+		event.preventDefault();
+		const x = event.clientX;
+		const y = event.clientY;
+
+		if (draggedApp) {
+			const rect = draggedApp.getBoundingClientRect();
+			draggedApp.style.position = "absolute";
+			draggedApp.style.left = `${x - rect.width / 2}px`;
+			draggedApp.style.top = `${y - rect.height / 2}px`;
+			adjustPosition(draggedApp);
+		}
+	});
+
+function adjustPosition(app) {
+	const rect1 = app.getBoundingClientRect();
+	document.querySelectorAll(".app").forEach((otherApp) => {
+		if (otherApp !== app) {
+			const rect2 = otherApp.getBoundingClientRect();
+			if (isColliding(rect1, rect2)) {
+				let newTop = parseFloat(app.style.top) + MIN_DISTANCE + rect1.height;
+				app.style.top = `${newTop}px`;
+				adjustPosition(app);
+			}
+		}
+	});
+}
+
+function isColliding(rect1, rect2) {
+	return !(
+		rect1.right < rect2.left ||
+		rect1.left > rect2.right ||
+		rect1.bottom < rect2.top ||
+		rect1.top > rect2.bottom
+	);
+}
+
+function initializePositions() {
+	document.querySelectorAll(".app").forEach((app, index) => {
+		app.style.position = "absolute";
+		app.style.left = `${index * 150}px`;
+		app.style.top = "20px";
+	});
+}
+
+initializePositions();
