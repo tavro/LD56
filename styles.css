@@ -282,14 +282,50 @@ canvas {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 15px;
+  background-color: #f1f1f1;
+  color: black;
   border-radius: 5px;
-  display: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   width: 512px;
-  transition: opacity 0.5s;
+  display: none;
+  transition: opacity 0.5s ease;
+}
+
+.overlay-header {
+  background-color: #0078d4;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.overlay-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.overlay-title {
+  flex-grow: 1;
+  margin: 0;
+}
+
+.overlay-content {
+  padding: 15px;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: 10px;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: red;
 }
 
 .scratches {
