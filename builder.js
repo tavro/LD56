@@ -27,6 +27,8 @@ class NodeInfo {
 		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
+
+		this.drawFeature(ctx);
 	}
 
 	containsPoint(x, y) {
@@ -64,6 +66,38 @@ class NodeInfo {
 		ctx.fill();
 		ctx.closePath();
 	}
+
+	drawFeature(ctx) {
+    if (this.type === 'arms') {
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(this.position.x, this.position.y - this.size * 1.2);
+        ctx.lineTo(this.position.x, this.position.y - this.size * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(this.position.x, this.position.y + this.size * 1.2);
+        ctx.lineTo(this.position.x, this.position.y + this.size * 2);
+        ctx.stroke();
+    } else if (this.type === 'fins') {
+        ctx.fillStyle = 'black';
+
+        ctx.beginPath();
+        ctx.moveTo(this.position.x, this.position.y - this.size * 1.1);
+        ctx.lineTo(this.position.x - this.size * 0.6, this.position.y - this.size * 1.5);
+        ctx.lineTo(this.position.x + this.size * 0.6, this.position.y - this.size * 1.5);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(this.position.x, this.position.y + this.size * 1.1);
+        ctx.lineTo(this.position.x - this.size * 0.6, this.position.y + this.size * 1.5);
+        ctx.lineTo(this.position.x + this.size * 0.6, this.position.y + this.size * 1.5);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
 }
 
 class Player2 {
@@ -178,6 +212,26 @@ class Player2 {
 		animationFrameId = requestAnimationFrame(() => this.animateNodes());
 	}
 
+	addNode() {
+		if (this.nodes.length < 2) return;
+
+		const lastNode = this.nodes[this.nodes.length - 1];
+		const secondLastNode = this.nodes[this.nodes.length - 2];
+
+		const newX = (secondLastNode.position.x + lastNode.position.x) / 2;
+		const newY = (secondLastNode.position.y + lastNode.position.y) / 2;
+
+		const newNode = new NodeInfo(
+			(secondLastNode.size + lastNode.size) / 2,
+			"#000000",
+			{ x: newX, y: newY }
+		);
+
+		this.nodes.splice(this.nodes.length - 1, 0, newNode);
+
+		this.draw();
+	}
+
 	resizeNode(mouseX, delta) {
 		let nodeIndex = -1;
 		const spacing = canvas2.width / (this.nodes.length + 1);
@@ -255,19 +309,7 @@ class Player2 {
 
 const nodes = [
 	new NodeInfo(50, "#FF0000", {
-		x: (window.innerWidth / 6) * 1,
-		y: window.innerHeight / 2,
-	}),
-	new NodeInfo(50, "#00FF00", {
-		x: (window.innerWidth / 6) * 2,
-		y: window.innerHeight / 2,
-	}),
-	new NodeInfo(50, "#0000FF", {
-		x: (window.innerWidth / 6) * 3,
-		y: window.innerHeight / 2,
-	}),
-	new NodeInfo(50, "#FFFF00", {
-		x: (window.innerWidth / 6) * 4,
+		x: window.innerWidth / 6,
 		y: window.innerHeight / 2,
 	}),
 	new NodeInfo(50, "#FF00FF", {
@@ -282,6 +324,12 @@ window.addEventListener("resize", resizecanvas2);
 resizecanvas2();
 
 player2.animateNodes();
+
+document.addEventListener("keydown", (event) => {
+	if (event.key === "n" || event.key === "N") {
+		player2.addNode();
+	}
+});
 
 canvas2.addEventListener("wheel", (event) => {
 	const delta = event.deltaY > 0 ? -5 : 5;

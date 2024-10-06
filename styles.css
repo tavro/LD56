@@ -155,14 +155,7 @@ body {
   color: gray;
 }
 
-.sender {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 32px;
-  width: 30%;
-}
-
+/* TODO: Style this so it works when scaling, same goes for categories */
 .mp-icons-wrapper {
   width: 10%;
 }
@@ -171,6 +164,14 @@ body {
   display: flex;
   flex-direction: row;
   width: 50%;
+}
+
+.sender {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 32px;
+  width: 30%;
 }
 
 .timestamp {
