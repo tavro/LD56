@@ -10,6 +10,7 @@ const builderAppId = "builder";
 // === FUNCTIONS ===
 
 function changeScreen(curId, othId) {
+	soundManager.stopMusic();
   if(othId == "mail-wrapper") {
     clearMailInbox();
 
@@ -24,6 +25,11 @@ function changeScreen(curId, othId) {
 
     generateMailPreviews(undefined, category);
   }
+	else if(othId == "telescope-wrapper") {
+		soundManager.loadMusic("res/Music/first-draft.mp3");
+		soundManager.setMusicVolume(0.3);
+		soundManager.playMusic();
+	}
 	const cur = document.querySelector("#" + curId);
 	const oth = document.querySelector("#" + othId);
 	cur.style.display = "none";

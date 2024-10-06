@@ -62,16 +62,4 @@ class SoundManager {
 	}
 }
 
-/*
-NOTE: Use it like this:
 const soundManager = new SoundManager();
-
-soundManager.loadSound("test", "res/Audio/test.wav");
-soundManager.loadMusic("res/Audio/music.mp3");
-
-soundManager.setSoundVolume(0.5);
-soundManager.setMusicVolume(0.3);
-
-You have to trigger things like for example 
-soundManager.playSound("test") and soundManager.playMusic() with a listener to bypass the rights to play sound
-*/
