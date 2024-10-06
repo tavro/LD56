@@ -1,26 +1,37 @@
 var awaitingMail = false;
 
 var activeAssignments = [];
-function checkAssignments(amount) {
-	if (activeAssignments.length > 0) {
-		for (const assignmentList of activeAssignments) {
-			for (const assignment of assignmentList) {
-				if (!assignment.condition(amount)) {
-					return false; // Not Finished with assignments
-				}
-			}
-		}
+function checkAssignments(amount, id) {
+    if (activeAssignments.length > 0) {
+        for (let i = activeAssignments.length - 1; i >= 0; i--) {
+            let assignmentList = activeAssignments[i];
 
-		// Finished with assignments
-		console.log("Finished assignments");
-    activeAssignments = [];
-		const temp = document.querySelector("#assignment-container");
-		if(temp) {
-			temp.style.display = "none";
-		}
-    awaitingMail = true;
-		return true;
-	}
+            assignmentList = assignmentList.filter(assignment => {
+                if (assignment.id === id) {
+                    return !assignment.condition(amount);
+                }
+                return true;
+            });
+            
+            if (assignmentList.length === 0) {
+                activeAssignments.splice(i, 1);
+            } else {
+                activeAssignments[i] = assignmentList;
+            }
+        }
+
+        if (activeAssignments.length === 0) {
+            console.log("Finished assignments");
+            const temp = document.querySelector("#assignment-container");
+            if (temp) {
+                temp.style.display = "none";
+            }
+            awaitingMail = true;
+            return true;
+        }
+        
+        return false;
+    }
 }
 
 var mouthAmount = 0;
@@ -51,7 +62,7 @@ Object.defineProperty(data, "mouthAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(mouthAmount);
+		checkAssignments(mouthAmount, "mouth");
 	},
 });
 
@@ -65,7 +76,7 @@ Object.defineProperty(data, "foodAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(foodAmount);
+		checkAssignments(foodAmount, "food");
 	},
 });
 
@@ -79,7 +90,7 @@ Object.defineProperty(data, "warmAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(warmAmount);
+		checkAssignments(warmAmount, "warmth");
 	},
 });
 
@@ -93,7 +104,7 @@ Object.defineProperty(data, "coldAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(coldAmount);
+		checkAssignments(coldAmount, "cold");
 	},
 });
 
@@ -107,7 +118,7 @@ Object.defineProperty(data, "virusAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(virusAmount);
+		checkAssignments(virusAmount, "virus");
 	},
 });
 
@@ -121,7 +132,7 @@ Object.defineProperty(data, "radioactivityAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(radioactivityAmount);
+		checkAssignments(radioactivityAmount, "radioactivity");
 	},
 });
 
@@ -135,6 +146,6 @@ Object.defineProperty(data, "killAmount", {
 		if(elem) {
 			elem.innerHTML = foodAmount;
 		}
-		checkAssignments(killAmount);
+		checkAssignments(killAmount, "kill");
 	},
 });
