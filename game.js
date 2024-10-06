@@ -23,6 +23,15 @@ function mousePositionToWorldCoords() {
 	return result;
 }
 
+function worldToScreenCoords(worldCoords) {
+	result = new Vector2(0, 0);
+	result.x = ((worldCoords.x - camera.position.x) / camera.size) * worldToPixelFactor
+
+	result.y = ((worldCoords.y - camera.position.y) / camera.size) * worldToPixelFactor
+
+	return result;
+}
+
 function drawImg(context, img, worldPosition, worldSize, opacity = 1.0) {
 	context.globalAlpha = opacity;
 
@@ -66,7 +75,7 @@ class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
 		this.aspectRatio = canvas.width / canvas.height;
-		this.size = 50;
+		this.size = 100;
 	}
 
 	setCameraPosition(value) {
@@ -304,19 +313,16 @@ function GameUpdate() {
 	});
 
 	if (!startedPhaseOne && phaseNumber == 1) {
-		console.log("STARTED PHASE 1")
-		startedPhaseOne = true
+		console.log("STARTED PHASE 1");
+		startedPhaseOne = true;
 	}
 }
 
-let startedPhaseOne = false
+let startedPhaseOne = false;
 
-function startHotPhase(){
+function startHotPhase() {
 	// Spwan hot spots
-
-	
 }
-
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);

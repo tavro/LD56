@@ -135,7 +135,11 @@ class Node_New extends MassObject {
 				.magnitude();
 
 			if (distanceToParent > this.size * 4) {
-				this.pushToPoint(this.parent.position, Math.sqrt(distanceToParent) * 0.001, true);
+				this.pushToPoint(
+					this.parent.position,
+					Math.sqrt(distanceToParent) * 0.001,
+					true
+				);
 			}
 		}
 		this.updatePhysics();
@@ -146,16 +150,16 @@ class Node_New extends MassObject {
 			context,
 			new Vector2(this.position.x, this.position.y),
 			this.size,
-			"red"
+			this.color
 		);
 		this.drawFeature(context);
 	}
 
-	containsPoint(x, y) {
-		const distance = Math.sqrt(
-			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
-		);
-		return distance <= this.size;
+	containsPoint(checkPosition) {
+		const pixelPos = worldToScreenCoords(this.position)
+		const deltaPixels = checkPosition.difference(pixelPos);
+
+		return deltaPixels.magnitude() <= this.size * pixelsPerUnit;
 	}
 
 	drawEyes(ctx) {
@@ -237,8 +241,8 @@ class PlayerBody {
 		this.headNode = new Node_New(2, "#FF0000", new Vector2(0, 0));
 		this.nodes = [this.headNode];
 
-		for (let i = 0; i < 4; i++) {
-			this.nodes.push(new Node_New(2, "#00FF00", new Vector2(i * 2, 0)));
+		for (let i = 0; i < 3; i++) {
+			this.nodes.push(new Node_New(2, "#00FF00", new Vector2(4 + i * 4, 0)));
 		}
 
 		for (let i = this.nodes.length - 1; i > 0; i--) {
