@@ -1,19 +1,14 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// Buffer context for tinting
-buffer = document.createElement("canvas");
-if (typeof window.G_vmlCanvasManager != "undefined") {
-	G_vmlCanvasManager.initElement(buffer);
-}
-const buffer_ctx = buffer.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // ______________ Resources
-zone_img = new Image();
-zone_img.src = "Res/Organism/Organism_Zone.png";
+zoneHot_img = new Image();
+zoneCold_img = new Image();
+zoneHot_img.src = "Res/Organism/Organism_ZoneHot.png";
+zoneCold_img.src = "Res/Organism/Organism_ZoneCold.png";
 
 // ______________ Global Constants
 const pixelsPerUnit = 32;
@@ -28,36 +23,20 @@ function mousePositionToWorldCoords() {
 	return result;
 }
 
-function drawImg(context, img, worldPosition, worldSize, color, opacity = 1.0) {
+function drawImg(context, img, worldPosition, worldSize, opacity = 1.0) {
 	context.globalAlpha = opacity;
 
 	const pixelSize = (worldToPixelFactor / camera.size) * worldSize;
 
 	const centerOffset = -pixelSize / 2;
 
-	buffer.width = pixelSize;
-	buffer.height = pixelSize;
-
 	const screenPosition = new Vector2(
 		((worldPosition.x - camera.position.x) / camera.size) * worldToPixelFactor,
 		((worldPosition.y - camera.position.y) / camera.size) * worldToPixelFactor
 	).add(new Vector2(centerOffset, centerOffset));
 
-	buffer_ctx.fillStyle = color;
-	buffer_ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-	buffer_ctx.globalCompositeOperation = "destination-atop";
-	buffer_ctx.drawImage(img, 0, 0, pixelSize, pixelSize);
-
 	context.drawImage(
 		img,
-		screenPosition.x,
-		screenPosition.y,
-		pixelSize,
-		pixelSize
-	);
-	context.drawImage(
-		buffer,
 		screenPosition.x,
 		screenPosition.y,
 		pixelSize,
@@ -162,27 +141,25 @@ class MassObject {
 }
 
 class Zone extends MassObject {
-	constructor(position, size, color) {
+	constructor(position, size) {
 		super();
 		this.position = position;
 		this.size = size;
-		this.isHot;
-		this.color = color;
+		this.isHot = true
 		this.mass = 3;
 		this.drag = 1.012;
 	}
 
-	setIsHot(isHot) {
-		this.isHot = isHot;
-		if (isHot) {
-			this.color = "#db3b2a";
-		} else {
-			this.color = "#81d4f0";
-		}
+	setIsHot(value) {
+		this.isHot = value
 	}
-
+	
 	draw(context) {
-		drawImg(context, zone_img, this.position, this.size, this.color, 0.5);
+		if (this.isHot) {
+			drawImg(context, zoneHot_img, this.position, this.size, 0.5);
+		} else {
+			drawImg(context, zoneCold_img, this.position, this.size, 0.5);
+		}
 	}
 
 	update(player) {
@@ -459,60 +436,35 @@ class Player {
 	}
 }
 
-function spawnFood(
-	exploredRect,
-	east = false,
-	west = false,
-	north = false,
-	south = false
-) {
-	if (east) {
-		for (let i = 0; i < exploredRect.getDimensions().y / 8; i++) {
-			const lineStart = exploredRect.right;
-			const lineEnd = exploredRect.right + camera.size * camera.aspectRatio;
-			const randomY =
-				exploredRect.top + Math.random() * exploredRect.getDimensions().y;
-			const randomX =
-				exploredRect.right + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
-	}
-	if (west) {
-		for (let i = 0; i < exploredRect.getDimensions().y / 8; i++) {
-			const lineStart = exploredRect.left;
-			const lineEnd = exploredRect.left - camera.size * camera.aspectRatio;
-			const randomY =
-				exploredRect.top + Math.random() * exploredRect.getDimensions().y;
-			const randomX = exploredRect.left + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
-	}
+let lastSpawnPoint = new Vector2(0, 0);
+function spawnAround(position, radius, isZone, isFood) {
+	const delta = lastSpawnPoint.difference(position);
 
-	if (south) {
-		for (let i = 0; i < exploredRect.getDimensions().x / 8; i++) {
-			const lineStart = exploredRect.bottom;
-			const lineEnd = exploredRect.bottom + camera.size * camera.aspectRatio;
-			const randomX =
-				exploredRect.left + Math.random() * exploredRect.getDimensions().x;
-			const randomY =
-				exploredRect.bottom + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
-	}
+	if (delta.magnitude() > radius) {
+		const dirAngle = Math.atan2(delta.y, delta.x);
 
-	if (north) {
-		for (let i = 0; i < exploredRect.getDimensions().x / 8; i++) {
-			const lineStart = exploredRect.top;
-			const lineEnd = exploredRect.top - camera.size * camera.aspectRatio;
-			const randomX =
-				exploredRect.left + Math.random() * exploredRect.getDimensions().x;
-			const randomY = exploredRect.top + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
+		for (let a = 0; a < Math.PI; a += 0.3) {
+			const distance = new Vector2(
+				Math.cos(dirAngle + a - Math.PI / 2),
+				Math.sin(dirAngle + a - Math.PI / 2)
+			).scale(Math.random() * radius + radius);
+			const spawnPoint = position.add(distance);
+
+			if (isFood) {
+				let newFood = new Food(spawnPoint);
+				foods.push(newFood);
+			}
+			if (isZone) {
+				let newZone = new Zone(spawnPoint, Math.random() * 10 + 10);
+				if (Math.random() > 0.5) {
+					newZone.setIsHot(true);
+				} else {
+					newZone.setIsHot(false);
+				}
+				zones.push(newZone);
+			}
 		}
+		lastSpawnPoint = position;
 	}
 }
 
@@ -521,24 +473,8 @@ function GameUpdate() {
 	player.update();
 	camera.followTarget(player.headPosition);
 
-	if (player.headPosition.x > areaExpoloredRect.right) {
-		areaExpoloredRect.right =
-			player.headPosition.x + (camera.size * camera.aspectRatio) / 2;
-		spawnFood(areaExpoloredRect, true, false, false, false);
-	}
-	if (player.headPosition.x < areaExpoloredRect.left) {
-		areaExpoloredRect.left =
-			player.headPosition.x - (camera.size * camera.aspectRatio) / 2;
-		spawnFood(areaExpoloredRect, false, true, false, false);
-	}
-	if (player.headPosition.y > areaExpoloredRect.bottom) {
-		areaExpoloredRect.bottom = player.headPosition.y + camera.size / 2;
-		spawnFood(areaExpoloredRect, false, false, false, true);
-	}
-	if (player.headPosition.y < areaExpoloredRect.top) {
-		areaExpoloredRect.top = player.headPosition.y - camera.size / 2;
-		spawnFood(areaExpoloredRect, false, false, true, false);
-	}
+	spawnAround(player.headPosition, camera.size, true, false);
+	spawnAround(player.headPosition, camera.size, false, true);
 
 	foods.forEach((food) => {
 		food.update(player);
@@ -617,20 +553,20 @@ for (let i = 0; i < 20; i++) {
 
 let zones = [];
 
-for (let i = 0; i < 20; i++) {
-	const randomX = (Math.random() - 0.5) * 50;
-	const randomY = (Math.random() - 0.5) * 50;
-	let newZone = new Zone(
-		new Vector2(randomX, randomY),
-		Math.random() * 10 + 10
-	);
-	if (Math.random() > 0.5) {
-		newZone.setIsHot(true);
-	} else {
-		newZone.setIsHot(false);
-	}
-	zones.push(newZone);
-}
+// for (let i = 0; i < 20; i++) {
+// 	const randomX = (Math.random() - 0.5) * 50;
+// 	const randomY = (Math.random() - 0.5) * 50;
+// 	let newZone = new Zone(
+// 		new Vector2(randomX, randomY),
+// 		Math.random() * 10 + 10
+// 	);
+// 	if (Math.random() > 0.5) {
+// 		newZone.setIsHot(true);
+// 	} else {
+// 		newZone.setIsHot(false);
+// 	}
+// 	zones.push(newZone);
+// }
 // ____________ Events
 canvas.addEventListener("mousemove", (event) => {
 	mousePosition.x = event.clientX;
