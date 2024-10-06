@@ -66,7 +66,7 @@ class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
 		this.aspectRatio = canvas.width / canvas.height;
-		this.size = 40;
+		this.size = 50;
 	}
 
 	setCameraPosition(value) {
@@ -87,73 +87,20 @@ class Camera {
 	}
 }
 
-class MassObject {
-	constructor(position = null, drag = 1.2) {
-		this.position = position;
-		if (position === null) this.position = new Vector2(0, 0);
-
-		this.drag = drag;
-
-		this.mass = 1;
-
-		this.force = new Vector2(0, 0);
-		this.velocity = new Vector2(0, 0);
-		this.acceleration = new Vector2(0, 0);
-	}
-
-	getDirectionAngle() {
-		return Math.atan2(this.velocity.y, this.velocity.x);
-	}
-
-	updatePhysics() {
-		this.acceleration = this.force.scale(1 / this.mass);
-		this.velocity = this.velocity.add(this.acceleration).scale(1 / this.drag);
-		this.position = this.position.add(this.velocity);
-		this.force = new Vector2(0, 0);
-	}
-
-	pushToPoint(targetCoords, force, isSpringy, threshold = 0) {
-		const delta = this.position.difference(targetCoords);
-		if (delta.magnitude() > threshold) {
-			if (isSpringy) {
-				this.force = new Vector2(delta.x, delta.y).scale(force);
-			} else {
-				this.force = new Vector2(delta.x, delta.y).normalized().scale(force);
-			}
-		}
-	}
-
-	pushToDirection(directionAngle, force) {
-		const direction = new Vector2(
-			Math.cos(directionAngle),
-			Math.sin(directionAngle)
-		);
-
-		this.force = new Vector2(direction.x, direction.y).scale(force);
-	}
-
-	pushForward(force, angleSpan) {
-		this.pushToDirection(
-			this.getDirectionAngle() + (Math.random() - 0.5) * angleSpan,
-			force
-		);
-	}
-}
-
 class Zone extends MassObject {
 	constructor(position, size) {
 		super();
 		this.position = position;
 		this.size = size;
-		this.isHot = true
+		this.isHot = true;
 		this.mass = 3;
 		this.drag = 1.012;
 	}
 
 	setIsHot(value) {
-		this.isHot = value
+		this.isHot = value;
 	}
-	
+
 	draw(context) {
 		if (this.isHot) {
 			drawImg(context, zoneHot_img, this.position, this.size, 0.5);
@@ -306,136 +253,6 @@ class OrganismNode extends MassObject {
 	}
 }
 
-class Player {
-	constructor() {
-		this.headPosition;
-		this.controlForce = 5 * 0.01;
-
-		this.hotValue = 0.0;
-		this.coldValue = 0.0;
-
-		this.hotResistance = 0.0;
-		this.coldResistance = 0.0;
-
-		this.isHotResistant = false;
-		this.isColdResistant = false;
-
-		this.nodes = [
-			new OrganismNode(1, "red", new Vector2(0, 0)),
-			new OrganismNode(1, "green", new Vector2(2, 0)),
-			new OrganismNode(1, "blue", new Vector2(4, 0)),
-		];
-
-		this.mainNode = this.nodes[0];
-
-		for (let i = this.nodes.length - 1; i > 0; i--) {
-			this.nodes[i].parent = this.nodes[i - 1];
-		}
-	}
-
-	update() {
-		if (isMouseDown) {
-			this.mainNode.pushToPoint(
-				mousePositionToWorldCoords(),
-				this.controlForce,
-				false
-			);
-		}
-
-		this.nodes.forEach((node) => {
-			node.update();
-		});
-
-		this.headPosition = this.mainNode.position;
-
-		if (this.hotValue > 0) {
-			if (!this.isHotResistant) {
-				this.hotValue -= (1 / 60) * 0.1;
-			} else {
-				this.hotValue = 1;
-				hotValueBar.color = "green";
-			}
-		} else {
-			this.hotValue = 0;
-		}
-
-		if (this.coldValue > 0) {
-			if (!this.isColdResistant) {
-				this.coldValue -= (1 / 60) * 0.1;
-			} else {
-				this.coldValue = 1;
-				coldValueBar.color = "#46f065";
-			}
-		} else {
-			this.coldValue = 0;
-		}
-
-		if (this.coldValue > 0.42 && this.coldValue < 0.58) {
-			this.coldResistance += (1 / 60) * 0.1;
-			coldValueBar.color = "#46f065";
-		} else {
-			coldValueBar.color = "#81d4f0";
-		}
-
-		if (this.hotValue > 0.42 && this.hotValue < 0.58) {
-			this.hotResistance += (1 / 60) * 0.1;
-			hotValueBar.color = "#46f065";
-		} else {
-			hotValueBar.color = "#f0533e";
-		}
-
-		if (!this.isColdResistant && this.coldResistance > 1) {
-			this.coldResistance = 1;
-			this.isColdResistant = true;
-			data.coldAmount = 1;
-		}
-
-		if (!this.isHotResistant && this.hotResistance > 1) {
-			this.hotResistance = 1;
-			this.isHotResistant = true;
-			data.warmAmount = 1;
-		}
-
-		if (!this.isColdResistant && this.coldValue > 1) {
-			console.log("You froze to death :c");
-			this.coldValue = 1;
-		}
-
-		if (!this.isHotResistant && this.hotValue >= 1) {
-			console.log("You burned up :c");
-			this.hotValue = 1;
-		}
-
-		hotValueBar.setValue(this.hotValue);
-		coldValueBar.setValue(this.coldValue);
-
-		hotResistanceBar.setValue(this.hotResistance);
-		coldResistanceBar.setValue(this.coldResistance);
-	}
-
-	draw(context) {
-		for (let i = 0; i < this.nodes.length; i++) {
-			this.nodes[i].draw(context);
-		}
-	}
-
-	giveFood() {
-		data.foodAmount++;
-	}
-
-	addHotResistance(value) {
-		if (!this.isHotResistant && this.hotValue <= 1.0) {
-			this.hotValue += value;
-		}
-	}
-
-	addColdResistance(value) {
-		if (!this.isColdResistant && this.coldValue <= 1.0) {
-			this.coldValue += value;
-		}
-	}
-}
-
 let lastSpawnPoint = new Vector2(0, 0);
 function spawnAround(position, radius, isZone, isFood) {
 	const delta = lastSpawnPoint.difference(position);
@@ -470,24 +287,24 @@ function spawnAround(position, radius, isZone, isFood) {
 
 // ____________ Game Logic
 function GameUpdate() {
-	player.update();
-	camera.followTarget(player.headPosition);
+	player_new.update();
+	camera.followTarget(player_new.headPosition);
 
-	spawnAround(player.headPosition, camera.size, true, false);
-	spawnAround(player.headPosition, camera.size, false, true);
+	spawnAround(player_new.headPosition, camera.size, true, false);
+	spawnAround(player_new.headPosition, camera.size, false, true);
 
 	foods.forEach((food) => {
-		food.update(player);
+		food.update(player_new);
 	});
 
 	zones.forEach((zone) => {
-		zone.update(player);
+		zone.update(player_new);
 	});
 }
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	player.draw(ctx);
+	player_new.draw(ctx);
 
 	foods.forEach((food) => {
 		food.draw(ctx);
@@ -505,7 +322,6 @@ function GameDraw() {
 
 // _____________ Globals
 let mousePosition = new Vector2(0, 0);
-let player = new Player();
 let isMouseDown = false;
 let camera = new Camera();
 let keyboard = new KeyboardManager();

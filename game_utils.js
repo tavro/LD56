@@ -1,3 +1,56 @@
+class MassObject {
+	constructor(position = null, drag = 1.2) {
+		this.position = position;
+		if (position === null) this.position = new Vector2(0, 0);
+
+		this.drag = drag;
+
+		this.mass = 1;
+
+		this.force = new Vector2(0, 0);
+		this.velocity = new Vector2(0, 0);
+		this.acceleration = new Vector2(0, 0);
+	}
+
+	getDirectionAngle() {
+		return Math.atan2(this.velocity.y, this.velocity.x);
+	}
+
+	updatePhysics() {
+		this.acceleration = this.force.scale(1 / this.mass);
+		this.velocity = this.velocity.add(this.acceleration).scale(1 / this.drag);
+		this.position = this.position.add(this.velocity);
+		this.force = new Vector2(0, 0);
+	}
+
+	pushToPoint(targetCoords, force, isSpringy, threshold = 0) {
+		const delta = this.position.difference(targetCoords);
+		if (delta.magnitude() > threshold) {
+			if (isSpringy) {
+				this.force = new Vector2(delta.x, delta.y).scale(force);
+			} else {
+				this.force = new Vector2(delta.x, delta.y).normalized().scale(force);
+			}
+		}
+	}
+
+	pushToDirection(directionAngle, force) {
+		const direction = new Vector2(
+			Math.cos(directionAngle),
+			Math.sin(directionAngle)
+		);
+
+		this.force = new Vector2(direction.x, direction.y).scale(force);
+	}
+
+	pushForward(force, angleSpan) {
+		this.pushToDirection(
+			this.getDirectionAngle() + (Math.random() - 0.5) * angleSpan,
+			force
+		);
+	}
+}
+
 class Vector2 {
 	constructor(x = 0, y = 0) {
 		this.x = x;
@@ -21,7 +74,7 @@ class Vector2 {
 	}
 
 	distance(other) {
-		return this.difference(other).magnitude()
+		return this.difference(other).magnitude();
 	}
 
 	normalized() {
@@ -35,14 +88,14 @@ class Vector2 {
 
 class Rect {
 	constructor(top = 0, left = 0, bottom = 0, right = 0) {
-		this.right = right
-		this.left = left
-		this.top = top
-		this.bottom = bottom
+		this.right = right;
+		this.left = left;
+		this.top = top;
+		this.bottom = bottom;
 	}
 
 	getDimensions() {
-		return new Vector2(this.right - this.left, this.bottom - this.top)
+		return new Vector2(this.right - this.left, this.bottom - this.top);
 	}
 }
 
