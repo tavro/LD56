@@ -61,73 +61,84 @@ function resizeNode(mouseX, mouseY, delta) {
 	let minDistance = Infinity;
 
 	for (let i = 0; i < player_new.playerBody.nodes.length; i++) {
-			const nodePosition = worldToScreenCoords(player_new.playerBody.nodes[i].position);
-			const distance = new Vector2(mouseX, mouseY).difference(nodePosition).magnitude();
+		const nodePosition = worldToScreenCoords(
+			player_new.playerBody.nodes[i].position
+		);
+		const distance = new Vector2(mouseX, mouseY)
+			.difference(nodePosition)
+			.magnitude();
 
-			if (distance < minDistance) {
-					minDistance = distance;
-					closestNode = player_new.playerBody.nodes[i];
-			}
+		if (distance < minDistance) {
+			minDistance = distance;
+			closestNode = player_new.playerBody.nodes[i];
+		}
 	}
 
 	if (closestNode) {
-			const newSize = Math.min(
-					Math.max(closestNode.size + delta / 50, minNodeSize),
-					maxNodeSize
-			);
-			closestNode.size = newSize;
+		const newSize = Math.min(
+			Math.max(closestNode.size + delta / 50, minNodeSize),
+			maxNodeSize
+		);
+		closestNode.size = newSize;
 	}
 }
+
+let currentNode;
+
+function showNodeInfo(node) {
+    currentNode = node;
+
+    const nodeInfoContainer = document.getElementById("nodeInfoContainer");
+    const bodyPartDropdown = document.getElementById("bodyPartDropdown");
+    const colorPicker = document.getElementById("colorPicker");
+
+    bodyPartDropdown.value = node.type || "";
+    colorPicker.value = node.color;
+
+    nodeInfoContainer.style.display = "block";
+}
+
+document.getElementById("submitNodeButton").onclick = function () {
+    if (currentNode) {
+        currentNode.type = document.getElementById("bodyPartDropdown").value;
+        currentNode.color = document.getElementById("colorPicker").value;
+    }
+};
+
+document.getElementById("closeNodeInfoButton").onclick = function () {
+    document.getElementById("nodeInfoContainer").style.display = "none";
+		document.getElementById("builder-overlay").style.display = "none";
+};
+
+document.getElementById("builder-overlay").addEventListener("click", function () {
+    document.getElementById("nodeInfoContainer").style.display = "none";
+    document.getElementById("builder-overlay").style.display = "none";
+});
 
 function changeNodeColor(mouseX, mouseY) {
 	let closestNode = null;
 	let minDistance = Infinity;
 
 	for (let i = 0; i < player_new.playerBody.nodes.length; i++) {
-			const nodePosition = worldToScreenCoords(player_new.playerBody.nodes[i].position);
-			const distance = new Vector2(mouseX, mouseY).difference(nodePosition).magnitude();
+		const nodePosition = worldToScreenCoords(
+			player_new.playerBody.nodes[i].position
+		);
+		const distance = new Vector2(mouseX, mouseY)
+			.difference(nodePosition)
+			.magnitude();
 
-			if (distance < minDistance) {
-					minDistance = distance;
-					closestNode = player_new.playerBody.nodes[i];
-			}
+		if (distance < minDistance) {
+			minDistance = distance;
+			closestNode = player_new.playerBody.nodes[i];
+		}
 	}
 
 	const hitMargin = 50;
 	if (closestNode && minDistance <= closestNode.size / 2 + hitMargin) {
-			const dropdownContainer = document.getElementById("dropdownContainer");
-			const bodyPartDropdown = document.getElementById("bodyPartDropdown");
-			const overlay = document.getElementById("builder-overlay");
+		const overlay = document.getElementById("builder-overlay");
+		overlay.style.display = "block";
 
-			overlay.style.display = "block";
-			dropdownContainer.style.display = "block";
-
-			bodyPartDropdown.onchange = function (event) {
-					const selectedPart = event.target.value;
-					if (selectedPart) {
-							closestNode.type = selectedPart;
-
-							dropdownContainer.style.display = "none";
-							const colorPickerContainer = document.getElementById('colorPickerContainer');
-							const colorPicker = document.getElementById('colorPicker');
-
-							colorPicker.value = closestNode.color;
-							colorPickerContainer.style.display = "block";
-
-							colorPicker.oninput = function (event) {
-									closestNode.color = event.target.value;
-							};
-
-							colorPicker.onchange = function () {
-									colorPickerContainer.style.display = "none";
-									overlay.style.display = "none";
-							};
-
-							setTimeout(() => {
-									colorPicker.click();
-							}, 100);
-					}
-			};
+		showNodeInfo(closestNode);
 	}
 }
 
@@ -139,11 +150,11 @@ function setupBuilder() {
 	});
 }
 
-document.getElementById('builder-overlay').addEventListener('click', function () {
-	document.getElementById('dropdownContainer').style.display = 'none';
-	document.getElementById('colorPickerContainer').style.display = 'none';
-	document.getElementById('builder-overlay').style.display = 'none';
-});
+document
+	.getElementById("builder-overlay")
+	.addEventListener("click", function () {
+		document.getElementById("nodeInfoContainer").style.display = "none";
+	});
 
 // === BACKGROUND ===
 
@@ -153,125 +164,130 @@ builder_canvas.height = window.innerHeight;
 const particleCount = 50;
 const particles = [];
 
-const colors = ['#BBBBBB', '#CCCCCC', '#DDDDDD', '#EEEEEE'];
+const colors = ["#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE"];
 
 function drawBackgroundLight() {
-    const gradient = builder_context.createRadialGradient(
-        builder_canvas.width / 2, builder_canvas.height / 2, 50,
-        builder_canvas.width / 2, builder_canvas.height / 2, builder_canvas.width / 2
-    );
+	const gradient = builder_context.createRadialGradient(
+		builder_canvas.width / 2,
+		builder_canvas.height / 2,
+		50,
+		builder_canvas.width / 2,
+		builder_canvas.height / 2,
+		builder_canvas.width / 2
+	);
 
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    gradient.addColorStop(0.3, 'rgba(255, 255, 128, 0.8)');
-    gradient.addColorStop(0.6, 'rgba(255, 255, 0, 0.0125)');
-    gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
+	gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+	gradient.addColorStop(0.3, "rgba(255, 255, 128, 0.8)");
+	gradient.addColorStop(0.6, "rgba(255, 255, 0, 0.0125)");
+	gradient.addColorStop(1, "rgba(255, 255, 0, 0)");
 
-    builder_context.save();
-    builder_context.fillStyle = gradient;
-    builder_context.fillRect(0, 0, builder_canvas.width, builder_canvas.height);
-    builder_context.restore();
+	builder_context.save();
+	builder_context.fillStyle = gradient;
+	builder_context.fillRect(0, 0, builder_canvas.width, builder_canvas.height);
+	builder_context.restore();
 }
 
 class Particle {
-    constructor() {
-        this.reset();
-    }
+	constructor() {
+		this.reset();
+	}
 
-    getRandomColor() {
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
+	getRandomColor() {
+		return colors[Math.floor(Math.random() * colors.length)];
+	}
 
-    generateShape() {
-        const segments = Math.floor(Math.random() * 5) + 5;
-        const amplitude = Math.random() * 20 + 10;
-        const waveLength = 15;
-        const controlPoints = [];
+	generateShape() {
+		const segments = Math.floor(Math.random() * 5) + 5;
+		const amplitude = Math.random() * 20 + 10;
+		const waveLength = 15;
+		const controlPoints = [];
 
-        for (let i = 0; i <= segments; i++) {
-            const x = i * waveLength;
-            const y = Math.sin(i + Math.random() * Math.PI) * amplitude;
-            controlPoints.push({ x, y });
-        }
+		for (let i = 0; i <= segments; i++) {
+			const x = i * waveLength;
+			const y = Math.sin(i + Math.random() * Math.PI) * amplitude;
+			controlPoints.push({ x, y });
+		}
 
-        return controlPoints;
-    }
+		return controlPoints;
+	}
 
-    draw() {
-        builder_context.save();
-        builder_context.translate(this.x, this.y);
-        builder_context.rotate(this.angle);
+	draw() {
+		builder_context.save();
+		builder_context.translate(this.x, this.y);
+		builder_context.rotate(this.angle);
 
-        builder_context.lineWidth = this.thickness;
-        builder_context.strokeStyle = this.color;
-        builder_context.globalAlpha = this.alpha;
-        builder_context.lineJoin = 'round';
+		builder_context.lineWidth = this.thickness;
+		builder_context.strokeStyle = this.color;
+		builder_context.globalAlpha = this.alpha;
+		builder_context.lineJoin = "round";
 
-        builder_context.beginPath();
-        builder_context.moveTo(this.shape[0].x, this.shape[0].y);
-        for (let i = 1; i < this.shape.length; i++) {
-            builder_context.lineTo(this.shape[i].x, this.shape[i].y);
-        }
-        builder_context.stroke();
+		builder_context.beginPath();
+		builder_context.moveTo(this.shape[0].x, this.shape[0].y);
+		for (let i = 1; i < this.shape.length; i++) {
+			builder_context.lineTo(this.shape[i].x, this.shape[i].y);
+		}
+		builder_context.stroke();
 
-        builder_context.shadowColor = this.color;
-        builder_context.restore();
-    }
+		builder_context.shadowColor = this.color;
+		builder_context.restore();
+	}
 
-    update() {
-        this.elapsedTime += 33.33;
+	update() {
+		this.elapsedTime += 33.33;
 
-        if (this.elapsedTime < this.lifetime / 4) {
-            this.alpha = this.elapsedTime / (this.lifetime / 4);
-        } else if (this.elapsedTime < this.lifetime) {
-            this.alpha = 1 - ((this.elapsedTime - this.lifetime / 4) / (this.lifetime * 0.75));
-        } else {
-            this.reset();
-        }
+		if (this.elapsedTime < this.lifetime / 4) {
+			this.alpha = this.elapsedTime / (this.lifetime / 4);
+		} else if (this.elapsedTime < this.lifetime) {
+			this.alpha =
+				1 - (this.elapsedTime - this.lifetime / 4) / (this.lifetime * 0.75);
+		} else {
+			this.reset();
+		}
 
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
+		this.x += this.velocity.x;
+		this.y += this.velocity.y;
 
-        this.velocity.x += (Math.random() - 0.5) * 0.1;
-        this.velocity.y += (Math.random() - 0.5) * 0.1;
+		this.velocity.x += (Math.random() - 0.5) * 0.1;
+		this.velocity.y += (Math.random() - 0.5) * 0.1;
 
-        if (this.x > builder_canvas.width || this.x < 0) {
-            this.velocity.x *= -1;
-        }
-        if (this.y > builder_canvas.height || this.y < 0) {
-            this.velocity.y *= -1;
-        }
+		if (this.x > builder_canvas.width || this.x < 0) {
+			this.velocity.x *= -1;
+		}
+		if (this.y > builder_canvas.height || this.y < 0) {
+			this.velocity.y *= -1;
+		}
 
-        this.angle += this.angleSpeed * 0.5 + (Math.random() - 0.5) * 0.01;
+		this.angle += this.angleSpeed * 0.5 + (Math.random() - 0.5) * 0.01;
 
-        this.draw();
-    }
+		this.draw();
+	}
 
-    reset() {
-        this.x = Math.random() * builder_canvas.width;
-        this.y = Math.random() * builder_canvas.height;
-        this.color = this.getRandomColor();
-        this.alpha = 0;
-        this.elapsedTime = 0;
-        this.angle = Math.random() * Math.PI * 2;
-        this.angleSpeed = Math.random() * 0.02 + 0.01;
+	reset() {
+		this.x = Math.random() * builder_canvas.width;
+		this.y = Math.random() * builder_canvas.height;
+		this.color = this.getRandomColor();
+		this.alpha = 0;
+		this.elapsedTime = 0;
+		this.angle = Math.random() * Math.PI * 2;
+		this.angleSpeed = Math.random() * 0.02 + 0.01;
 
-        this.velocity = {
-            x: (Math.random() * 0.2 - 0.1) * 0.2,
-            y: (Math.random() * 0.2 - 0.1) * 0.2
-        };
+		this.velocity = {
+			x: (Math.random() * 0.2 - 0.1) * 0.2,
+			y: (Math.random() * 0.2 - 0.1) * 0.2,
+		};
 
-        this.lifetime = Math.random() * 5000 + 5000;
-        this.shape = this.generateShape();
-        this.thickness = Math.random() * 5 + 5;
-    }
+		this.lifetime = Math.random() * 5000 + 5000;
+		this.shape = this.generateShape();
+		this.thickness = Math.random() * 5 + 5;
+	}
 }
 
 function generateParticles() {
-    for (let i = 0; i < particleCount; i++) {
-        if (particles.length < particleCount) {
-            particles.push(new Particle());
-        }
-    }
+	for (let i = 0; i < particleCount; i++) {
+		if (particles.length < particleCount) {
+			particles.push(new Particle());
+		}
+	}
 }
 
 setupBuilder();
@@ -282,7 +298,7 @@ function animate2() {
 	drawBackgroundLight();
 
 	particles.forEach((particle) => {
-			particle.update();
+		particle.update();
 	});
 
 	player_new.draw(builder_context);

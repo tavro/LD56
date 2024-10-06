@@ -10,7 +10,10 @@
 		<div id="os-wrapper">
 			<div id="desktop-wrapper">
 				<div class="app" id="mail" draggable="true">
-					<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Email.svg" class="non-draggable non-selectable" />
+					<img
+						src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Email.svg"
+						class="non-draggable non-selectable"
+					/>
 					<h1 class="non-selectable">Mail</h1>
 				</div>
 				<div class="app" id="telescope" draggable="true">
@@ -38,7 +41,9 @@
 		<div id="opened-mail">
 			<div id="mail-header">
 				<div class="back-btn-wrapper" id="back1">
-					<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg" />
+					<img
+						src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg"
+					/>
 					<div>go back</div>
 				</div>
 			</div>
@@ -53,41 +58,55 @@
 		<div id="mail-wrapper">
 			<div id="mail-menu">
 				<div class="back-btn-wrapper" id="back2">
-					<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg" />
+					<img
+						src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg"
+					/>
 					<div>go back</div>
 				</div>
 				<hr />
 				<div class="category1">
-					<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Inbox.svg" />
+					<img
+						src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Inbox.svg"
+					/>
 					<p id="mm-inbox">Inbox</p>
 				</div>
 				<div class="category1">
-					<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites.svg" />
+					<img
+						src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites.svg"
+					/>
 					<p id="mm-favorites">Favorites</p>
 				</div>
 				<div class="category1">
-					<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarWhite.svg" />
+					<img
+						src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarWhite.svg"
+					/>
 					<p id="mm-important">Important</p>
 				</div>
 			</div>
 			<div id="mail-inbox">
 				<div id="category-wrapper">
 					<div class="category2" id="category-primary">
-						<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Primary.svg" />
+						<img
+							src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Primary.svg"
+						/>
 						<div class="c2-text-wrapper">
 							<p>Primary</p>
 							<p class="summary" id="primary-summary">No new mail...</p>
 						</div>
 					</div>
 					<div class="category2" id="category-campaigns">
-						<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Campaigns.svg" />
+						<img
+							src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Campaigns.svg"
+						/>
 						<div class="c2-text-wrapper">
 							<p>Campaigns</p>
 							<p class="summary" id="campaigns-summary">No new mail...</p>
 						</div>
 					</div>
 					<div class="category2" id="category-social">
-						<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Social.svg" />
+						<img
+							src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Social.svg"
+						/>
 						<div class="c2-text-wrapper">
 							<p>Social</p>
 							<p class="summary" id="social-summary">No new mail...</p>
@@ -112,14 +131,18 @@
 		</div>
 		<div id="telescope-wrapper">
 			<div class="back-btn-wrapper-alt" id="back3">
-				<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg" />
+				<img
+					src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg"
+				/>
 				<div>go back</div>
 			</div>
 			<canvas id="canvas"></canvas>
 		</div>
 		<div id="builder-wrapper">
 			<div class="back-btn-wrapper-alt" id="back4">
-				<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg" />
+				<img
+					src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Back.svg"
+				/>
 				<div>go back</div>
 			</div>
 			<!--<div class="scratches"></div>-->
@@ -128,7 +151,10 @@
 		<div id="assignment-container"></div>
 		<div id="overlay" class="overlay">
 			<div class="overlay-header">
-				<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Primary.svg" class="overlay-icon" />
+				<img
+					src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Primary.svg"
+					class="overlay-icon"
+				/>
 				<h2 class="overlay-title">Mail Notification</h2>
 				<span class="close-btn" onclick="closeOverlay()">✖</span>
 			</div>
@@ -139,7 +165,7 @@
 		</div>
 		<div id="builder-overlay"></div>
 		<div
-			id="dropdownContainer"
+			id="nodeInfoContainer"
 			style="
 				display: none;
 				position: fixed;
@@ -147,26 +173,27 @@
 				left: 50%;
 				transform: translate(-50%, -50%);
 				z-index: 1;
+				background-color: white;
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 			"
 		>
-			<select id="bodyPartDropdown">
-				<option value="" disabled selected>Select body part</option>
-				<option value="fins">Fins</option>
-				<option value="arms">Arms</option>
-			</select>
-		</div>
-		<div
-			id="colorPickerContainer"
-			style="
-				display: none;
-				position: fixed;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				z-index: 1;
-			"
-		>
-			<input type="color" id="colorPicker" />
+			<h2>Node Info</h2>
+			<p>
+				<strong>Type:</strong>
+				<select id="bodyPartDropdown">
+					<option value="" disabled selected>Select body part</option>
+					<option value="fins">Fins</option>
+					<option value="arms">Arms</option>
+				</select>
+			</p>
+			<p>
+				<strong>Color:</strong>
+				<input type="color" id="colorPicker" />
+			</p>
+			<button id="closeNodeInfoButton">Close</button>
+			<button id="submitNodeButton">Submit</button>
 		</div>
 		<script src="utils.js"></script>
 		<script src="sound.js"></script>

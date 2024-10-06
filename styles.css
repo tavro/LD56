@@ -359,3 +359,11 @@ canvas {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 0;
 }
+
+#dropdownContainer {
+  margin-top: 60px;
+}
+
+#colorPickerContainer {
+  margin-top: 10px;
+}
