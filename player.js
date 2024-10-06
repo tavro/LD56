@@ -164,29 +164,35 @@ class Node_New extends MassObject {
 
 	drawEyes(ctx) {
 		const eyeSize = this.size * 0.1;
-		const eyeY = this.position.y - this.size * 0.2;
+
+		const screenPosition = worldToScreenCoords(this.position);
+		const eyeY = screenPosition.y - this.size * 0.2 * pixelsPerUnit;
+
+		const leftEyeX = screenPosition.x - this.size * 0.3 * pixelsPerUnit;
+		const rightEyeX = screenPosition.x + this.size * 0.3 * pixelsPerUnit;
 
 		ctx.beginPath();
-		ctx.arc(this.position.x - this.size * 0.3, eyeY, eyeSize, 0, Math.PI * 2);
+		ctx.arc(leftEyeX, eyeY, eyeSize * pixelsPerUnit, 0, Math.PI * 2);
 		ctx.fillStyle = "white";
 		ctx.fill();
 		ctx.closePath();
 
 		ctx.beginPath();
-		ctx.arc(this.position.x + this.size * 0.3, eyeY, eyeSize, 0, Math.PI * 2);
+		ctx.arc(rightEyeX, eyeY, eyeSize * pixelsPerUnit, 0, Math.PI * 2);
 		ctx.fillStyle = "white";
 		ctx.fill();
 		ctx.closePath();
 
 		const pupilSize = eyeSize * 0.5;
 		ctx.fillStyle = "black";
+
 		ctx.beginPath();
-		ctx.arc(this.position.x - this.size * 0.3, eyeY, pupilSize, 0, Math.PI * 2);
+		ctx.arc(leftEyeX, eyeY, pupilSize * pixelsPerUnit, 0, Math.PI * 2);
 		ctx.fill();
 		ctx.closePath();
 
 		ctx.beginPath();
-		ctx.arc(this.position.x + this.size * 0.3, eyeY, pupilSize, 0, Math.PI * 2);
+		ctx.arc(rightEyeX, eyeY, pupilSize * pixelsPerUnit, 0, Math.PI * 2);
 		ctx.fill();
 		ctx.closePath();
 	}
@@ -279,9 +285,9 @@ class PlayerBody {
 			}
 		}
 
-		// this.nodes[0].drawEyes(context);
-		// this.drawTail(context, this.nodes[this.nodes.length - 1]);
-		// this.drawMouth(context, this.nodes[0]);
+		this.nodes[0].drawEyes(context);
+		this.drawTail(context, this.nodes[this.nodes.length - 1]);
+		this.drawMouth(context, this.nodes[0]);
 	}
 
 	drawInterpolatedCircles(context, node1, node2) {
@@ -321,28 +327,46 @@ class PlayerBody {
 	}
 
 	drawTail(context, node) {
-		const tailLength = 20;
-		const tailWidth = 10;
-		const tailX = node.position.x + node.size;
-		const tailY = node.position.y;
+		const tailLength = 1;
+		const tailWidth = 0.5;
+
+		const screenPosition = worldToScreenCoords(node.position);
+		const screenTailX = screenPosition.x + node.size * pixelsPerUnit;
+		const screenTailY = screenPosition.y;
 
 		context.fillStyle = node.color;
 		context.beginPath();
-		context.moveTo(tailX, tailY);
-		context.lineTo(tailX + tailLength, tailY - tailWidth);
-		context.lineTo(tailX + tailLength, tailY + tailWidth);
+		context.moveTo(screenTailX, screenTailY);
+		context.lineTo(
+			screenTailX + tailLength * pixelsPerUnit,
+			screenTailY - tailWidth * pixelsPerUnit
+		);
+		context.lineTo(
+			screenTailX + tailLength * pixelsPerUnit,
+			screenTailY + tailWidth * pixelsPerUnit
+		);
 		context.closePath();
 		context.fill();
 	}
 
 	drawMouth(context, node) {
 		const mouthWidth = node.size * 0.5;
-		const mouthX = node.position.x;
-		const mouthY = node.position.y + node.size * 0.2;
+
+		const screenPosition = worldToScreenCoords(node.position);
+		const screenMouthX = screenPosition.x;
+		const screenMouthY = screenPosition.y + node.size * 0.2 * pixelsPerUnit;
 
 		context.fillStyle = "black";
+
 		context.beginPath();
-		context.arc(mouthX, mouthY, mouthWidth, 0, Math.PI, false);
+		context.arc(
+			screenMouthX,
+			screenMouthY,
+			mouthWidth * pixelsPerUnit,
+			0,
+			Math.PI,
+			false
+		);
 		context.fill();
 	}
 
