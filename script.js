@@ -26,9 +26,12 @@ function changeScreen(curId, othId) {
 
 		generateMailPreviews(undefined, category);
 	} else if (othId == "telescope-wrapper") {
+		inGame = true;
 		soundManager.loadMusic("res/Music/first-draft.mp3");
 		soundManager.setMusicVolume(0.3);
 		soundManager.playMusic();
+	} else if (othId == "builder-wrapper") {
+		inGame = false;
 	}
 	const cur = document.querySelector("#" + curId);
 	const oth = document.querySelector("#" + othId);

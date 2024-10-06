@@ -298,25 +298,27 @@ function spawnAround(position, radius, isZone, isFood) {
 
 // ____________ Game Logic
 function GameUpdate() {
-	player_new.update();
-	camera.followTarget(player_new.headPosition);
-
-	spawnAround(player_new.headPosition, camera.size / 2, false, true);
-	if (startedPhaseOne) {
-		spawnAround(player_new.headPosition, camera.size / 2, true, false);
-	}
-
-	foods.forEach((food) => {
-		food.update(player_new);
-	});
-
-	zones.forEach((zone) => {
-		zone.update(player_new);
-	});
-
-	if (!startedPhaseOne && phaseNumber == 1) {
-		console.log("STARTED PHASE 1");
-		startedPhaseOne = true;
+	if(inGame) {
+		player_new.update();
+		camera.followTarget(player_new.headPosition);
+		
+		spawnAround(player_new.headPosition, camera.size / 2, false, true);
+		if (startedPhaseOne) {
+			spawnAround(player_new.headPosition, camera.size / 2, true, false);
+		}
+		
+		foods.forEach((food) => {
+			food.update(player_new);
+		});
+		
+		zones.forEach((zone) => {
+			zone.update(player_new);
+		});
+		
+		if (!startedPhaseOne && phaseNumber == 1) {
+			console.log("STARTED PHASE 1");
+			startedPhaseOne = true;
+		}
 	}
 }
 
