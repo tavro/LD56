@@ -166,10 +166,10 @@ class Node_New extends MassObject {
 		const eyeSize = this.size * 0.1;
 
 		const screenPosition = worldToScreenCoords(this.position);
-		const eyeY = screenPosition.y - this.size * 0.2 * pixelsPerUnit;
+		const eyeY = screenPosition.y - this.size * 0.1 * pixelsPerUnit;
 
-		const leftEyeX = screenPosition.x - this.size * 0.3 * pixelsPerUnit;
-		const rightEyeX = screenPosition.x + this.size * 0.3 * pixelsPerUnit;
+		const leftEyeX = screenPosition.x - this.size * 0.15 * pixelsPerUnit;
+		const rightEyeX = screenPosition.x + this.size * 0.15 * pixelsPerUnit;
 
 		ctx.beginPath();
 		ctx.arc(leftEyeX, eyeY, eyeSize * pixelsPerUnit, 0, Math.PI * 2);
@@ -350,11 +350,11 @@ class PlayerBody {
 	}
 
 	drawMouth(context, node) {
-		const mouthWidth = node.size * 0.5;
+		const mouthWidth = node.size * 0.2;
 
 		const screenPosition = worldToScreenCoords(node.position);
 		const screenMouthX = screenPosition.x;
-		const screenMouthY = screenPosition.y + node.size * 0.2 * pixelsPerUnit;
+		const screenMouthY = screenPosition.y + node.size * 0.1 * pixelsPerUnit;
 
 		context.fillStyle = "black";
 
