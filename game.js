@@ -162,19 +162,22 @@ class MassObject {
 }
 
 class Zone extends MassObject {
-	constructor(position, size, isHot) {
+	constructor(position, size, color) {
 		super();
 		this.position = position;
 		this.size = size;
-		this.isHot = isHot;
-		this.color = "pink";
+		this.isHot;
+		this.color = color;
 		this.mass = 3;
 		this.drag = 1.012;
+	}
 
-		if (this.isHot) {
-			this.color = "red";
+	setIsHot(isHot) {
+		this.isHot = isHot;
+		if (isHot) {
+			this.color = "#db3b2a";
 		} else {
-			this.color = "#8adeff";
+			this.color = "#81d4f0";
 		}
 	}
 
@@ -384,7 +387,7 @@ class Player {
 				this.coldValue -= (1 / 60) * 0.1;
 			} else {
 				this.coldValue = 1;
-				coldValueBar.color = "green";
+				coldValueBar.color = "#46f065";
 			}
 		} else {
 			this.coldValue = 0;
@@ -392,16 +395,16 @@ class Player {
 
 		if (this.coldValue > 0.42 && this.coldValue < 0.58) {
 			this.coldResistance += (1 / 60) * 0.1;
-			coldValueBar.color = "green";
+			coldValueBar.color = "#46f065";
 		} else {
-			coldValueBar.color = "red";
+			coldValueBar.color = "#81d4f0";
 		}
 
 		if (this.hotValue > 0.42 && this.hotValue < 0.58) {
 			this.hotResistance += (1 / 60) * 0.1;
-			hotValueBar.color = "green";
+			hotValueBar.color = "#46f065";
 		} else {
-			hotValueBar.color = "red";
+			hotValueBar.color = "#f0533e";
 		}
 
 		if (!this.isColdResistant && this.coldResistance > 1) {
@@ -413,7 +416,7 @@ class Player {
 		if (!this.isHotResistant && this.hotResistance > 1) {
 			this.hotResistance = 1;
 			this.isHotResistant = true;
-			data.hotAmount = 1;
+			data.warmAmount = 1;
 		}
 
 		if (!this.isColdResistant && this.coldValue > 1) {
@@ -588,7 +591,7 @@ let hotResistanceBar = new UIBar(
 	0,
 	200,
 	10,
-	"green"
+	"#46f065"
 );
 
 let coldValueBar = new UIBar(
@@ -604,7 +607,7 @@ let coldResistanceBar = new UIBar(
 	0,
 	200,
 	10,
-	"green"
+	"#46f065"
 );
 
 for (let i = 0; i < 20; i++) {
@@ -614,20 +617,20 @@ for (let i = 0; i < 20; i++) {
 
 let zones = [];
 
-for (let i = 0; i < 30; i++) {
-	const randomX = Math.random() - 0.5 * 50;
-	const randomY = Math.random() - 0.5 * 50;
-	let newZone = new Zone(new Vector2(randomX, randomY), (Math.random() + 10) * 10)
+for (let i = 0; i < 20; i++) {
+	const randomX = (Math.random() - 0.5) * 50;
+	const randomY = (Math.random() - 0.5) * 50;
+	let newZone = new Zone(
+		new Vector2(randomX, randomY),
+		Math.random() * 10 + 10
+	);
 	if (Math.random() > 0.5) {
-		let hotZone = new Zone(new Vector2(20, 0), 20, true);
+		newZone.setIsHot(true);
+	} else {
+		newZone.setIsHot(false);
 	}
+	zones.push(newZone);
 }
-
-let hotZone = new Zone(new Vector2(20, 0), 20, true);
-let coldZone = new Zone(new Vector2(-20, 0), 20, false);
-zones.push(hotZone);
-zones.push(coldZone);
-
 // ____________ Events
 canvas.addEventListener("mousemove", (event) => {
 	mousePosition.x = event.clientX;
