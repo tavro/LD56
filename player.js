@@ -123,6 +123,8 @@ class Node_New extends MassObject {
 		this.size = size;
 		this.color = color;
 		this.position = position; // { x: number, y: number }
+		this.previousPosition = new Vector2(position.x, position.y);
+		this.direction = new Vector2(0, 0);
 		this.type = null; // 'fins' or 'arms'
 		this.parent = null;
 		this.drag = 1.1;
@@ -131,6 +133,8 @@ class Node_New extends MassObject {
 	}
 
 	update() {
+		const currentPosition = new Vector2(this.position.x, this.position.y);
+
 		if (this.parent) {
 			const distanceToParent = this.parent.position
 				.difference(this.position)
@@ -145,6 +149,23 @@ class Node_New extends MassObject {
 			}
 		}
 		this.updatePhysics();
+
+		this.calculateMovementDirection(currentPosition);
+	}
+
+	calculateMovementDirection(currentPosition) {
+		const direction = currentPosition.difference(this.previousPosition);
+		this.previousPosition = currentPosition;
+
+		const magnitude = direction.magnitude();
+		if (magnitude > 0) {
+			this.direction = new Vector2(
+				direction.x / magnitude,
+				direction.y / magnitude
+			);
+		} else {
+			this.direction = new Vector2(0, 0);
+		}
 	}
 
 	draw(context) {
@@ -206,61 +227,59 @@ class Node_New extends MassObject {
 			ctx.strokeStyle = this.color;
 			ctx.lineWidth = 2;
 
+			const angle = Math.atan2(this.direction.y, this.direction.x);
+
+			ctx.save();
+			ctx.translate(screenPosition.x, screenPosition.y);
+			ctx.rotate(angle);
+
 			ctx.beginPath();
-			ctx.moveTo(
-				screenPosition.x,
-				screenPosition.y - this.size * 0.35 * pixelsPerUnit
-			);
-			ctx.lineTo(
-				screenPosition.x,
-				screenPosition.y - this.size * (0.7 * this.level) * pixelsPerUnit
-			);
+			ctx.moveTo(0, -this.size * 0.35 * pixelsPerUnit);
+			ctx.lineTo(0, -this.size * (0.7 * this.level) * pixelsPerUnit);
 			ctx.stroke();
 
 			ctx.beginPath();
-			ctx.moveTo(
-				screenPosition.x,
-				screenPosition.y + this.size * 0.35 * pixelsPerUnit
-			);
-			ctx.lineTo(
-				screenPosition.x,
-				screenPosition.y + this.size * (0.7 * this.level) * pixelsPerUnit
-			);
+			ctx.moveTo(0, this.size * 0.35 * pixelsPerUnit);
+			ctx.lineTo(0, this.size * (0.7 * this.level) * pixelsPerUnit);
 			ctx.stroke();
+
+			ctx.restore();
 		} else if (this.type === "fins") {
 			ctx.fillStyle = this.color;
 
+			const angle = Math.atan2(this.direction.y, this.direction.x);
+
+			ctx.save();
+			ctx.translate(screenPosition.x, screenPosition.y);
+			ctx.rotate(angle);
+
 			ctx.beginPath();
-			ctx.moveTo(
-				screenPosition.x,
-				screenPosition.y - this.size * 0.35 * pixelsPerUnit
+			ctx.moveTo(0, -this.size * 0.35 * pixelsPerUnit);
+			ctx.lineTo(
+				-this.size * 0.25 * pixelsPerUnit,
+				-this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.lineTo(
-				screenPosition.x - this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y - this.size * (0.75 * this.level) * pixelsPerUnit
-			);
-			ctx.lineTo(
-				screenPosition.x + this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y - this.size * (0.75 * this.level) * pixelsPerUnit
+				this.size * 0.25 * pixelsPerUnit,
+				-this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
 
 			ctx.beginPath();
-			ctx.moveTo(
-				screenPosition.x,
-				screenPosition.y + this.size * 0.35 * pixelsPerUnit
+			ctx.moveTo(0, this.size * 0.35 * pixelsPerUnit);
+			ctx.lineTo(
+				-this.size * 0.25 * pixelsPerUnit,
+				this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.lineTo(
-				screenPosition.x - this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y + this.size * (0.75 * this.level) * pixelsPerUnit
-			);
-			ctx.lineTo(
-				screenPosition.x + this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y + this.size * (0.75 * this.level) * pixelsPerUnit
+				this.size * 0.25 * pixelsPerUnit,
+				this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
+
+			ctx.restore();
 		}
 	}
 }
@@ -329,27 +348,46 @@ class PlayerBody {
 	}
 
 	drawTail(context, node) {
-		const tailLength = 0.5;
-		const tailWidth = 0.25;
+    const tailLength = 0.5;
+    const tailWidth = 0.25;
 
-		const screenPosition = worldToScreenCoords(node.position);
-		const screenTailX = screenPosition.x + node.size * 0.35 * pixelsPerUnit;
-		const screenTailY = screenPosition.y;
+    const screenPosition = worldToScreenCoords(node.position);
 
-		context.fillStyle = node.color;
-		context.beginPath();
-		context.moveTo(screenTailX, screenTailY);
-		context.lineTo(
-			screenTailX + tailLength * pixelsPerUnit,
-			screenTailY - tailWidth * pixelsPerUnit
-		);
-		context.lineTo(
-			screenTailX + tailLength * pixelsPerUnit,
-			screenTailY + tailWidth * pixelsPerUnit
-		);
-		context.closePath();
-		context.fill();
-	}
+    const direction = new Vector2(
+        node.position.x - node.parent.position.x,
+        node.position.y - node.parent.position.y
+    );
+
+    const magnitude = direction.magnitude();
+    if (magnitude > 0) {
+        direction.x /= magnitude;
+        direction.y /= magnitude;
+    }
+
+    const tailBaseX = screenPosition.x + direction.x * (node.size * 0.35 * pixelsPerUnit);
+    const tailBaseY = screenPosition.y + direction.y * (node.size * 0.35 * pixelsPerUnit);
+
+    const tailEndX = tailBaseX + direction.x * (tailLength * pixelsPerUnit);
+    const tailEndY = tailBaseY + direction.y * (tailLength * pixelsPerUnit);
+
+    const angle = Math.atan2(direction.y, direction.x);
+
+    context.fillStyle = node.color;
+    context.save();
+
+    context.translate(tailBaseX, tailBaseY);
+    context.rotate(angle);
+
+    context.beginPath();
+    context.moveTo(0, 0);
+    context.lineTo(tailLength * pixelsPerUnit, -tailWidth * pixelsPerUnit);
+    context.lineTo(tailLength * pixelsPerUnit, tailWidth * pixelsPerUnit);
+    context.closePath();
+    context.fill();
+
+    context.restore();
+}
+
 
 	drawMouth(context, node) {
 		const mouthWidth = node.size * 0.2;
