@@ -86,34 +86,49 @@ function resizeNode(mouseX, mouseY, delta) {
 let currentNode;
 
 function showNodeInfo(node) {
-    currentNode = node;
+	currentNode = node;
 
-    const nodeInfoContainer = document.getElementById("nodeInfoContainer");
-    const bodyPartDropdown = document.getElementById("bodyPartDropdown");
-    const colorPicker = document.getElementById("colorPicker");
+	const nodeLevelInput = document.getElementById("nodeLevelInput");
+	const nodeInfoContainer = document.getElementById("nodeInfoContainer");
+	const bodyPartDropdown = document.getElementById("bodyPartDropdown");
+	const colorPicker = document.getElementById("colorPicker");
 
-    bodyPartDropdown.value = node.type || "";
-    colorPicker.value = node.color;
+	console.log(node);
 
-    nodeInfoContainer.style.display = "block";
+	nodeLevelInput.max = node.maxLevel;
+	nodeLevelInput.value = node.level || 1;
+	bodyPartDropdown.value = node.type || "";
+	colorPicker.value = node.color;
+
+	nodeInfoContainer.style.display = "block";
 }
 
 document.getElementById("submitNodeButton").onclick = function () {
-    if (currentNode) {
-        currentNode.type = document.getElementById("bodyPartDropdown").value;
-        currentNode.color = document.getElementById("colorPicker").value;
-    }
+	if (currentNode) {
+		const nodeLevelInput = document.getElementById("nodeLevelInput");
+
+		const newLevel = Math.min(
+			Math.max(parseInt(nodeLevelInput.value), 1),
+			currentNode.maxLevel
+		);
+		currentNode.level = newLevel;
+
+		currentNode.type = document.getElementById("bodyPartDropdown").value;
+		currentNode.color = document.getElementById("colorPicker").value;
+	}
 };
 
 document.getElementById("closeNodeInfoButton").onclick = function () {
-    document.getElementById("nodeInfoContainer").style.display = "none";
-		document.getElementById("builder-overlay").style.display = "none";
+	document.getElementById("nodeInfoContainer").style.display = "none";
+	document.getElementById("builder-overlay").style.display = "none";
 };
 
-document.getElementById("builder-overlay").addEventListener("click", function () {
-    document.getElementById("nodeInfoContainer").style.display = "none";
-    document.getElementById("builder-overlay").style.display = "none";
-});
+document
+	.getElementById("builder-overlay")
+	.addEventListener("click", function () {
+		document.getElementById("nodeInfoContainer").style.display = "none";
+		document.getElementById("builder-overlay").style.display = "none";
+	});
 
 function changeNodeColor(mouseX, mouseY) {
 	let closestNode = null;
