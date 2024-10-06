@@ -93,33 +93,34 @@ function changeNodeColor(mouseX, mouseY) {
 			}
 	}
 
-	if (closestNode) {
-			console.log("clicked on: " + closestNode.color);
-
+	const hitMargin = 50;
+	if (closestNode && minDistance <= closestNode.size / 2 + hitMargin) {
 			const dropdownContainer = document.getElementById("dropdownContainer");
 			const bodyPartDropdown = document.getElementById("bodyPartDropdown");
+			const overlay = document.getElementById("builder-overlay");
+
+			overlay.style.display = "block";
 			dropdownContainer.style.display = "block";
 
-			bodyPartDropdown.onchange = function(event) {
+			bodyPartDropdown.onchange = function (event) {
 					const selectedPart = event.target.value;
 					if (selectedPart) {
 							closestNode.type = selectedPart;
-							alert(`You have selected ${selectedPart} for the node.`);
 
 							dropdownContainer.style.display = "none";
-
 							const colorPickerContainer = document.getElementById('colorPickerContainer');
 							const colorPicker = document.getElementById('colorPicker');
-							
+
 							colorPicker.value = closestNode.color;
 							colorPickerContainer.style.display = "block";
 
-							colorPicker.oninput = function(event) {
+							colorPicker.oninput = function (event) {
 									closestNode.color = event.target.value;
 							};
 
-							colorPicker.onchange = function() {
+							colorPicker.onchange = function () {
 									colorPickerContainer.style.display = "none";
+									overlay.style.display = "none";
 							};
 
 							setTimeout(() => {
@@ -147,3 +148,9 @@ function animate2() {
 }
 
 animate2();
+
+document.getElementById('builder-overlay').addEventListener('click', function () {
+	document.getElementById('dropdownContainer').style.display = 'none';
+	document.getElementById('colorPickerContainer').style.display = 'none';
+	document.getElementById('builder-overlay').style.display = 'none';
+});
