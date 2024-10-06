@@ -24,14 +24,23 @@ body {
   align-content: center;
 }
 
-.back-btn-wrapper:hover {
+.back-btn-wrapper:hover, .back-btn-wrapper-alt {
   cursor: pointer;
 }
 
-.back-btn-wrapper img {
+.back-btn-wrapper img, .back-btn-wrapper-alt img {
   width: 16px;
   height: 16px;
   margin-right: 8px;
+}
+
+.back-btn-wrapper-alt {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
 }
 
 #mail-header {
@@ -204,13 +213,18 @@ canvas {
 }
 
 .app {
-  margin: 8px;
+  margin: 0;
   width: 128px;
   height: 128px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: absolute;
+}
+
+.app:hover {
+  cursor: pointer;
 }
 
 .app img {
@@ -231,23 +245,106 @@ canvas {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
+  width: 256px;
+  height: 256px;
+  background-color: #ffeb3b;
+  color: black;
+  padding: 15px;
   z-index: 1000;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  font-family: 'Lobster', cursive;
+  border: 1px solid #fdd835;
+  /* TODO: Add paper texture=> background-image: url(''); */
+  background-size: cover;
+}
+
+.task-item {
+  margin: 10px 0;
+  padding: 10px;
+  border-left: 4px solid #f57f20;
+  background-color: rgba(255, 235, 59, 0.9);
+  border-radius: 5px;
+}
+
+.task-item h3 {
+  margin: 0;
+  font-size: 1.2em;
+  font-style: italic;
+}
+
+.task-item p {
+  margin: 5px 0 0;
+  font-size: 1em;
+  line-height: 1.4;
 }
 
 .overlay {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 15px;
+  background-color: #f1f1f1;
+  color: black;
   border-radius: 5px;
-  display: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   width: 512px;
-  transition: opacity 0.5s;
+  display: none;
+  transition: opacity 0.5s ease;
+}
+
+.overlay-header {
+  background-color: #0078d4;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.overlay-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.overlay-title {
+  flex-grow: 1;
+  margin: 0;
+}
+
+.overlay-content {
+  padding: 15px;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: 10px;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: red;
+}
+
+.scratches {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('res/glass.png') no-repeat center center/cover;
+  opacity: 0.25;
+  z-index: 0;
+}
+
+.non-draggable {
+  user-drag: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.non-selectable {
+  user-select: none;
 }

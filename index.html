@@ -9,17 +9,23 @@
 	<body>
 		<div id="os-wrapper">
 			<div id="desktop-wrapper">
-				<div class="app" id="mail">
-					<img src="res/Icon_Email.svg" />
-					<h1>Mail</h1>
+				<div class="app" id="mail" draggable="true">
+					<img src="res/Icon_Email.svg" class="non-draggable non-selectable" />
+					<h1 class="non-selectable">Mail</h1>
 				</div>
-				<div class="app" id="telescope">
-					<img src="res/Icon_Organism.svg" />
-					<h1>Telescope</h1>
+				<div class="app" id="telescope" draggable="true">
+					<img
+						src="res/Icon_Organism.svg"
+						class="non-draggable non-selectable"
+					/>
+					<h1 class="non-selectable">Microscope</h1>
 				</div>
-				<div class="app" id="builder">
-					<img src="res/Icon_Builder.svg" />
-					<h1>DNA</h1>
+				<div class="app" id="builder" draggable="true">
+					<img
+						src="res/Icon_Builder.svg"
+						class="non-draggable non-selectable"
+					/>
+					<h1 class="non-selectable">DNA</h1>
 				</div>
 				<!--
         <div class="app">
@@ -40,7 +46,7 @@
 				<h1 id="om-topic">Topic</h1>
 				<h2 id="om-sender">Sender</h2>
 				<p id="om-timestamp">13:37</p>
-        <hr/>
+				<hr />
 				<div id="om-content">Test test test test</div>
 			</div>
 		</div>
@@ -105,26 +111,32 @@
 			</div>
 		</div>
 		<div id="telescope-wrapper">
-      <div class="back-btn-wrapper" id="back3">
-        <img src="res/Icon_Back.svg" />
-        <div>go back</div>
-      </div>
+			<div class="back-btn-wrapper-alt" id="back3">
+				<img src="res/Icon_Back.svg" />
+				<div>go back</div>
+			</div>
 			<canvas id="canvas"></canvas>
 		</div>
 		<div id="builder-wrapper">
-      <div class="back-btn-wrapper" id="back4">
-        <img src="res/Icon_Back.svg" />
-        <div>go back</div>
-      </div>
+			<div class="back-btn-wrapper-alt" id="back4">
+				<img src="res/Icon_Back.svg" />
+				<div>go back</div>
+			</div>
+			<!--<div class="scratches"></div>-->
 			<canvas id="canvas2"></canvas>
 		</div>
-    <div id="assignment-container"></div>
-    <div id="overlay" class="overlay">
-      <h1><span id="overlay-sender"></span> sent you mail</h1>
-      <hr/>
-      <h2 id="overlay-title"></h2>
-      <p id="overlay-content"></p>
-    </div>
+		<div id="assignment-container"></div>
+		<div id="overlay" class="overlay">
+			<div class="overlay-header">
+				<img src="res/Icon_Primary.svg" class="overlay-icon" />
+				<h2 class="overlay-title">Mail Notification</h2>
+				<span class="close-btn" onclick="closeOverlay()">✖</span>
+			</div>
+			<div class="overlay-content">
+				<h2 id="overlay-sender">name nameson (example@email.com)</h2>
+				<p id="overlay-subject">This is the subject</p>
+			</div>
+		</div>
 		<script src="utils.js"></script>
 		<script src="sound.js"></script>
 		<script src="stats.js"></script>
@@ -134,5 +146,6 @@
 		<script src="player.js"></script>
 		<script src="game.js"></script>
 		<script src="builder.js"></script>
+		<!--<script src="microscope.js"></script>-->
 	</body>
 </html>

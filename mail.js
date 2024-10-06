@@ -158,9 +158,8 @@ function handleMail() {
 	currentKey++;
 	const overlay = document.getElementById("overlay");
 
-  document.getElementById("overlay-sender").innerHTML = obj.sender; 
-  document.getElementById("overlay-title").innerHTML = obj.topic;
-  document.getElementById("overlay-content").innerHTML = obj.content;
+  document.getElementById("overlay-sender").innerHTML = obj.sender + " (" + obj.email + ")"; 
+  document.getElementById("overlay-subject").innerHTML = obj.topic;
 
 	document.getElementById("primary-summary").innerHTML = truncateString(obj.sender, 16) + " - " + truncateString(obj.topic, 16);
 
@@ -171,8 +170,8 @@ function handleMail() {
 		overlay.style.opacity = "0";
 		setTimeout(function () {
 			overlay.style.display = "none";
-		}, 500);
-	}, 3000);
+		}, 5000);
+	}, 30000);
 }
 
 function checkAwaitingMail() {
@@ -558,9 +557,8 @@ function handleCampaignMail() {
 
 	const overlay = document.getElementById("overlay");
 
-  document.getElementById("overlay-sender").innerHTML = campaignEmail.sender; 
+  document.getElementById("overlay-sender").innerHTML = campaignEmail.sender + " (" + campaignEmail.email + ")"; 
   document.getElementById("overlay-title").innerHTML = campaignEmail.topic;
-  document.getElementById("overlay-content").innerHTML = campaignEmail.content;
 	
 	document.getElementById("campaigns-summary").innerHTML = truncateString(campaignEmail.sender, 16) + " - " + truncateString(campaignEmail.topic, 16);
 
@@ -571,8 +569,8 @@ function handleCampaignMail() {
 		overlay.style.opacity = "0";
 		setTimeout(function () {
 			overlay.style.display = "none";
-		}, 500);
-	}, 3000);
+		}, 5000);
+	}, 30000);
 
 	currentKey++;
 	campaignMails.splice(randomIndex, 1);
