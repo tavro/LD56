@@ -558,7 +558,7 @@ function handleCampaignMail() {
 	const overlay = document.getElementById("overlay");
 
   document.getElementById("overlay-sender").innerHTML = campaignEmail.sender + " (" + campaignEmail.email + ")"; 
-  document.getElementById("overlay-title").innerHTML = campaignEmail.topic;
+  document.getElementById("overlay-subject").innerHTML = campaignEmail.topic;
 	
 	document.getElementById("campaigns-summary").innerHTML = truncateString(campaignEmail.sender, 16) + " - " + truncateString(campaignEmail.topic, 16);
 
