@@ -18,6 +18,7 @@ class PlayerController {
 
 		this.playerBody = new PlayerBody();
 		this.mainNode = this.playerBody.nodes[0];
+		this.headPosition = this.mainNode.position;
 	}
 
 	update() {
@@ -159,10 +160,19 @@ class Node_New extends MassObject {
 				.difference(this.position)
 				.magnitude();
 
-			if (distanceToParent > this.size * 4) {
+			if (distanceToParent > this.size * 1) {
 				this.pushToPoint(
 					this.parent.position,
 					Math.sqrt(distanceToParent) * 0.001,
+					true,
+					false
+				);
+			}
+			if (distanceToParent < this.size * 2) {
+				this.pushToPoint(
+					this.parent.position,
+					Math.sqrt(distanceToParent) * 0.001,
+					true,
 					true
 				);
 			}

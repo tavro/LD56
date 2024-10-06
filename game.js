@@ -8,8 +8,8 @@ canvas.height = window.innerHeight;
 
 zoneHot_img = new Image();
 zoneCold_img = new Image();
-zoneHot_img.src = "Organism/Organism_ZoneHot.png";
-zoneCold_img.src = "Organism/Organism_ZoneCold.png";
+zoneHot_img.src = resouceUrl + "Organism/Organism_ZoneHot.png";
+zoneCold_img.src = resouceUrl + "Organism/Organism_ZoneCold.png";
 
 // ______________ Global Constants
 const pixelsPerUnit = 32;
@@ -81,6 +81,13 @@ class Camera {
 		this.size = 100;
 	}
 
+	getDiagonalLength() {
+		const diagnoal = Math.sqrt(
+			this.size ** 2 + (this.size * this.aspectRatio) ** 2
+		);
+		return diagnoal;
+	}
+
 	setCameraPosition(value) {
 		this.position = this.position.add(value);
 	}
@@ -138,6 +145,14 @@ class Zone extends MassObject {
 			this.pushForward(Math.random() * 0.04, Math.PI);
 		}
 		this.updatePhysics();
+	}
+}
+
+class Virus extends MassObject {
+	constructor(position) {
+		super();
+		this.position = position;
+
 	}
 }
 
@@ -298,7 +313,7 @@ class OrganismNode extends MassObject {
 }
 
 let lastSpawnPoint = new Vector2(0, 0);
-function spawnAround(position, radius, isZone, isFood) {
+function spawnAround(position, radius, isFood, isZone, isVirus) {
 	const delta = lastSpawnPoint.difference(position);
 
 	if (delta.magnitude() > radius) {
@@ -308,7 +323,7 @@ function spawnAround(position, radius, isZone, isFood) {
 			const distance = new Vector2(
 				Math.cos(dirAngle + a - Math.PI / 2),
 				Math.sin(dirAngle + a - Math.PI / 2)
-			).scale(Math.random() * radius + radius);
+			).scale(radius + (Math.random() * radius) / 2);
 			const spawnPoint = position.add(distance);
 
 			if (isFood) {
@@ -316,13 +331,21 @@ function spawnAround(position, radius, isZone, isFood) {
 				foods.push(newFood);
 			}
 			if (isZone) {
-				let newZone = new Zone(spawnPoint, Math.random() * 10 + 10);
-				if (Math.random() > 0.5) {
-					newZone.setIsHot(true);
-				} else {
-					newZone.setIsHot(false);
+				if (Math.random() < 0.15) {
+					let newZone = new Zone(spawnPoint, Math.random() * 30 + 30);
+					if (Math.random() > 0.5) {
+						newZone.setIsHot(true);
+					} else {
+						newZone.setIsHot(false);
+					}
+					zones.push(newZone);
 				}
-				zones.push(newZone);
+			}
+			if (isVirus) {
+				if (Math.random() < 0.05) {
+					let newVirus = new Virus(spawnPoint);
+					viruses.push(newVirus);
+				}
 			}
 		}
 		lastSpawnPoint = position;
@@ -330,15 +353,29 @@ function spawnAround(position, radius, isZone, isFood) {
 }
 
 // ____________ Game Logic
+function GameInit() {
+	// spawns food
+	for (let i = 0; i < 40; i++) {
+		const randomX =
+			(Math.random() - 0.5) * camera.size * camera.aspectRatio * 2;
+		const randomY = (Math.random() - 0.5) * camera.size * 2 + camera.size / 4;
+		let newFood = new Food(new Vector2(randomX, randomY));
+		foods.push(newFood);
+	}
+}
+
 function GameUpdate() {
 	if (inGame) {
 		player_new.update();
 		camera.followTarget(player_new.headPosition);
 
-		spawnAround(player_new.headPosition, camera.size / 2, false, true);
-		if (startedPhaseOne) {
-			spawnAround(player_new.headPosition, camera.size / 2, true, false);
-		}
+		spawnAround(
+			player_new.headPosition,
+			camera.getDiagonalLength() / 2,
+			true,
+			startedPhaseHeat,
+			startedPhaseVirus
+		);
 
 		foods.forEach((food) => {
 			food.update(player_new);
@@ -348,19 +385,31 @@ function GameUpdate() {
 			zone.update(player_new);
 		});
 
-		if (!startedPhaseOne && phaseNumber == 1) {
-			console.log("STARTED PHASE 1");
-			startedPhaseOne = true;
-			startHotPhase()
+		if (!startedPhaseHeat && phaseNumber == 1) {
+			console.log("STARTED PHASE Heat");
+			startedPhaseHeat = true;
+			startPhaseHot();
+		}
+
+		if (!startedPhaseVirus && phaseNumber == 2) {
+			console.log("STARTED PHASE Virus");
+			startedPhaseVirus = true;
+			startPhaseVirus();
 		}
 	}
 }
 
-let startedPhaseOne = false;
+let startedPhaseHeat = false;
+let startedPhaseVirus = false;
 
-function startHotPhase() {
+phaseNumber = 2;
 
+function startPhaseHot() {
 	// Spwan hot spots
+}
+
+function startPhaseVirus() {
+	// spawn virus
 }
 
 function GameDraw() {
@@ -375,15 +424,15 @@ function GameDraw() {
 		zone.draw(ctx);
 	});
 
-	if (startedPhaseOne) {
-		hotResistanceBar.draw()
-		hotValueBar.draw()
-		coldResistanceBar.draw()
-		coldValueBar.draw()
+	if (startedPhaseHeat) {
+		hotResistanceBar.draw(ctx);
+		hotValueBar.draw(ctx);
+		coldResistanceBar.draw(ctx);
+		coldValueBar.draw(ctx);
 	}
 	bars.forEach((bar) => {
-		bar.draw(ctx)
-	})
+		bar.draw(ctx);
+	});
 }
 
 // _____________ Globals
@@ -393,10 +442,10 @@ let camera = new Camera();
 let keyboard = new KeyboardManager();
 
 let foods = [];
+let viruses = [];
+let bars = [];
 
 let areaExpoloredRect = new Rect();
-
-let bars = [];
 
 let hotValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 10),
@@ -439,11 +488,6 @@ let hungerBar = new UIBar(
 	true
 );
 bars.push(hungerBar);
-
-for (let i = 0; i < 20; i++) {
-	let newFood = new Food(new Vector2(i * 1.2, 0));
-	foods.push(newFood);
-}
 
 let zones = [];
 
@@ -498,6 +542,7 @@ function animate() {
 	requestAnimationFrame(animate);
 }
 
+GameInit();
 animate();
 
 // __________________ Character builder

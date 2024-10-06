@@ -46,7 +46,7 @@ function addNode() {
 	const newNode = new Node_New(
 		(secondLastNode.size + lastNode.size) / 2,
 		"#000000",
-		{ x: newX, y: newY }
+		new Vector2(newX, newY)
 	);
 
 	player_new.playerBody.nodes.splice(
@@ -317,6 +317,8 @@ function animate2() {
 	});
 
 	player_new.draw(builder_context);
+	camera.followTarget(player_new.headPosition);
+	player_new.update();
 	requestAnimationFrame(animate2);
 }
 

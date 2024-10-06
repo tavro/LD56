@@ -23,8 +23,16 @@ class MassObject {
 		this.force = new Vector2(0, 0);
 	}
 
-	pushToPoint(targetCoords, force, isSpringy, threshold = 0) {
-		const delta = this.position.difference(targetCoords);
+	pushToPoint(targetCoords, force, isSpringy, inverted = false, threshold = 0) {
+		let delta = new Vector2(0, 0)
+
+		if (inverted) {
+			delta = targetCoords.difference(this.position);
+		}
+		else {
+			delta = this.position.difference(targetCoords);
+
+		}
 		if (delta.magnitude() > threshold) {
 			if (isSpringy) {
 				this.force = new Vector2(delta.x, delta.y).scale(force);
