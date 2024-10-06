@@ -137,9 +137,7 @@ class KeyboardManager {
 	__LogKeyDown(key) {
 		if (key in this.keysPressed === false) {
 			this.keysPressed[key] = true;
-			console.log("key down: " + key);
 			if (key in this.keyDownCallbackList) {
-				console.log("calling func");
 				const funcs = this.keyDownCallbackList[key];
 				console.log(funcs);
 				funcs.forEach((func) => {
@@ -154,7 +152,6 @@ class KeyboardManager {
 	__LogKeyUp(key) {
 		if (key in this.keysPressed) {
 			delete this.keysPressed[key];
-			console.log("key up: " + key);
 			if (key in this.keyUpCallbackList) {
 				const funcs = this.keyUpCallbackList[key];
 				console.log(funcs);
