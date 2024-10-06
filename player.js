@@ -201,45 +201,45 @@ class Node_New extends MassObject {
 		const screenPosition = worldToScreenCoords(this.position);
 
 		if (this.type === "arms") {
-			ctx.strokeStyle = "black";
+			ctx.strokeStyle = this.color;
 			ctx.lineWidth = 2;
 
 			ctx.beginPath();
 			ctx.moveTo(
 				screenPosition.x,
-				screenPosition.y - this.size * 1.2 * pixelsPerUnit
+				screenPosition.y - this.size * 0.35 * pixelsPerUnit
 			);
 			ctx.lineTo(
 				screenPosition.x,
-				screenPosition.y - this.size * 2 * pixelsPerUnit
+				screenPosition.y - this.size * 1 * pixelsPerUnit
 			);
 			ctx.stroke();
 
 			ctx.beginPath();
 			ctx.moveTo(
 				screenPosition.x,
-				screenPosition.y + this.size * 1.2 * pixelsPerUnit
+				screenPosition.y + this.size * 0.35 * pixelsPerUnit
 			);
 			ctx.lineTo(
 				screenPosition.x,
-				screenPosition.y + this.size * 2 * pixelsPerUnit
+				screenPosition.y + this.size * 1 * pixelsPerUnit
 			);
 			ctx.stroke();
 		} else if (this.type === "fins") {
-			ctx.fillStyle = "black";
+			ctx.fillStyle = this.color;
 
 			ctx.beginPath();
 			ctx.moveTo(
 				screenPosition.x,
-				screenPosition.y - this.size * 1.1 * pixelsPerUnit
+				screenPosition.y - this.size * 0.35 * pixelsPerUnit
 			);
 			ctx.lineTo(
-				screenPosition.x - this.size * 0.6 * pixelsPerUnit,
-				screenPosition.y - this.size * 1.5 * pixelsPerUnit
+				screenPosition.x - this.size * 0.25 * pixelsPerUnit,
+				screenPosition.y - this.size * 0.75 * pixelsPerUnit
 			);
 			ctx.lineTo(
-				screenPosition.x + this.size * 0.6 * pixelsPerUnit,
-				screenPosition.y - this.size * 1.5 * pixelsPerUnit
+				screenPosition.x + this.size * 0.25 * pixelsPerUnit,
+				screenPosition.y - this.size * 0.75 * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
@@ -247,15 +247,15 @@ class Node_New extends MassObject {
 			ctx.beginPath();
 			ctx.moveTo(
 				screenPosition.x,
-				screenPosition.y + this.size * 1.1 * pixelsPerUnit
+				screenPosition.y + this.size * 0.35 * pixelsPerUnit
 			);
 			ctx.lineTo(
-				screenPosition.x - this.size * 0.6 * pixelsPerUnit,
-				screenPosition.y + this.size * 1.5 * pixelsPerUnit
+				screenPosition.x - this.size * 0.25 * pixelsPerUnit,
+				screenPosition.y + this.size * 0.75 * pixelsPerUnit
 			);
 			ctx.lineTo(
-				screenPosition.x + this.size * 0.6 * pixelsPerUnit,
-				screenPosition.y + this.size * 1.5 * pixelsPerUnit
+				screenPosition.x + this.size * 0.25 * pixelsPerUnit,
+				screenPosition.y + this.size * 0.75 * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
@@ -327,11 +327,11 @@ class PlayerBody {
 	}
 
 	drawTail(context, node) {
-		const tailLength = 1;
-		const tailWidth = 0.5;
+		const tailLength = 0.5;
+		const tailWidth = 0.25;
 
 		const screenPosition = worldToScreenCoords(node.position);
-		const screenTailX = screenPosition.x + node.size * pixelsPerUnit;
+		const screenTailX = screenPosition.x + node.size * 0.35 * pixelsPerUnit;
 		const screenTailY = screenPosition.y;
 
 		context.fillStyle = node.color;
