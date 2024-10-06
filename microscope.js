@@ -1,8 +1,8 @@
-const canvas3 = document.getElementById('canvas2');
-const ctx3 = canvas3.getContext('2d');
+const builder_canvas = document.getElementById('canvas2');
+const builder_context = builder_canvas.getContext('2d');
 
-canvas3.width = window.innerWidth;
-canvas3.height = window.innerHeight;
+builder_canvas.width = window.innerWidth;
+builder_canvas.height = window.innerHeight;
 
 const particleCount = 50;
 const particles = [];
@@ -10,9 +10,9 @@ const particles = [];
 const colors = ['#777777', '#AAAAAA', '#BBBBBB', '#DDDDDD'];
 
 function drawBackgroundLight() {
-    const gradient = ctx3.createRadialGradient(
-        canvas3.width / 2, canvas3.height / 2, 50,
-        canvas3.width / 2, canvas3.height / 2, canvas3.width / 2
+    const gradient = builder_context.createRadialGradient(
+        builder_canvas.width / 2, builder_canvas.height / 2, 50,
+        builder_canvas.width / 2, builder_canvas.height / 2, builder_canvas.width / 2
     );
 
     gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
@@ -20,10 +20,10 @@ function drawBackgroundLight() {
     gradient.addColorStop(0.6, 'rgba(255, 255, 0, 0.0125)');
     gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
 
-    ctx3.save();
-    ctx3.fillStyle = gradient;
-    ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
-    ctx3.restore();
+    builder_context.save();
+    builder_context.fillStyle = gradient;
+    builder_context.fillRect(0, 0, builder_canvas.width, builder_canvas.height);
+    builder_context.restore();
 }
 
 class Particle {
@@ -51,24 +51,24 @@ class Particle {
     }
 
     draw() {
-        ctx3.save();
-        ctx3.translate(this.x, this.y);
-        ctx3.rotate(this.angle);
+        builder_context.save();
+        builder_context.translate(this.x, this.y);
+        builder_context.rotate(this.angle);
 
-        ctx3.lineWidth = this.thickness;
-        ctx3.strokeStyle = this.color;
-        ctx3.globalAlpha = this.alpha;
-        ctx3.lineJoin = 'round';
+        builder_context.lineWidth = this.thickness;
+        builder_context.strokeStyle = this.color;
+        builder_context.globalAlpha = this.alpha;
+        builder_context.lineJoin = 'round';
 
-        ctx3.beginPath();
-        ctx3.moveTo(this.shape[0].x, this.shape[0].y);
+        builder_context.beginPath();
+        builder_context.moveTo(this.shape[0].x, this.shape[0].y);
         for (let i = 1; i < this.shape.length; i++) {
-            ctx3.lineTo(this.shape[i].x, this.shape[i].y);
+            builder_context.lineTo(this.shape[i].x, this.shape[i].y);
         }
-        ctx3.stroke();
+        builder_context.stroke();
 
-        ctx3.shadowColor = this.color;
-        ctx3.restore();
+        builder_context.shadowColor = this.color;
+        builder_context.restore();
     }
 
     update() {
@@ -88,10 +88,10 @@ class Particle {
         this.velocity.x += (Math.random() - 0.5) * 0.1;
         this.velocity.y += (Math.random() - 0.5) * 0.1;
 
-        if (this.x > canvas3.width || this.x < 0) {
+        if (this.x > builder_canvas.width || this.x < 0) {
             this.velocity.x *= -1;
         }
-        if (this.y > canvas3.height || this.y < 0) {
+        if (this.y > builder_canvas.height || this.y < 0) {
             this.velocity.y *= -1;
         }
 
@@ -101,8 +101,8 @@ class Particle {
     }
 
     reset() {
-        this.x = Math.random() * canvas3.width;
-        this.y = Math.random() * canvas3.height;
+        this.x = Math.random() * builder_canvas.width;
+        this.y = Math.random() * builder_canvas.height;
         this.color = this.getRandomColor();
         this.alpha = 0;
         this.elapsedTime = 0;
@@ -129,7 +129,7 @@ function generateParticles() {
 }
 
 function animate3() {
-    ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
+    builder_context.clearRect(0, 0, builder_canvas.width, builder_canvas.height);
 
     drawBackgroundLight();
 
@@ -144,6 +144,6 @@ generateParticles();
 animate3();
 
 window.addEventListener('resize', () => {
-    canvas3.width = window.innerWidth;
-    canvas3.height = window.innerHeight;
+    builder_canvas.width = window.innerWidth;
+    builder_canvas.height = window.innerHeight;
 });
