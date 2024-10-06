@@ -95,18 +95,38 @@ function changeNodeColor(mouseX, mouseY) {
 
 	if (closestNode) {
 			console.log("clicked on: " + closestNode.color);
-			const newColor = prompt("Enter a color (name or hex code):", closestNode.color);
-			if (newColor) {
-					closestNode.color = newColor;
-			}
-			if (player_new.playerBody.nodes.indexOf(closestNode) !== 0 &&
-					player_new.playerBody.nodes.indexOf(closestNode) !== player_new.playerBody.nodes.length - 1) {
-					const typeChoice = prompt("Choose between 'fins' or 'arms':", closestNode.type);
-					if (typeChoice === "fins" || typeChoice === "arms") {
-							closestNode.type = typeChoice;
-							alert(`You have selected ${typeChoice} for the node.`);
+
+			const dropdownContainer = document.getElementById("dropdownContainer");
+			const bodyPartDropdown = document.getElementById("bodyPartDropdown");
+			dropdownContainer.style.display = "block";
+
+			bodyPartDropdown.onchange = function(event) {
+					const selectedPart = event.target.value;
+					if (selectedPart) {
+							closestNode.type = selectedPart;
+							alert(`You have selected ${selectedPart} for the node.`);
+
+							dropdownContainer.style.display = "none";
+
+							const colorPickerContainer = document.getElementById('colorPickerContainer');
+							const colorPicker = document.getElementById('colorPicker');
+							
+							colorPicker.value = closestNode.color;
+							colorPickerContainer.style.display = "block";
+
+							colorPicker.oninput = function(event) {
+									closestNode.color = event.target.value;
+							};
+
+							colorPicker.onchange = function() {
+									colorPickerContainer.style.display = "none";
+							};
+
+							setTimeout(() => {
+									colorPicker.click();
+							}, 100);
 					}
-			}
+			};
 	}
 }
 

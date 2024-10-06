@@ -137,6 +137,36 @@
 				<p id="overlay-subject">This is the subject</p>
 			</div>
 		</div>
+		<div
+			id="dropdownContainer"
+			style="
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 1;
+			"
+		>
+			<select id="bodyPartDropdown">
+				<option value="" disabled selected>Select body part</option>
+				<option value="fins">Fins</option>
+				<option value="arms">Arms</option>
+			</select>
+		</div>
+		<div
+			id="colorPickerContainer"
+			style="
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 1;
+			"
+		>
+			<input type="color" id="colorPicker" />
+		</div>
 		<script src="utils.js"></script>
 		<script src="sound.js"></script>
 		<script src="stats.js"></script>
