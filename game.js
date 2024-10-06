@@ -1,8 +1,22 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// Buffer context for tinting
+buffer = document.createElement("canvas");
+if (typeof window.G_vmlCanvasManager != "undefined") {
+	G_vmlCanvasManager.initElement(buffer);
+}
+const buffer_ctx = buffer.getContext("2d");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+// ______________ Resources
+zone_img = new Image();
+zone_img.src = "Res/Organism/Organism_Zone.png";
+
+// ______________ Global Constants
+const pixelsPerUnit = 32;
 
 // ______________ Global Functions
 function mousePositionToWorldCoords() {
@@ -12,7 +26,44 @@ function mousePositionToWorldCoords() {
 	result.y =
 		camera.position.y + (mousePosition.y * camera.size) / worldToPixelFactor;
 	return result;
-	d;
+}
+
+function drawImg(context, img, worldPosition, worldSize, color, opacity = 1.0) {
+	context.globalAlpha = opacity;
+
+	const pixelSize = (worldToPixelFactor / camera.size) * worldSize;
+
+	const centerOffset = -pixelSize / 2;
+
+	buffer.width = pixelSize;
+	buffer.height = pixelSize;
+
+	const screenPosition = new Vector2(
+		((worldPosition.x - camera.position.x) / camera.size) * worldToPixelFactor,
+		((worldPosition.y - camera.position.y) / camera.size) * worldToPixelFactor
+	).add(new Vector2(centerOffset, centerOffset));
+
+	buffer_ctx.fillStyle = color;
+	buffer_ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	buffer_ctx.globalCompositeOperation = "destination-atop";
+	buffer_ctx.drawImage(img, 0, 0, pixelSize, pixelSize);
+
+	context.drawImage(
+		img,
+		screenPosition.x,
+		screenPosition.y,
+		pixelSize,
+		pixelSize
+	);
+	context.drawImage(
+		buffer,
+		screenPosition.x,
+		screenPosition.y,
+		pixelSize,
+		pixelSize
+	);
+	context.globalAlpha = 1.0;
 }
 
 function drawCircle(context, position, radius, color) {
@@ -36,8 +87,7 @@ class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
 		this.aspectRatio = canvas.width / canvas.height;
-		this.size = 50;
-		console.log("Created Camera");
+		this.size = 40;
 	}
 
 	setCameraPosition(value) {
@@ -49,7 +99,7 @@ class Camera {
 	}
 
 	followTarget(targetCoords) {
-		const offsetX = (this.size) * this.aspectRatio / 2;
+		const offsetX = (this.size * this.aspectRatio) / 2;
 		const offsetY = this.size / 2;
 		const newDelta = this.position
 			.difference(targetCoords.add(new Vector2(-offsetX, -offsetY)))
@@ -59,27 +109,96 @@ class Camera {
 }
 
 class MassObject {
-	velocity = new Vector2(0, 0);
-	position = new Vector2(0, 0);
-	acceleration = new Vector2(0, 0);
-	drag = 0.9;
+	constructor(position = null, drag = 1.2) {
+		this.position = position;
+		if (position === null) this.position = new Vector2(0, 0);
 
-	updatePhysics() {
-		this.velocity = this.velocity.add(this.acceleration).scale(this.drag);
-		this.position = this.position.add(this.velocity);
+		this.drag = drag;
 
+		this.mass = 1;
+
+		this.force = new Vector2(0, 0);
+		this.velocity = new Vector2(0, 0);
 		this.acceleration = new Vector2(0, 0);
 	}
 
-	accelerateToPoint(targetCoords, force, isSpringy) {
+	getDirectionAngle() {
+		return Math.atan2(this.velocity.y, this.velocity.x);
+	}
+
+	updatePhysics() {
+		this.acceleration = this.force.scale(1 / this.mass);
+		this.velocity = this.velocity.add(this.acceleration).scale(1 / this.drag);
+		this.position = this.position.add(this.velocity);
+		this.force = new Vector2(0, 0);
+	}
+
+	pushToPoint(targetCoords, force, isSpringy, threshold = 0) {
 		const delta = this.position.difference(targetCoords);
-		if (isSpringy) {
-			this.acceleration = new Vector2(delta.x, delta.y).scale(force);
-		} else {
-			this.acceleration = new Vector2(delta.x, delta.y)
-				.normalized()
-				.scale(force);
+		if (delta.magnitude() > threshold) {
+			if (isSpringy) {
+				this.force = new Vector2(delta.x, delta.y).scale(force);
+			} else {
+				this.force = new Vector2(delta.x, delta.y).normalized().scale(force);
+			}
 		}
+	}
+
+	pushToDirection(directionAngle, force) {
+		const direction = new Vector2(
+			Math.cos(directionAngle),
+			Math.sin(directionAngle)
+		);
+
+		this.force = new Vector2(direction.x, direction.y).scale(force);
+	}
+
+	pushForward(force, angleSpan) {
+		this.pushToDirection(
+			this.getDirectionAngle() + (Math.random() - 0.5) * angleSpan,
+			force
+		);
+	}
+}
+
+class Zone extends MassObject {
+	constructor(position, size, isHot) {
+		super();
+		this.position = position;
+		this.size = size;
+		this.isHot = isHot;
+		this.color = "pink";
+		this.mass = 3;
+		this.drag = 1.012;
+
+		if (this.isHot) {
+			this.color = "red";
+		} else {
+			this.color = "#8adeff";
+		}
+	}
+
+	draw(context) {
+		drawImg(context, zone_img, this.position, this.size, this.color, 0.5);
+	}
+
+	update(player) {
+		const distanceToPlayer = this.position
+			.difference(player.headPosition)
+			.magnitude();
+		if (distanceToPlayer < this.size / 2) {
+			const distanceToCenter = 1 - (distanceToPlayer / this.size) * 2;
+
+			if (this.isHot) {
+				player.addHotResistance(((distanceToCenter + 1) ** 2 / 20) * (1 / 60));
+			} else {
+				player.addColdResistance(((distanceToCenter + 1) ** 2 / 20) * (1 / 60));
+			}
+		}
+		if (Math.random() < 0.1) {
+			this.pushForward(Math.random() * 0.15, Math.PI / 3);
+		}
+		this.updatePhysics();
 	}
 }
 
@@ -87,7 +206,7 @@ class Food extends MassObject {
 	constructor(position) {
 		super();
 		this.position = position;
-		this.size = 0.5;
+		this.size = Math.random() * 0.5 + 0.5;
 		this.color = "green";
 		this.isEaten = false;
 	}
@@ -97,14 +216,14 @@ class Food extends MassObject {
 			return;
 		}
 
-		this.updatePhysics();
 		this.checkDistanceToPlayer(player);
 
-		// this.accelerateToPoint(
-		// 	this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
-		// 	0.2,
-		// 	true
-		// );
+		this.pushToPoint(
+			this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
+			0.008,
+			true
+		);
+		this.updatePhysics();
 	}
 
 	draw(context) {
@@ -127,7 +246,59 @@ class Food extends MassObject {
 	}
 }
 
-class Node extends MassObject {
+class UIBar {
+	constructor(screenPosition, value, pixelLength, pixelHeight, color) {
+		this.screenPosition = screenPosition;
+		this.value = value;
+		this.pixelLength = pixelLength;
+		this.color = color;
+		this.pixelHeight = pixelHeight;
+	}
+
+	update(player) {}
+
+	addValue(offset) {
+		this.setValue(this.value + offset);
+	}
+
+	setValue(val) {
+		this.value = val;
+		if (this.value > 1) {
+			this.value = 1;
+		}
+		if (this.value < 0) {
+			this.value = 0;
+		}
+	}
+
+	draw(context) {
+		context.fillStyle = "black";
+		context.fillRect(
+			this.screenPosition.x - 5,
+			this.screenPosition.y - 5,
+			this.pixelLength + 10,
+			this.pixelHeight + 10
+		);
+
+		context.fillStyle = "white";
+		context.fillRect(
+			this.screenPosition.x,
+			this.screenPosition.y,
+			this.pixelLength,
+			this.pixelHeight
+		);
+
+		context.fillStyle = this.color;
+		context.fillRect(
+			this.screenPosition.x,
+			this.screenPosition.y,
+			this.pixelLength * this.value,
+			this.pixelHeight
+		);
+	}
+}
+
+class OrganismNode extends MassObject {
 	constructor(size, color, position) {
 		super();
 		this.position = position;
@@ -141,21 +312,14 @@ class Node extends MassObject {
 		drawCircle(context, this.position, this.size, this.color);
 	}
 
-	containsPoint(x, y) {
-		const distance = Math.sqrt(
-			(x - this.position.x) ** 2 + (y - this.position.y) ** 2
-		);
-		return distance <= this.size;
-	}
-
 	update() {
 		if (this.parent) {
 			const distanceToParent = this.parent.position
 				.difference(this.position)
 				.magnitude();
 
-			if (distanceToParent > this.size) {
-				this.accelerateToPoint(this.parent.position, 0.01, true);
+			if (distanceToParent > this.size * 4) {
+				this.pushToPoint(this.parent.position, 0.01, true);
 			}
 		}
 		this.updatePhysics();
@@ -165,14 +329,15 @@ class Node extends MassObject {
 class Player {
 	constructor() {
 		this.headPosition;
-		this.color = "blue";
+		this.controlForce = 5 * 0.01;
 
-		this.controlForce = 1 / 30;
+		this.hotValue = 0.0;
+		this.coldValue = 0.0;
 
 		this.nodes = [
-			new Node(1, "red", new Vector2(5, 5)),
-			new Node(1, "green", new Vector2(7, 5)),
-			new Node(1, "blue", new Vector2(9, 5)),
+			new OrganismNode(1, "red", new Vector2(0, 0)),
+			new OrganismNode(1, "green", new Vector2(2, 0)),
+			new OrganismNode(1, "blue", new Vector2(4, 0)),
 		];
 
 		this.mainNode = this.nodes[0];
@@ -184,7 +349,7 @@ class Player {
 
 	update() {
 		if (isMouseDown) {
-			this.mainNode.accelerateToPoint(
+			this.mainNode.pushToPoint(
 				mousePositionToWorldCoords(),
 				this.controlForce,
 				false
@@ -196,55 +361,43 @@ class Player {
 		});
 
 		this.headPosition = this.mainNode.position;
+
+		if (this.hotValue > 0) {
+			this.hotValue -= (1 / 60) * 0.1;
+		} else {
+			this.hotValue = 0;
+		}
+
+		if (this.coldValue > 0) {
+			this.coldValue -= (1 / 60) * 0.1;
+		} else {
+			this.coldValue = 0;
+		}
+
+		hotBar.setValue(this.hotValue);
+		coldBar.setValue(this.coldValue);
+	}
+
+	draw(context) {
+		for (let i = 0; i < this.nodes.length; i++) {
+			this.nodes[i].draw(context);
+		}
 	}
 
 	giveFood() {
 		data.foodAmount++;
 	}
 
-	draw(context) {
-		for (let i = 0; i < this.nodes.length; i++) {
-			this.nodes[i].draw(context);
-
-			// if (i > 0) {
-			// 	this.drawConnectingShape(
-			// 		this.nodes[i - 1].position.x,
-			// 		this.nodes[i - 1].position.y,
-			// 		this.nodes[i].position.x,
-			// 		this.nodes[i].position.y,
-			// 		this.nodes[i - 1].size,
-			// 		this.nodes[i].size,
-			// 		this.nodes[i - 1].color,
-			// 		this.nodes[i].color
-			// 	);
-			// }
+	addHotResistance(value) {
+		if (this.hotValue <= 1.0) {
+			this.hotValue += value;
 		}
 	}
 
-	drawConnectingShape(x1, y1, x2, y2, size1, size2, color1, color2) {
-		const controlHeight = 20;
-
-		const x1w = x1 - camera.position.x;
-		const y1w = y1 - camera.position.y;
-
-		const x2w = x2 - camera.position.x;
-		const y2w = y2 - camera.position.y;
-
-		const gradient = ctx.createLinearGradient(x1w, y1w, x2w, y2w);
-		gradient.addColorStop(0, color1);
-		gradient.addColorStop(1, color2);
-
-		ctx.beginPath();
-		ctx.moveTo(x1w, y1w - size1);
-		ctx.lineTo(x1w + (x2w - x1w) / 2, y1w - size1 - controlHeight);
-		ctx.lineTo(x2w, y2w - size2);
-		ctx.lineTo(x2w, y2w + size2);
-		ctx.lineTo(x1w + (x2w - x1w) / 2, y1w + size1 + controlHeight);
-		ctx.lineTo(x1w, y1w + size1);
-		ctx.closePath();
-
-		ctx.fillStyle = gradient;
-		ctx.fill();
+	addColdResistance(value) {
+		if (this.coldValue <= 1.0) {
+			this.coldValue += value;
+		}
 	}
 }
 
@@ -332,15 +485,29 @@ function GameUpdate() {
 	foods.forEach((food) => {
 		food.update(player);
 	});
+
+	zones.forEach((zone) => {
+		zone.update(player);
+	});
+	hotBar.update(player);
+	coldBar.update(player);
 }
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	// buffer_ctx.clearRect(0, 0, canvas.width, canvas.height);
 	player.draw(ctx);
 
 	foods.forEach((food) => {
 		food.draw(ctx);
 	});
+
+	zones.forEach((zone) => {
+		zone.draw(ctx);
+	});
+
+	hotBar.draw(ctx);
+	coldBar.draw(ctx);
 }
 
 // _____________ Globals
@@ -354,10 +521,33 @@ let foods = [];
 
 let areaExpoloredRect = new Rect();
 
+let hotBar = new UIBar(
+	new Vector2(canvas.width / 2 - 100, 10),
+	0,
+	200,
+	20,
+	"red"
+);
+
+let coldBar = new UIBar(
+	new Vector2(canvas.width / 2 - 100, 50),
+	0,
+	200,
+	20,
+	"blue"
+);
+
 for (let i = 0; i < 20; i++) {
-	let newFood = new Food(new Vector2(i * 1.2, 3));
+	let newFood = new Food(new Vector2(i * 1.2, 0));
 	foods.push(newFood);
 }
+
+let zones = [];
+
+let hotZone = new Zone(new Vector2(20, 0), 20, true);
+let coldZone = new Zone(new Vector2(-20, 0), 20, false);
+zones.push(hotZone);
+zones.push(coldZone);
 
 // ____________ Events
 canvas.addEventListener("mousemove", (event) => {
@@ -378,7 +568,6 @@ window.addEventListener("resize", () => {
 	canvas.height = window.innerHeight;
 	worldToPixelFactor = window.innerHeight;
 	camera.aspectRatio = canvas.width / canvas.height;
-
 });
 
 document.addEventListener("keydown", (event) => {
