@@ -12,6 +12,9 @@ class PlayerController {
 		this.isHotResistant = false;
 		this.isColdResistant = false;
 
+		this.hungerValue = 1.0;
+		this.hungerRate = 0.02;
+
 		this.playerBody = new PlayerBody();
 		this.mainNode = this.playerBody.nodes[0];
 	}
@@ -94,14 +97,27 @@ class PlayerController {
 
 		hotResistanceBar.setValue(this.hotResistance);
 		coldResistanceBar.setValue(this.coldResistance);
+		this.getHungry(this.hungerRate);
 	}
 
 	draw(context) {
 		this.playerBody.draw(context);
 	}
 
+	getHungry(rate) {
+		this.hungerValue -= (1 / 60) * rate;
+		if (this.hungerRate < 0) {
+			this.hungerRate = 0;
+		}
+		hungerBar.setValue(this.hungerValue);
+	}
+
 	giveFood() {
 		data.foodAmount++;
+		this.hungerValue += 0.05;
+		if (this.hungerValue > 1.0) {
+			this.hungerValue = 1.0;
+		}
 	}
 
 	addHotResistance(value) {
@@ -348,46 +364,47 @@ class PlayerBody {
 	}
 
 	drawTail(context, node) {
-    const tailLength = 0.5;
-    const tailWidth = 0.25;
+		const tailLength = 0.5;
+		const tailWidth = 0.25;
 
-    const screenPosition = worldToScreenCoords(node.position);
+		const screenPosition = worldToScreenCoords(node.position);
 
-    const direction = new Vector2(
-        node.position.x - node.parent.position.x,
-        node.position.y - node.parent.position.y
-    );
+		const direction = new Vector2(
+			node.position.x - node.parent.position.x,
+			node.position.y - node.parent.position.y
+		);
 
-    const magnitude = direction.magnitude();
-    if (magnitude > 0) {
-        direction.x /= magnitude;
-        direction.y /= magnitude;
-    }
+		const magnitude = direction.magnitude();
+		if (magnitude > 0) {
+			direction.x /= magnitude;
+			direction.y /= magnitude;
+		}
 
-    const tailBaseX = screenPosition.x + direction.x * (node.size * 0.35 * pixelsPerUnit);
-    const tailBaseY = screenPosition.y + direction.y * (node.size * 0.35 * pixelsPerUnit);
+		const tailBaseX =
+			screenPosition.x + direction.x * (node.size * 0.35 * pixelsPerUnit);
+		const tailBaseY =
+			screenPosition.y + direction.y * (node.size * 0.35 * pixelsPerUnit);
 
-    const tailEndX = tailBaseX + direction.x * (tailLength * pixelsPerUnit);
-    const tailEndY = tailBaseY + direction.y * (tailLength * pixelsPerUnit);
+		const tailEndX = tailBaseX + direction.x * (tailLength * pixelsPerUnit);
+		const tailEndY = tailBaseY + direction.y * (tailLength * pixelsPerUnit);
 
-    const angle = Math.atan2(direction.y, direction.x);
+		const angle = Math.atan2(direction.y, direction.x);
 
-    context.fillStyle = node.color;
-    context.save();
+		context.fillStyle = node.color;
+		context.save();
 
-    context.translate(tailBaseX, tailBaseY);
-    context.rotate(angle);
+		context.translate(tailBaseX, tailBaseY);
+		context.rotate(angle);
 
-    context.beginPath();
-    context.moveTo(0, 0);
-    context.lineTo(tailLength * pixelsPerUnit, -tailWidth * pixelsPerUnit);
-    context.lineTo(tailLength * pixelsPerUnit, tailWidth * pixelsPerUnit);
-    context.closePath();
-    context.fill();
+		context.beginPath();
+		context.moveTo(0, 0);
+		context.lineTo(tailLength * pixelsPerUnit, -tailWidth * pixelsPerUnit);
+		context.lineTo(tailLength * pixelsPerUnit, tailWidth * pixelsPerUnit);
+		context.closePath();
+		context.fill();
 
-    context.restore();
-}
-
+		context.restore();
+	}
 
 	drawMouth(context, node) {
 		const mouthWidth = node.size * 0.2;

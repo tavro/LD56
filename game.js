@@ -5,10 +5,13 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // ______________ Resources
+const resouceUrl =
+	"https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/";
+
 zoneHot_img = new Image();
 zoneCold_img = new Image();
-zoneHot_img.src = "Res/Organism/Organism_ZoneHot.png";
-zoneCold_img.src = "Res/Organism/Organism_ZoneCold.png";
+zoneHot_img.src = "Organism/Organism_ZoneHot.png";
+zoneCold_img.src = "Organism/Organism_ZoneCold.png";
 
 // ______________ Global Constants
 const pixelsPerUnit = 32;
@@ -185,15 +188,21 @@ class Food extends MassObject {
 }
 
 class UIBar {
-	constructor(screenPosition, value, pixelLength, pixelHeight, color) {
+	constructor(
+		screenPosition,
+		value,
+		pixelLength,
+		pixelHeight,
+		color,
+		isVertical
+	) {
 		this.screenPosition = screenPosition;
 		this.value = value;
 		this.pixelLength = pixelLength;
 		this.color = color;
 		this.pixelHeight = pixelHeight;
+		this.isVertical = isVertical;
 	}
-
-	update(player) {}
 
 	addValue(offset) {
 		this.setValue(this.value + offset);
@@ -210,29 +219,55 @@ class UIBar {
 	}
 
 	draw(context) {
-		context.fillStyle = "black";
-		context.fillRect(
-			this.screenPosition.x - 2,
-			this.screenPosition.y - 2,
-			this.pixelLength + 4,
-			this.pixelHeight + 4
-		);
+		if (this.isVertical) {
+			context.fillStyle = "black";
+			context.fillRect(
+				this.screenPosition.x - 2,
+				this.screenPosition.y + 2,
+				this.pixelLength + 4,
+				-this.pixelHeight - 4
+			);
 
-		context.fillStyle = "white";
-		context.fillRect(
-			this.screenPosition.x,
-			this.screenPosition.y,
-			this.pixelLength,
-			this.pixelHeight
-		);
+			context.fillStyle = "white";
+			context.fillRect(
+				this.screenPosition.x,
+				this.screenPosition.y,
+				this.pixelLength,
+				-this.pixelHeight
+			);
 
-		context.fillStyle = this.color;
-		context.fillRect(
-			this.screenPosition.x,
-			this.screenPosition.y,
-			this.pixelLength * this.value,
-			this.pixelHeight
-		);
+			context.fillStyle = this.color;
+			context.fillRect(
+				this.screenPosition.x,
+				this.screenPosition.y,
+				this.pixelLength,
+				-this.pixelHeight * this.value
+			);
+		} else {
+			context.fillStyle = "black";
+			context.fillRect(
+				this.screenPosition.x - 2,
+				this.screenPosition.y - 2,
+				this.pixelLength + 4,
+				this.pixelHeight + 4
+			);
+
+			context.fillStyle = "white";
+			context.fillRect(
+				this.screenPosition.x,
+				this.screenPosition.y,
+				this.pixelLength,
+				this.pixelHeight
+			);
+
+			context.fillStyle = this.color;
+			context.fillRect(
+				this.screenPosition.x,
+				this.screenPosition.y,
+				this.pixelLength * this.value,
+				this.pixelHeight
+			);
+		}
 	}
 }
 
@@ -298,23 +333,24 @@ function spawnAround(position, radius, isZone, isFood) {
 
 // ____________ Game Logic
 function GameUpdate() {
-	if(inGame) {
+	if (inGame) {
+		console.log("test")
 		player_new.update();
 		camera.followTarget(player_new.headPosition);
-		
+
 		spawnAround(player_new.headPosition, camera.size / 2, false, true);
 		if (startedPhaseOne) {
 			spawnAround(player_new.headPosition, camera.size / 2, true, false);
 		}
-		
+
 		foods.forEach((food) => {
 			food.update(player_new);
 		});
-		
+
 		zones.forEach((zone) => {
 			zone.update(player_new);
 		});
-		
+
 		if (!startedPhaseOne && phaseNumber == 1) {
 			console.log("STARTED PHASE 1");
 			startedPhaseOne = true;
@@ -340,10 +376,9 @@ function GameDraw() {
 		zone.draw(ctx);
 	});
 
-	hotValueBar.draw(ctx);
-	coldValueBar.draw(ctx);
-	hotResistanceBar.draw(ctx);
-	coldResistanceBar.draw(ctx);
+	bars.forEach(bar => {
+		bar.draw(ctx)
+	});
 }
 
 // _____________ Globals
@@ -356,6 +391,8 @@ let foods = [];
 
 let areaExpoloredRect = new Rect();
 
+let bars = [];
+
 let hotValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 10),
 	0,
@@ -363,6 +400,7 @@ let hotValueBar = new UIBar(
 	20,
 	"red"
 );
+bars.push(hotValueBar);
 
 let hotResistanceBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 30),
@@ -371,6 +409,7 @@ let hotResistanceBar = new UIBar(
 	10,
 	"#46f065"
 );
+bars.push(hotResistanceBar);
 
 let coldValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 50),
@@ -379,6 +418,7 @@ let coldValueBar = new UIBar(
 	20,
 	"blue"
 );
+bars.push(coldValueBar);
 
 let coldResistanceBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 70),
@@ -387,6 +427,17 @@ let coldResistanceBar = new UIBar(
 	10,
 	"#46f065"
 );
+bars.push(coldResistanceBar);
+
+let hungerBar = new UIBar(
+	new Vector2(20, canvas.height - 20),
+	0,
+	40,
+	400,
+	"#2dcf56",
+	true
+);
+bars.push(hungerBar);
 
 for (let i = 0; i < 20; i++) {
 	let newFood = new Food(new Vector2(i * 1.2, 0));
