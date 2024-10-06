@@ -332,7 +332,6 @@ function spawnAround(position, radius, isZone, isFood) {
 // ____________ Game Logic
 function GameUpdate() {
 	if (inGame) {
-		console.log("test")
 		player_new.update();
 		camera.followTarget(player_new.headPosition);
 
@@ -352,6 +351,7 @@ function GameUpdate() {
 		if (!startedPhaseOne && phaseNumber == 1) {
 			console.log("STARTED PHASE 1");
 			startedPhaseOne = true;
+			startHotPhase()
 		}
 	}
 }
@@ -359,6 +359,7 @@ function GameUpdate() {
 let startedPhaseOne = false;
 
 function startHotPhase() {
+
 	// Spwan hot spots
 }
 
@@ -374,9 +375,15 @@ function GameDraw() {
 		zone.draw(ctx);
 	});
 
-	bars.forEach(bar => {
+	if (startedPhaseOne) {
+		hotResistanceBar.draw()
+		hotValueBar.draw()
+		coldResistanceBar.draw()
+		coldValueBar.draw()
+	}
+	bars.forEach((bar) => {
 		bar.draw(ctx)
-	});
+	})
 }
 
 // _____________ Globals
@@ -398,7 +405,6 @@ let hotValueBar = new UIBar(
 	20,
 	"red"
 );
-bars.push(hotValueBar);
 
 let hotResistanceBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 30),
@@ -407,7 +413,6 @@ let hotResistanceBar = new UIBar(
 	10,
 	"#46f065"
 );
-bars.push(hotResistanceBar);
 
 let coldValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 50),
@@ -416,7 +421,6 @@ let coldValueBar = new UIBar(
 	20,
 	"blue"
 );
-bars.push(coldValueBar);
 
 let coldResistanceBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 70),
@@ -425,7 +429,6 @@ let coldResistanceBar = new UIBar(
 	10,
 	"#46f065"
 );
-bars.push(coldResistanceBar);
 
 let hungerBar = new UIBar(
 	new Vector2(20, canvas.height - 20),

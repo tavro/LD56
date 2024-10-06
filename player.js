@@ -14,6 +14,7 @@ class PlayerController {
 
 		this.hungerValue = 1.0;
 		this.hungerRate = 0.02;
+		this.isStarved = false;
 
 		this.playerBody = new PlayerBody();
 		this.mainNode = this.playerBody.nodes[0];
@@ -106,8 +107,10 @@ class PlayerController {
 
 	getHungry(rate) {
 		this.hungerValue -= (1 / 60) * rate;
-		if (this.hungerRate < 0) {
-			this.hungerRate = 0;
+		if (!this.isStarved && this.hungerValue < 0) {
+			this.hungerValue = 0;
+			this.isStarved = true;
+			console.log("YOU STARVED");
 		}
 		hungerBar.setValue(this.hungerValue);
 	}

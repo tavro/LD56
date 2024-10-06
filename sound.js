@@ -65,3 +65,7 @@ class SoundManager {
 const soundManager = new SoundManager();
 
 soundManager.loadSound("email", resouceUrl + "Audio/sfx_emailnotif.mp3")
+soundManager.loadSound("success", resouceUrl + "Audio/sfx_success.mp3")
+soundManager.loadSound("fail", resouceUrl + "Audio/sfx_fail.mp3")
+soundManager.loadSound("eat", resouceUrl + "Audio/sfx_eat.mp3")
+soundManager.loadSound("click", resouceUrl + "Audio/sfx_click.mp3")
