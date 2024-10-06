@@ -195,8 +195,8 @@ class Zone extends MassObject {
 				player.addColdResistance(((distanceToCenter + 1) ** 2 / 20) * (1 / 60));
 			}
 		}
-		if (Math.random() < 0.1) {
-			this.pushForward(Math.random() * 0.15, Math.PI / 3);
+		if (Math.random() < 0.2) {
+			this.pushForward(Math.random() * 0.04, Math.PI);
 		}
 		this.updatePhysics();
 	}
@@ -274,10 +274,10 @@ class UIBar {
 	draw(context) {
 		context.fillStyle = "black";
 		context.fillRect(
-			this.screenPosition.x - 5,
-			this.screenPosition.y - 5,
-			this.pixelLength + 10,
-			this.pixelHeight + 10
+			this.screenPosition.x - 2,
+			this.screenPosition.y - 2,
+			this.pixelLength + 4,
+			this.pixelHeight + 4
 		);
 
 		context.fillStyle = "white";
@@ -334,6 +334,12 @@ class Player {
 		this.hotValue = 0.0;
 		this.coldValue = 0.0;
 
+		this.hotResistance = 0.0;
+		this.coldResistance = 0.0;
+
+		this.isHotResistant = false;
+		this.isColdResistant = false;
+
 		this.nodes = [
 			new OrganismNode(1, "red", new Vector2(0, 0)),
 			new OrganismNode(1, "green", new Vector2(2, 0)),
@@ -363,19 +369,68 @@ class Player {
 		this.headPosition = this.mainNode.position;
 
 		if (this.hotValue > 0) {
-			this.hotValue -= (1 / 60) * 0.1;
+			if (!this.isHotResistant) {
+				this.hotValue -= (1 / 60) * 0.1;
+			} else {
+				this.hotValue = 1;
+				hotValueBar.color = "green";
+			}
 		} else {
 			this.hotValue = 0;
 		}
 
 		if (this.coldValue > 0) {
-			this.coldValue -= (1 / 60) * 0.1;
+			if (!this.isColdResistant) {
+				this.coldValue -= (1 / 60) * 0.1;
+			} else {
+				this.coldValue = 1;
+				coldValueBar.color = "green";
+			}
 		} else {
 			this.coldValue = 0;
 		}
 
-		hotBar.setValue(this.hotValue);
-		coldBar.setValue(this.coldValue);
+		if (this.coldValue > 0.42 && this.coldValue < 0.58) {
+			this.coldResistance += (1 / 60) * 0.1;
+			coldValueBar.color = "green";
+		} else {
+			coldValueBar.color = "red";
+		}
+
+		if (this.hotValue > 0.42 && this.hotValue < 0.58) {
+			this.hotResistance += (1 / 60) * 0.1;
+			hotValueBar.color = "green";
+		} else {
+			hotValueBar.color = "red";
+		}
+
+		if (!this.isColdResistant && this.coldResistance > 1) {
+			this.coldResistance = 1;
+			this.isColdResistant = true;
+			data.coldAmount = 1;
+		}
+
+		if (!this.isHotResistant && this.hotResistance > 1) {
+			this.hotResistance = 1;
+			this.isHotResistant = true;
+			data.hotAmount = 1;
+		}
+
+		if (!this.isColdResistant && this.coldValue > 1) {
+			console.log("You froze to death :c");
+			this.coldValue = 1;
+		}
+
+		if (!this.isHotResistant && this.hotValue >= 1) {
+			console.log("You burned up :c");
+			this.hotValue = 1;
+		}
+
+		hotValueBar.setValue(this.hotValue);
+		coldValueBar.setValue(this.coldValue);
+
+		hotResistanceBar.setValue(this.hotResistance);
+		coldResistanceBar.setValue(this.coldResistance);
 	}
 
 	draw(context) {
@@ -389,13 +444,13 @@ class Player {
 	}
 
 	addHotResistance(value) {
-		if (this.hotValue <= 1.0) {
+		if (!this.isHotResistant && this.hotValue <= 1.0) {
 			this.hotValue += value;
 		}
 	}
 
 	addColdResistance(value) {
-		if (this.coldValue <= 1.0) {
+		if (!this.isColdResistant && this.coldValue <= 1.0) {
 			this.coldValue += value;
 		}
 	}
@@ -489,13 +544,10 @@ function GameUpdate() {
 	zones.forEach((zone) => {
 		zone.update(player);
 	});
-	hotBar.update(player);
-	coldBar.update(player);
 }
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	// buffer_ctx.clearRect(0, 0, canvas.width, canvas.height);
 	player.draw(ctx);
 
 	foods.forEach((food) => {
@@ -506,8 +558,10 @@ function GameDraw() {
 		zone.draw(ctx);
 	});
 
-	hotBar.draw(ctx);
-	coldBar.draw(ctx);
+	hotValueBar.draw(ctx);
+	coldValueBar.draw(ctx);
+	hotResistanceBar.draw(ctx);
+	coldResistanceBar.draw(ctx);
 }
 
 // _____________ Globals
@@ -521,7 +575,7 @@ let foods = [];
 
 let areaExpoloredRect = new Rect();
 
-let hotBar = new UIBar(
+let hotValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 10),
 	0,
 	200,
@@ -529,12 +583,28 @@ let hotBar = new UIBar(
 	"red"
 );
 
-let coldBar = new UIBar(
+let hotResistanceBar = new UIBar(
+	new Vector2(canvas.width / 2 - 100, 30),
+	0,
+	200,
+	10,
+	"green"
+);
+
+let coldValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 50),
 	0,
 	200,
 	20,
 	"blue"
+);
+
+let coldResistanceBar = new UIBar(
+	new Vector2(canvas.width / 2 - 100, 70),
+	0,
+	200,
+	10,
+	"green"
 );
 
 for (let i = 0; i < 20; i++) {
@@ -543,6 +613,15 @@ for (let i = 0; i < 20; i++) {
 }
 
 let zones = [];
+
+for (let i = 0; i < 30; i++) {
+	const randomX = Math.random() - 0.5 * 50;
+	const randomY = Math.random() - 0.5 * 50;
+	let newZone = new Zone(new Vector2(randomX, randomY), (Math.random() + 10) * 10)
+	if (Math.random() > 0.5) {
+		let hotZone = new Zone(new Vector2(20, 0), 20, true);
+	}
+}
 
 let hotZone = new Zone(new Vector2(20, 0), 20, true);
 let coldZone = new Zone(new Vector2(-20, 0), 20, false);
