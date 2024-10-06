@@ -162,6 +162,8 @@ function handleMail() {
   document.getElementById("overlay-title").innerHTML = obj.topic;
   document.getElementById("overlay-content").innerHTML = obj.content;
 
+	document.getElementById("primary-summary").innerHTML = truncateString(obj.sender, 16) + " - " + truncateString(obj.topic, 16);
+
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
 
@@ -416,7 +418,7 @@ const campaignMails = [
       <p><strong>Chef Enchantress</strong><br>Head Baker at Foodie Fun Factory</p>
       </div>`,
 		timestamp: "10:30",
-		category: "baking",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -436,7 +438,7 @@ const campaignMails = [
       <p><strong>Wanda Wild</strong><br>Party Planner at Zany Zoo Adventures</p>
       </div>`,
 		timestamp: "15:00",
-		category: "events",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -456,7 +458,7 @@ const campaignMails = [
       <p><strong>Chic Charlie</strong><br>Style Director at Funky Fashion House</p>
       </div>`,
 		timestamp: "11:20",
-		category: "fashion",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -476,7 +478,7 @@ const campaignMails = [
       <p><strong>Artie Explorer</strong><br>Head Adventurer at Adventurous Art Studio</p>
       </div>`,
 		timestamp: "12:45",
-		category: "art",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -496,7 +498,7 @@ const campaignMails = [
       <p><strong>Captain Quirk</strong><br>Chief Treasure Officer at Quirky Quests Co.</p>
       </div>`,
 		timestamp: "09:50",
-		category: "adventure",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -516,7 +518,7 @@ const campaignMails = [
       <p><strong>Chef Loony</strong><br>Chief Noodle Officer at Crazy Cooking Club</p>
       </div>`,
 		timestamp: "16:15",
-		category: "cooking",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -536,7 +538,7 @@ const campaignMails = [
       <p><strong>DJ Starburst</strong><br>Chief Party Planner at Glitter Galaxy Inc.</p>
       </div>`,
 		timestamp: "20:00",
-		category: "events",
+		category: "campaigns",
 		read: false,
 		favorite: false,
 		important: false,
@@ -559,6 +561,8 @@ function handleCampaignMail() {
   document.getElementById("overlay-sender").innerHTML = campaignEmail.sender; 
   document.getElementById("overlay-title").innerHTML = campaignEmail.topic;
   document.getElementById("overlay-content").innerHTML = campaignEmail.content;
+	
+	document.getElementById("campaigns-summary").innerHTML = truncateString(campaignEmail.sender, 16) + " - " + truncateString(campaignEmail.topic, 16);
 
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
@@ -577,6 +581,6 @@ function handleCampaignMail() {
 function checkRandomCampaignMail() {
 	setInterval(() => {
 		handleCampaignMail();
-	}, Math.floor(Math.random() * (300000 - 120000 + 1)) + 120000);
+	}, Math.floor(Math.random() * (150000 - 60000 + 1)) + 60000);
 }
 checkRandomCampaignMail();

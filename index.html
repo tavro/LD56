@@ -70,21 +70,21 @@
 						<img src="res/Icon_Primary.svg" />
 						<div class="c2-text-wrapper">
 							<p>Primary</p>
-							<p class="summary">No new mail...</p> <!-- TODO: Update this when new mail arrives -->
+							<p class="summary" id="primary-summary">No new mail...</p>
 						</div>
 					</div>
 					<div class="category2" id="category-campaigns">
 						<img src="res/Icon_Campaigns.svg" />
 						<div class="c2-text-wrapper">
 							<p>Campaigns</p>
-							<p class="summary">No new mail...</p>
+							<p class="summary" id="campaigns-summary">No new mail...</p>
 						</div>
 					</div>
 					<div class="category2" id="category-social">
 						<img src="res/Icon_Social.svg" />
 						<div class="c2-text-wrapper">
 							<p>Social</p>
-							<p class="summary">No new mail...</p>
+							<p class="summary" id="social-summary">No new mail...</p>
 						</div>
 					</div>
 				</div>
@@ -125,6 +125,7 @@
       <h2 id="overlay-title"></h2>
       <p id="overlay-content"></p>
     </div>
+		<script src="utils.js"></script>
 		<script src="sound.js"></script>
 		<script src="stats.js"></script>
 		<script src="mail.js"></script>

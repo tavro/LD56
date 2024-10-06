@@ -11,8 +11,18 @@ const builderAppId = "builder";
 
 function changeScreen(curId, othId) {
   if(othId == "mail-wrapper") {
-    clearMailInbox(); // TODO: Reset rest of state
-    generateMailPreviews(undefined, "primary");
+    clearMailInbox();
+
+		category = "primary";
+		document.querySelector("#category-primary").style.borderBottom = "2px solid black";
+		document.querySelector("#category-campaigns").style.borderBottom = "none";
+		document.querySelector("#category-social").style.borderBottom = "none";
+
+		document.querySelector("#mm-inbox").style.fontWeight = "bold";
+		document.querySelector("#mm-favorites").style.fontWeight = "100";
+		document.querySelector("#mm-important").style.fontWeight = "100";
+
+    generateMailPreviews(undefined, category);
   }
 	const cur = document.querySelector("#" + curId);
 	const oth = document.querySelector("#" + othId);
@@ -22,19 +32,6 @@ function changeScreen(curId, othId) {
 
 function clickApp(id) {
 	changeScreen("os-wrapper", id + "-wrapper");
-}
-
-function truncateString(str, maxLength) {
-	if (str.length <= maxLength) {
-		return str;
-	}
-	return str.slice(0, maxLength) + "...";
-}
-
-function htmlToPlainString(html) {
-  var tempElement = document.createElement("div");
-  tempElement.innerHTML = html;
-  return tempElement.textContent || tempElement.innerText || "";
 }
 
 function generateHtml(mail, id) {
@@ -48,7 +45,7 @@ function generateHtml(mail, id) {
 		mail.important ? "res/Icon_StarYellow.svg" : "res/Icon_StarWhite.svg"
 	}" id="${id}-important-btn" />
   </div>
-  <div style="display:flex;flex-direction:row;align-items:center;" id="${id}-info-wrapper">
+  <div style="display:flex;flex-direction:row;align-items:center;width:90%;" id="${id}-info-wrapper">
   <div class="sender"><p>${mail.sender}</p></div>
   <div class="mp-text-wrapper">
   <div class="topic"><p>${

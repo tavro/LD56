@@ -46,6 +46,10 @@ body {
   background-color: white;
 }
 
+#mail-inbox {
+  width: 100vw;
+}
+
 #mail-info-wrapper {
   margin: 32px;
 }
@@ -156,17 +160,23 @@ body {
   flex-direction: row;
   align-items: center;
   height: 32px;
-  width: 256px;
+  width: 30%;
+}
+
+.mp-icons-wrapper {
+  width: 10%;
 }
 
 .mp-text-wrapper {
   display: flex;
   flex-direction: row;
-  width: 624px;
+  width: 50%;
 }
 
 .timestamp {
   margin-right: 8px;
+  width: 20%;
+  text-align: end;
 }
 
 .read {
