@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <rect id="Icon_Cursor" x="0" y="0" width="64" height="64" style="fill:none;"/>
+    <path d="M1.679,1.555L17.605,2.895L3.018,17.481L1.679,1.555Z" style="fill:white;stroke:black;stroke-width:2px;"/>
+    <circle cx="31.443" cy="31.579" r="23.394" style="fill:rgb(239,168,138);stroke:black;stroke-width:4px;"/>
+    <circle cx="41.32" cy="10.188" r="6.238" style="fill:rgb(205,216,251);stroke:black;stroke-width:2px;"/>
+    <circle cx="28.885" cy="20.26" r="3.833" style="fill:rgb(205,216,251);stroke:black;stroke-width:2px;"/>
+    <circle cx="33.848" cy="54.973" r="7.472" style="fill:rgb(205,216,251);stroke:black;stroke-width:2px;"/>
+    <circle cx="49.118" cy="33.97" r="9.877" style="fill:rgb(205,216,251);stroke:black;stroke-width:2px;"/>
+    <circle cx="9.115" cy="31.579" r="7.798" style="fill:rgb(205,216,251);stroke:black;stroke-width:2px;"/>
+</svg>
