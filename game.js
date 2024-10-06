@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 // ______________ Resources
 zoneHot_img = new Image();
 zoneCold_img = new Image();
-zoneHot_img.src = "Res/Organism/Organism_ZoneHot.png";
+zoneHot_img.src = "/Res/Organism/Organism_ZoneHot.png";
 zoneCold_img.src = "Res/Organism/Organism_ZoneCold.png";
 
 // ______________ Global Constants
