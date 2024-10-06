@@ -7,7 +7,7 @@ body {
 #desktop-wrapper {
   display: flex;
   flex-direction: row;
-  background-image: url("res/wallpaper.jpg");
+  background-image: url("https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/wallpaper.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vh;
@@ -334,7 +334,7 @@ canvas {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: url('res/glass.png') no-repeat center center/cover;
+  background: url('https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/glass.png') no-repeat center center/cover;
   opacity: 0.25;
   z-index: 0;
 }
