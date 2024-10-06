@@ -27,7 +27,7 @@ function changeScreen(curId, othId) {
 		generateMailPreviews(undefined, category);
 	} else if (othId == "telescope-wrapper") {
 		inGame = true;
-		soundManager.loadMusic("res/Music/first-draft.mp3");
+		soundManager.loadMusic("https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Music/first-draft.mp3");
 		soundManager.setMusicVolume(0.3);
 		soundManager.playMusic();
 	} else if (othId == "builder-wrapper") {
@@ -48,10 +48,10 @@ function generateHtml(mail, id) {
   <div class="mail-preview ${mail.read ? "read" : ""}" id="${id}">
   <div class="mp-icons-wrapper">
   <img src="${
-		mail.favorite ? "res/Icon_Favorites_2.svg" : "res/Icon_Favorites.svg"
+		mail.favorite ? "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites_2.svg" : "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites.svg"
 	}" id="${id}-favorite-btn" />
   <img src="${
-		mail.important ? "res/Icon_StarYellow.svg" : "res/Icon_StarWhite.svg"
+		mail.important ? "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarYellow.svg" : "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarWhite.svg"
 	}" id="${id}-important-btn" />
   </div>
   <div style="display:flex;flex-direction:row;align-items:center;width:90%;" id="${id}-info-wrapper">
