@@ -27,12 +27,17 @@ function checkAssignments(amount, id) {
                 temp.style.display = "none";
             }
             awaitingMail = true;
+						if (id == "food" || id == "warmth" || id == "cold") {
+							phaseNumber++;
+						}
             return true;
         }
         
         return false;
     }
 }
+
+let phaseNumber = 0
 
 var mouthAmount = 0;
 var foodAmount = 0;
@@ -60,7 +65,7 @@ Object.defineProperty(data, "mouthAmount", {
 		mouthAmount = value;
 		const elem = document.querySelector("#mouthAmount");
 		if(elem) {
-			elem.innerHTML = foodAmount;
+			elem.innerHTML = mouthAmount;
 		}
 		checkAssignments(mouthAmount, "mouth");
 	},
@@ -88,7 +93,7 @@ Object.defineProperty(data, "warmAmount", {
 		warmAmount = value;
 		const elem = document.querySelector("#warmthAmount");
 		if(elem) {
-			elem.innerHTML = foodAmount;
+			elem.innerHTML = warmAmount;
 		}
 		checkAssignments(warmAmount, "warmth");
 	},
@@ -102,7 +107,7 @@ Object.defineProperty(data, "coldAmount", {
 		coldAmount = value;
 		const elem = document.querySelector("#coldAmount");
 		if(elem) {
-			elem.innerHTML = foodAmount;
+			elem.innerHTML = coldAmount;
 		}
 		checkAssignments(coldAmount, "cold");
 	},
@@ -116,7 +121,7 @@ Object.defineProperty(data, "virusAmount", {
 		virusAmount = value;
 		const elem = document.querySelector("#virusAmount");
 		if(elem) {
-			elem.innerHTML = foodAmount;
+			elem.innerHTML = virusAmount;
 		}
 		checkAssignments(virusAmount, "virus");
 	},
@@ -130,7 +135,7 @@ Object.defineProperty(data, "radioactivityAmount", {
 		radioactivityAmount = value;
 		const elem = document.querySelector("#radioactivityAmount");
 		if(elem) {
-			elem.innerHTML = foodAmount;
+			elem.innerHTML = radioactivityAmount;
 		}
 		checkAssignments(radioactivityAmount, "radioactivity");
 	},
@@ -144,7 +149,7 @@ Object.defineProperty(data, "killAmount", {
 		killAmount = value;
 		const elem = document.querySelector("#killAmount");
 		if(elem) {
-			elem.innerHTML = foodAmount;
+			elem.innerHTML = killAmount;
 		}
 		checkAssignments(killAmount, "kill");
 	},

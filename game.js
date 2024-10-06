@@ -1,19 +1,14 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// Buffer context for tinting
-buffer = document.createElement("canvas");
-if (typeof window.G_vmlCanvasManager != "undefined") {
-	G_vmlCanvasManager.initElement(buffer);
-}
-const buffer_ctx = buffer.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // ______________ Resources
-zone_img = new Image();
-zone_img.src = "Res/Organism/Organism_Zone.png";
+zoneHot_img = new Image();
+zoneCold_img = new Image();
+zoneHot_img.src = "Res/Organism/Organism_ZoneHot.png";
+zoneCold_img.src = "Res/Organism/Organism_ZoneCold.png";
 
 // ______________ Global Constants
 const pixelsPerUnit = 32;
@@ -28,36 +23,20 @@ function mousePositionToWorldCoords() {
 	return result;
 }
 
-function drawImg(context, img, worldPosition, worldSize, color, opacity = 1.0) {
+function drawImg(context, img, worldPosition, worldSize, opacity = 1.0) {
 	context.globalAlpha = opacity;
 
 	const pixelSize = (worldToPixelFactor / camera.size) * worldSize;
 
 	const centerOffset = -pixelSize / 2;
 
-	buffer.width = pixelSize;
-	buffer.height = pixelSize;
-
 	const screenPosition = new Vector2(
 		((worldPosition.x - camera.position.x) / camera.size) * worldToPixelFactor,
 		((worldPosition.y - camera.position.y) / camera.size) * worldToPixelFactor
 	).add(new Vector2(centerOffset, centerOffset));
 
-	buffer_ctx.fillStyle = color;
-	buffer_ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-	buffer_ctx.globalCompositeOperation = "destination-atop";
-	buffer_ctx.drawImage(img, 0, 0, pixelSize, pixelSize);
-
 	context.drawImage(
 		img,
-		screenPosition.x,
-		screenPosition.y,
-		pixelSize,
-		pixelSize
-	);
-	context.drawImage(
-		buffer,
 		screenPosition.x,
 		screenPosition.y,
 		pixelSize,
@@ -87,7 +66,7 @@ class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
 		this.aspectRatio = canvas.width / canvas.height;
-		this.size = 40;
+		this.size = 50;
 	}
 
 	setCameraPosition(value) {
@@ -108,78 +87,26 @@ class Camera {
 	}
 }
 
-class MassObject {
-	constructor(position = null, drag = 1.2) {
-		this.position = position;
-		if (position === null) this.position = new Vector2(0, 0);
-
-		this.drag = drag;
-
-		this.mass = 1;
-
-		this.force = new Vector2(0, 0);
-		this.velocity = new Vector2(0, 0);
-		this.acceleration = new Vector2(0, 0);
-	}
-
-	getDirectionAngle() {
-		return Math.atan2(this.velocity.y, this.velocity.x);
-	}
-
-	updatePhysics() {
-		this.acceleration = this.force.scale(1 / this.mass);
-		this.velocity = this.velocity.add(this.acceleration).scale(1 / this.drag);
-		this.position = this.position.add(this.velocity);
-		this.force = new Vector2(0, 0);
-	}
-
-	pushToPoint(targetCoords, force, isSpringy, threshold = 0) {
-		const delta = this.position.difference(targetCoords);
-		if (delta.magnitude() > threshold) {
-			if (isSpringy) {
-				this.force = new Vector2(delta.x, delta.y).scale(force);
-			} else {
-				this.force = new Vector2(delta.x, delta.y).normalized().scale(force);
-			}
-		}
-	}
-
-	pushToDirection(directionAngle, force) {
-		const direction = new Vector2(
-			Math.cos(directionAngle),
-			Math.sin(directionAngle)
-		);
-
-		this.force = new Vector2(direction.x, direction.y).scale(force);
-	}
-
-	pushForward(force, angleSpan) {
-		this.pushToDirection(
-			this.getDirectionAngle() + (Math.random() - 0.5) * angleSpan,
-			force
-		);
-	}
-}
-
 class Zone extends MassObject {
-	constructor(position, size, isHot) {
+	constructor(position, size) {
 		super();
 		this.position = position;
 		this.size = size;
-		this.isHot = isHot;
-		this.color = "pink";
+		this.isHot = true;
 		this.mass = 3;
 		this.drag = 1.012;
+	}
 
-		if (this.isHot) {
-			this.color = "red";
-		} else {
-			this.color = "#8adeff";
-		}
+	setIsHot(value) {
+		this.isHot = value;
 	}
 
 	draw(context) {
-		drawImg(context, zone_img, this.position, this.size, this.color, 0.5);
+		if (this.isHot) {
+			drawImg(context, zoneHot_img, this.position, this.size, 0.5);
+		} else {
+			drawImg(context, zoneCold_img, this.position, this.size, 0.5);
+		}
 	}
 
 	update(player) {
@@ -326,229 +253,74 @@ class OrganismNode extends MassObject {
 	}
 }
 
-class Player {
-	constructor() {
-		this.headPosition;
-		this.controlForce = 5 * 0.01;
+let lastSpawnPoint = new Vector2(0, 0);
+function spawnAround(position, radius, isZone, isFood) {
+	const delta = lastSpawnPoint.difference(position);
 
-		this.hotValue = 0.0;
-		this.coldValue = 0.0;
+	if (delta.magnitude() > radius) {
+		const dirAngle = Math.atan2(delta.y, delta.x);
 
-		this.hotResistance = 0.0;
-		this.coldResistance = 0.0;
+		for (let a = 0; a < Math.PI; a += 0.3) {
+			const distance = new Vector2(
+				Math.cos(dirAngle + a - Math.PI / 2),
+				Math.sin(dirAngle + a - Math.PI / 2)
+			).scale(Math.random() * radius + radius);
+			const spawnPoint = position.add(distance);
 
-		this.isHotResistant = false;
-		this.isColdResistant = false;
-
-		this.nodes = [
-			new OrganismNode(1, "red", new Vector2(0, 0)),
-			new OrganismNode(1, "green", new Vector2(2, 0)),
-			new OrganismNode(1, "blue", new Vector2(4, 0)),
-		];
-
-		this.mainNode = this.nodes[0];
-
-		for (let i = this.nodes.length - 1; i > 0; i--) {
-			this.nodes[i].parent = this.nodes[i - 1];
-		}
-	}
-
-	update() {
-		if (isMouseDown) {
-			this.mainNode.pushToPoint(
-				mousePositionToWorldCoords(),
-				this.controlForce,
-				false
-			);
-		}
-
-		this.nodes.forEach((node) => {
-			node.update();
-		});
-
-		this.headPosition = this.mainNode.position;
-
-		if (this.hotValue > 0) {
-			if (!this.isHotResistant) {
-				this.hotValue -= (1 / 60) * 0.1;
-			} else {
-				this.hotValue = 1;
-				hotValueBar.color = "green";
+			if (isFood) {
+				let newFood = new Food(spawnPoint);
+				foods.push(newFood);
 			}
-		} else {
-			this.hotValue = 0;
-		}
-
-		if (this.coldValue > 0) {
-			if (!this.isColdResistant) {
-				this.coldValue -= (1 / 60) * 0.1;
-			} else {
-				this.coldValue = 1;
-				coldValueBar.color = "green";
+			if (isZone) {
+				let newZone = new Zone(spawnPoint, Math.random() * 10 + 10);
+				if (Math.random() > 0.5) {
+					newZone.setIsHot(true);
+				} else {
+					newZone.setIsHot(false);
+				}
+				zones.push(newZone);
 			}
-		} else {
-			this.coldValue = 0;
 		}
-
-		if (this.coldValue > 0.42 && this.coldValue < 0.58) {
-			this.coldResistance += (1 / 60) * 0.1;
-			coldValueBar.color = "green";
-		} else {
-			coldValueBar.color = "red";
-		}
-
-		if (this.hotValue > 0.42 && this.hotValue < 0.58) {
-			this.hotResistance += (1 / 60) * 0.1;
-			hotValueBar.color = "green";
-		} else {
-			hotValueBar.color = "red";
-		}
-
-		if (!this.isColdResistant && this.coldResistance > 1) {
-			this.coldResistance = 1;
-			this.isColdResistant = true;
-			data.coldAmount = 1;
-		}
-
-		if (!this.isHotResistant && this.hotResistance > 1) {
-			this.hotResistance = 1;
-			this.isHotResistant = true;
-			data.hotAmount = 1;
-		}
-
-		if (!this.isColdResistant && this.coldValue > 1) {
-			console.log("You froze to death :c");
-			this.coldValue = 1;
-		}
-
-		if (!this.isHotResistant && this.hotValue >= 1) {
-			console.log("You burned up :c");
-			this.hotValue = 1;
-		}
-
-		hotValueBar.setValue(this.hotValue);
-		coldValueBar.setValue(this.coldValue);
-
-		hotResistanceBar.setValue(this.hotResistance);
-		coldResistanceBar.setValue(this.coldResistance);
-	}
-
-	draw(context) {
-		for (let i = 0; i < this.nodes.length; i++) {
-			this.nodes[i].draw(context);
-		}
-	}
-
-	giveFood() {
-		data.foodAmount++;
-	}
-
-	addHotResistance(value) {
-		if (!this.isHotResistant && this.hotValue <= 1.0) {
-			this.hotValue += value;
-		}
-	}
-
-	addColdResistance(value) {
-		if (!this.isColdResistant && this.coldValue <= 1.0) {
-			this.coldValue += value;
-		}
-	}
-}
-
-function spawnFood(
-	exploredRect,
-	east = false,
-	west = false,
-	north = false,
-	south = false
-) {
-	if (east) {
-		for (let i = 0; i < exploredRect.getDimensions().y / 8; i++) {
-			const lineStart = exploredRect.right;
-			const lineEnd = exploredRect.right + camera.size * camera.aspectRatio;
-			const randomY =
-				exploredRect.top + Math.random() * exploredRect.getDimensions().y;
-			const randomX =
-				exploredRect.right + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
-	}
-	if (west) {
-		for (let i = 0; i < exploredRect.getDimensions().y / 8; i++) {
-			const lineStart = exploredRect.left;
-			const lineEnd = exploredRect.left - camera.size * camera.aspectRatio;
-			const randomY =
-				exploredRect.top + Math.random() * exploredRect.getDimensions().y;
-			const randomX = exploredRect.left + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
-	}
-
-	if (south) {
-		for (let i = 0; i < exploredRect.getDimensions().x / 8; i++) {
-			const lineStart = exploredRect.bottom;
-			const lineEnd = exploredRect.bottom + camera.size * camera.aspectRatio;
-			const randomX =
-				exploredRect.left + Math.random() * exploredRect.getDimensions().x;
-			const randomY =
-				exploredRect.bottom + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
-	}
-
-	if (north) {
-		for (let i = 0; i < exploredRect.getDimensions().x / 8; i++) {
-			const lineStart = exploredRect.top;
-			const lineEnd = exploredRect.top - camera.size * camera.aspectRatio;
-			const randomX =
-				exploredRect.left + Math.random() * exploredRect.getDimensions().x;
-			const randomY = exploredRect.top + Math.random() * (lineEnd - lineStart);
-			let newFood = new Food(new Vector2(randomX, randomY));
-			foods.push(newFood);
-		}
+		lastSpawnPoint = position;
 	}
 }
 
 // ____________ Game Logic
 function GameUpdate() {
-	player.update();
-	camera.followTarget(player.headPosition);
+	player_new.update();
+	camera.followTarget(player_new.headPosition);
 
-	if (player.headPosition.x > areaExpoloredRect.right) {
-		areaExpoloredRect.right =
-			player.headPosition.x + (camera.size * camera.aspectRatio) / 2;
-		spawnFood(areaExpoloredRect, true, false, false, false);
-	}
-	if (player.headPosition.x < areaExpoloredRect.left) {
-		areaExpoloredRect.left =
-			player.headPosition.x - (camera.size * camera.aspectRatio) / 2;
-		spawnFood(areaExpoloredRect, false, true, false, false);
-	}
-	if (player.headPosition.y > areaExpoloredRect.bottom) {
-		areaExpoloredRect.bottom = player.headPosition.y + camera.size / 2;
-		spawnFood(areaExpoloredRect, false, false, false, true);
-	}
-	if (player.headPosition.y < areaExpoloredRect.top) {
-		areaExpoloredRect.top = player.headPosition.y - camera.size / 2;
-		spawnFood(areaExpoloredRect, false, false, true, false);
+	spawnAround(player_new.headPosition, camera.size, false, false);
+	if (startedPhaseOne) {
+		spawnAround(player_new.headPosition, camera.size, false, true);
 	}
 
 	foods.forEach((food) => {
-		food.update(player);
+		food.update(player_new);
 	});
 
 	zones.forEach((zone) => {
-		zone.update(player);
+		zone.update(player_new);
 	});
+
+	if (!startedPhaseOne && phaseNumber == 1) {
+		console.log("STARTED PHASE 1")
+		startedPhaseOne = true
+	}
 }
+
+let startedPhaseOne = false
+
+function startHotPhase(){
+	// Spwan hot spots
+
+	
+}
+
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	player.draw(ctx);
+	player_new.draw(ctx);
 
 	foods.forEach((food) => {
 		food.draw(ctx);
@@ -566,7 +338,6 @@ function GameDraw() {
 
 // _____________ Globals
 let mousePosition = new Vector2(0, 0);
-let player = new Player();
 let isMouseDown = false;
 let camera = new Camera();
 let keyboard = new KeyboardManager();
@@ -588,7 +359,7 @@ let hotResistanceBar = new UIBar(
 	0,
 	200,
 	10,
-	"green"
+	"#46f065"
 );
 
 let coldValueBar = new UIBar(
@@ -604,7 +375,7 @@ let coldResistanceBar = new UIBar(
 	0,
 	200,
 	10,
-	"green"
+	"#46f065"
 );
 
 for (let i = 0; i < 20; i++) {
@@ -614,20 +385,20 @@ for (let i = 0; i < 20; i++) {
 
 let zones = [];
 
-for (let i = 0; i < 30; i++) {
-	const randomX = Math.random() - 0.5 * 50;
-	const randomY = Math.random() - 0.5 * 50;
-	let newZone = new Zone(new Vector2(randomX, randomY), (Math.random() + 10) * 10)
-	if (Math.random() > 0.5) {
-		let hotZone = new Zone(new Vector2(20, 0), 20, true);
-	}
-}
-
-let hotZone = new Zone(new Vector2(20, 0), 20, true);
-let coldZone = new Zone(new Vector2(-20, 0), 20, false);
-zones.push(hotZone);
-zones.push(coldZone);
-
+// for (let i = 0; i < 20; i++) {
+// 	const randomX = (Math.random() - 0.5) * 50;
+// 	const randomY = (Math.random() - 0.5) * 50;
+// 	let newZone = new Zone(
+// 		new Vector2(randomX, randomY),
+// 		Math.random() * 10 + 10
+// 	);
+// 	if (Math.random() > 0.5) {
+// 		newZone.setIsHot(true);
+// 	} else {
+// 		newZone.setIsHot(false);
+// 	}
+// 	zones.push(newZone);
+// }
 // ____________ Events
 canvas.addEventListener("mousemove", (event) => {
 	mousePosition.x = event.clientX;
