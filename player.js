@@ -156,7 +156,7 @@ class Node_New extends MassObject {
 	}
 
 	containsPoint(checkPosition) {
-		const pixelPos = worldToScreenCoords(this.position)
+		const pixelPos = worldToScreenCoords(this.position);
 		const deltaPixels = checkPosition.difference(pixelPos);
 
 		return deltaPixels.magnitude() <= this.size * pixelsPerUnit;
@@ -192,43 +192,64 @@ class Node_New extends MassObject {
 	}
 
 	drawFeature(ctx) {
+		const screenPosition = worldToScreenCoords(this.position);
+
 		if (this.type === "arms") {
 			ctx.strokeStyle = "black";
 			ctx.lineWidth = 2;
+
 			ctx.beginPath();
-			ctx.moveTo(this.position.x, this.position.y - this.size * 1.2);
-			ctx.lineTo(this.position.x, this.position.y - this.size * 2);
+			ctx.moveTo(
+				screenPosition.x,
+				screenPosition.y - this.size * 1.2 * pixelsPerUnit
+			);
+			ctx.lineTo(
+				screenPosition.x,
+				screenPosition.y - this.size * 2 * pixelsPerUnit
+			);
 			ctx.stroke();
 
 			ctx.beginPath();
-			ctx.moveTo(this.position.x, this.position.y + this.size * 1.2);
-			ctx.lineTo(this.position.x, this.position.y + this.size * 2);
+			ctx.moveTo(
+				screenPosition.x,
+				screenPosition.y + this.size * 1.2 * pixelsPerUnit
+			);
+			ctx.lineTo(
+				screenPosition.x,
+				screenPosition.y + this.size * 2 * pixelsPerUnit
+			);
 			ctx.stroke();
 		} else if (this.type === "fins") {
 			ctx.fillStyle = "black";
 
 			ctx.beginPath();
-			ctx.moveTo(this.position.x, this.position.y - this.size * 1.1);
-			ctx.lineTo(
-				this.position.x - this.size * 0.6,
-				this.position.y - this.size * 1.5
+			ctx.moveTo(
+				screenPosition.x,
+				screenPosition.y - this.size * 1.1 * pixelsPerUnit
 			);
 			ctx.lineTo(
-				this.position.x + this.size * 0.6,
-				this.position.y - this.size * 1.5
+				screenPosition.x - this.size * 0.6 * pixelsPerUnit,
+				screenPosition.y - this.size * 1.5 * pixelsPerUnit
+			);
+			ctx.lineTo(
+				screenPosition.x + this.size * 0.6 * pixelsPerUnit,
+				screenPosition.y - this.size * 1.5 * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
 
 			ctx.beginPath();
-			ctx.moveTo(this.position.x, this.position.y + this.size * 1.1);
-			ctx.lineTo(
-				this.position.x - this.size * 0.6,
-				this.position.y + this.size * 1.5
+			ctx.moveTo(
+				screenPosition.x,
+				screenPosition.y + this.size * 1.1 * pixelsPerUnit
 			);
 			ctx.lineTo(
-				this.position.x + this.size * 0.6,
-				this.position.y + this.size * 1.5
+				screenPosition.x - this.size * 0.6 * pixelsPerUnit,
+				screenPosition.y + this.size * 1.5 * pixelsPerUnit
+			);
+			ctx.lineTo(
+				screenPosition.x + this.size * 0.6 * pixelsPerUnit,
+				screenPosition.y + this.size * 1.5 * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();

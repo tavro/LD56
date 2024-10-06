@@ -153,7 +153,7 @@ builder_canvas.height = window.innerHeight;
 const particleCount = 50;
 const particles = [];
 
-const colors = ['#777777', '#AAAAAA', '#BBBBBB', '#DDDDDD'];
+const colors = ['#BBBBBB', '#CCCCCC', '#DDDDDD', '#EEEEEE'];
 
 function drawBackgroundLight() {
     const gradient = builder_context.createRadialGradient(
@@ -260,9 +260,9 @@ class Particle {
             y: (Math.random() * 0.2 - 0.1) * 0.2
         };
 
-        this.lifetime = Math.random() * 50000 + 50000;
+        this.lifetime = Math.random() * 5000 + 5000;
         this.shape = this.generateShape();
-        this.thickness = Math.random() * 10 + 10;
+        this.thickness = Math.random() * 5 + 5;
     }
 }
 
