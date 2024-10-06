@@ -5,8 +5,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // ______________ Resources
-const resouceUrl =
-	"https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/";
 
 zoneHot_img = new Image();
 zoneCold_img = new Image();

@@ -166,6 +166,8 @@ function handleMail() {
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
 
+	soundManager.playSound("email")
+
 	setTimeout(function () {
 		overlay.style.opacity = "0";
 		setTimeout(function () {

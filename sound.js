@@ -63,3 +63,5 @@ class SoundManager {
 }
 
 const soundManager = new SoundManager();
+
+soundManager.loadSound("email", resouceUrl + "Audio/sfx_emailnotif.mp3")
