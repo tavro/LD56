@@ -126,6 +126,8 @@ class Node_New extends MassObject {
 		this.type = null; // 'fins' or 'arms'
 		this.parent = null;
 		this.drag = 1.1;
+		this.level = 1;
+		this.maxLevel = 3;
 	}
 
 	update() {
@@ -211,7 +213,7 @@ class Node_New extends MassObject {
 			);
 			ctx.lineTo(
 				screenPosition.x,
-				screenPosition.y - this.size * 1 * pixelsPerUnit
+				screenPosition.y - this.size * (0.7 * this.level) * pixelsPerUnit
 			);
 			ctx.stroke();
 
@@ -222,7 +224,7 @@ class Node_New extends MassObject {
 			);
 			ctx.lineTo(
 				screenPosition.x,
-				screenPosition.y + this.size * 1 * pixelsPerUnit
+				screenPosition.y + this.size * (0.7 * this.level) * pixelsPerUnit
 			);
 			ctx.stroke();
 		} else if (this.type === "fins") {
@@ -235,11 +237,11 @@ class Node_New extends MassObject {
 			);
 			ctx.lineTo(
 				screenPosition.x - this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y - this.size * 0.75 * pixelsPerUnit
+				screenPosition.y - this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.lineTo(
 				screenPosition.x + this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y - this.size * 0.75 * pixelsPerUnit
+				screenPosition.y - this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
@@ -251,11 +253,11 @@ class Node_New extends MassObject {
 			);
 			ctx.lineTo(
 				screenPosition.x - this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y + this.size * 0.75 * pixelsPerUnit
+				screenPosition.y + this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.lineTo(
 				screenPosition.x + this.size * 0.25 * pixelsPerUnit,
-				screenPosition.y + this.size * 0.75 * pixelsPerUnit
+				screenPosition.y + this.size * (0.75 * this.level) * pixelsPerUnit
 			);
 			ctx.closePath();
 			ctx.fill();
