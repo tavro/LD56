@@ -25,9 +25,11 @@ function mousePositionToWorldCoords() {
 
 function worldToScreenCoords(worldCoords) {
 	result = new Vector2(0, 0);
-	result.x = ((worldCoords.x - camera.position.x) / camera.size) * worldToPixelFactor
+	result.x =
+		((worldCoords.x - camera.position.x) / camera.size) * worldToPixelFactor;
 
-	result.y = ((worldCoords.y - camera.position.y) / camera.size) * worldToPixelFactor
+	result.y =
+		((worldCoords.y - camera.position.y) / camera.size) * worldToPixelFactor;
 
 	return result;
 }
@@ -156,7 +158,7 @@ class Food extends MassObject {
 
 		this.pushToPoint(
 			this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
-			0.008,
+			0.01,
 			true
 		);
 		this.updatePhysics();
@@ -171,7 +173,7 @@ class Food extends MassObject {
 
 	checkDistanceToPlayer(player) {
 		const distance = this.position.distance(player.headPosition);
-		if (distance < 1) {
+		if (distance < player.playerBody.headNode.size) {
 			this.eat();
 			player.giveFood();
 		}
@@ -299,9 +301,9 @@ function GameUpdate() {
 	player_new.update();
 	camera.followTarget(player_new.headPosition);
 
-	spawnAround(player_new.headPosition, camera.size, false, false);
+	spawnAround(player_new.headPosition, camera.size / 2, false, true);
 	if (startedPhaseOne) {
-		spawnAround(player_new.headPosition, camera.size, false, true);
+		spawnAround(player_new.headPosition, camera.size / 2, true, false);
 	}
 
 	foods.forEach((food) => {
