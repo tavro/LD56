@@ -33,6 +33,11 @@ function changeScreen(curId, othId) {
 	} else if (othId == "builder-wrapper") {
 		inGame = false;
 	}
+
+	if (curId == "telescope-wrapper") {
+		inGame = false;
+	}
+
 	const cur = document.querySelector("#" + curId);
 	const oth = document.querySelector("#" + othId);
 	cur.style.display = "none";
