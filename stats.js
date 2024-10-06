@@ -27,12 +27,17 @@ function checkAssignments(amount, id) {
                 temp.style.display = "none";
             }
             awaitingMail = true;
+						if (id == "food" || id == "warmth" || id == "cold") {
+							phaseNumber++;
+						}
             return true;
         }
         
         return false;
     }
 }
+
+let phaseNumber = 0
 
 var mouthAmount = 0;
 var foodAmount = 0;

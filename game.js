@@ -290,8 +290,10 @@ function GameUpdate() {
 	player_new.update();
 	camera.followTarget(player_new.headPosition);
 
-	spawnAround(player_new.headPosition, camera.size, true, false);
-	spawnAround(player_new.headPosition, camera.size, false, true);
+	spawnAround(player_new.headPosition, camera.size, false, false);
+	if (startedPhaseOne) {
+		spawnAround(player_new.headPosition, camera.size, false, true);
+	}
 
 	foods.forEach((food) => {
 		food.update(player_new);
@@ -300,7 +302,21 @@ function GameUpdate() {
 	zones.forEach((zone) => {
 		zone.update(player_new);
 	});
+
+	if (!startedPhaseOne && phaseNumber == 1) {
+		console.log("STARTED PHASE 1")
+		startedPhaseOne = true
+	}
 }
+
+let startedPhaseOne = false
+
+function startHotPhase(){
+	// Spwan hot spots
+
+	
+}
+
 
 function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
