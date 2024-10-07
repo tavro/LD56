@@ -494,8 +494,8 @@ function GameUpdate() {
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
 			getZone,
-			2,
-			0.4
+			3,
+			0.6
 		);
 	}
 
@@ -504,8 +504,8 @@ function GameUpdate() {
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
 			getVirus,
-			4,
-			0.9
+			3,
+			0.5
 		);
 	}
 
@@ -602,6 +602,29 @@ function GameDraw() {
 	bars.forEach((bar) => {
 		bar.draw(ctx);
 	});
+
+	// Fill Tint RED when too hot
+	if (!player_new.isHotResistant && player_new.hotValue > 0.7) {
+		ctx.globalAlpha = (player_new.hotValue - 0.7) * 2;
+		ctx.beginPath();
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "#ff1919";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.globalAlpha = 1.0;
+	}
+	// Fill Tint BLUE when too cold
+	if (!player_new.isColdResistant && player_new.coldValue > 0.7) {
+		ctx.globalAlpha = (player_new.coldValue - 0.7) * 2;
+		ctx.beginPath();
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "#12d7ff";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.globalAlpha = 1.0;
+	}
 }
 
 // _____________ Globals
@@ -713,13 +736,9 @@ function animate() {
 	if (inGame) {
 		const playerVel = player_new.playerBody.headNode.velocity.scale(-10); // change scale value for paralax effect
 		ctx.clearRect(0, 0, game_canvas.width, game_canvas.height);
-		drawBackgroundLight(game_canvas, ctx)
+		drawBackgroundLight(game_canvas, ctx);
 		particles.forEach((particle) => {
-			particle.update(
-				ctx,
-				game_canvas,
-				playerVel
-			);
+			particle.update(ctx, game_canvas, playerVel);
 		});
 		GameUpdate();
 		GameDraw();

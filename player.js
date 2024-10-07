@@ -128,11 +128,13 @@ class PlayerController {
 
 		if (!this.isColdResistant && this.coldValue > 1) {
 			console.log("You froze to death :c");
+			this.kill();
 			this.coldValue = 1;
 		}
 
 		if (!this.isHotResistant && this.hotValue >= 1) {
 			console.log("You burned up :c");
+			this.kill();
 			this.hotValue = 1;
 		}
 
@@ -200,13 +202,17 @@ class PlayerController {
 			this.position = new Vector2(0, 0);
 			camera.position = new Vector2(0, 0);
 			this.reviveTimer = 0;
+			this.coldValue = 0;
+			this.hotValue = 0;
+			this.hotResistance = 0;
+			this.coldResistance = 0;
 		}
 	}
 
 	kill() {
 		this.hungerValue = 0;
 		this.isDead = true;
-		deathCount++
+		deathCount++;
 		console.log("Player died. death count: " + deathCount);
 
 		// TODO Send game over trigger
