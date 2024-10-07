@@ -26,6 +26,7 @@ const mailQueue = [
 				condition: function (killAmount) {
 					return killAmount >= 5;
 				},
+				reward: 200,
 				completed: false,
 			},
 		],
@@ -56,6 +57,7 @@ const mailQueue = [
 				condition: function (virusAmount) {
 					return virusAmount >= 1;
 				},
+				reward: 75,
 				completed: false,
 			},
 			{
@@ -65,6 +67,7 @@ const mailQueue = [
 				condition: function (radioactivityAmount) {
 					return radioactivityAmount >= 1;
 				},
+				reward: 75,
 				completed: false,
 			},
 		],
@@ -94,6 +97,7 @@ const mailQueue = [
 				condition: function (warmAmount) {
 					return warmAmount >= 1;
 				},
+				reward: 50,
 				completed: false,
 			},
 			{
@@ -103,6 +107,7 @@ const mailQueue = [
 				condition: function (coldAmount) {
 					return coldAmount >= 1;
 				},
+				reward: 50,
 				completed: false,
 			},
 		],
@@ -142,10 +147,11 @@ const mailObj = {
 			{
 				title: "Eat food",
 				amount: 10,
-        id: "food",
+				id: "food",
 				condition: function (foodAmount) {
 					return foodAmount >= 10;
 				},
+				reward: 50,
 				completed: false,
 			},
 		],
@@ -166,7 +172,7 @@ function handleMail() {
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
 
-	soundManager.playSound("email")
+	soundManager.playSound("email");
 
 	setTimeout(function () {
 		overlay.style.opacity = "0";
@@ -559,13 +565,15 @@ function handleCampaignMail() {
 
 	const overlay = document.getElementById("overlay");
 
-  document.getElementById("overlay-sender").innerHTML = campaignEmail.sender + " (" + campaignEmail.email + ")"; 
-  document.getElementById("overlay-subject").innerHTML = campaignEmail.topic;
+  	document.getElementById("overlay-sender").innerHTML = campaignEmail.sender + " (" + campaignEmail.email + ")"; 
+  	document.getElementById("overlay-subject").innerHTML = campaignEmail.topic;
 	
 	document.getElementById("campaigns-summary").innerHTML = truncateString(campaignEmail.sender, 16) + " - " + truncateString(campaignEmail.topic, 16);
 
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
+
+	soundManager.playSound("email");
 
 	setTimeout(function () {
 		overlay.style.opacity = "0";
