@@ -10,7 +10,6 @@ const builderAppId = "builder";
 // === FUNCTIONS ===
 
 function changeScreen(curId, othId) {
-	soundManager.stopMusic();
 	if (othId == "mail-wrapper") {
 		clearMailInbox();
 
@@ -28,14 +27,22 @@ function changeScreen(curId, othId) {
 	} else if (othId == "telescope-wrapper") {
 		inBuilder = false;
 		inGame = true;
-		soundManager.loadMusic(
-			"https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Music/first-draft.mp3"
-		);
+		soundManager.stopMusic()
+		soundManager.loadMusic(resouceUrl + "Music/music_microscope.mp3");
 		soundManager.setMusicVolume(0.3);
 		soundManager.playMusic();
 	} else if (othId == "builder-wrapper") {
 		inBuilder = true;
 		inGame = false;
+	}
+
+	// Switches to main music if any other than microscope scene
+	if (othId == "os-wrapper" && curId == "login-wrapper" || curId == "telescope-wrapper") {
+		soundManager.stopMusic();
+	
+		soundManager.loadMusic(resouceUrl + "Music/music_main.mp3");
+		soundManager.setMusicVolume(0.3);
+		soundManager.playMusic();
 	}
 
 	if (curId == "telescope-wrapper") {
