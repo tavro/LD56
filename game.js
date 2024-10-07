@@ -7,9 +7,25 @@ canvas.height = window.innerHeight;
 // ______________ Resources
 
 zoneHot_img = new Image();
-zoneCold_img = new Image();
 zoneHot_img.src = resouceUrl + "Organism/Organism_ZoneHot.png";
+
+zoneCold_img = new Image();
 zoneCold_img.src = resouceUrl + "Organism/Organism_ZoneCold.png";
+
+food1_img = new Image();
+food1_img.src = resouceUrl + "Organism/Organism_Food1.png";
+
+food2_img = new Image();
+food2_img.src = resouceUrl + "Organism/Organism_Food2.png";
+
+food3_img = new Image();
+food3_img.src = resouceUrl + "Organism/Organism_Food3.png";
+
+virus1_img = new Image();
+virus1_img.src = resouceUrl + "Organism/Organism_Virus1.png";
+
+virus2_img = new Image();
+virus2_img.src = resouceUrl + "Organism/Organism_Virus2.png";
 
 // ______________ Global Constants
 const pixelsPerUnit = 32;
@@ -160,9 +176,22 @@ class Food extends MassObject {
 	constructor(position) {
 		super();
 		this.position = position;
-		this.size = Math.random() * 0.5 + 0.5;
+		this.size = Math.random() * 2 + 2;
 		this.color = "green";
 		this.isEaten = false;
+		this.img = null
+
+		// Select a random image from res
+		const randNum = Math.floor((Math.random() * 3))
+		if (randNum == 0) {
+			this.img = food1_img
+		}
+		else if (randNum == 1) {
+			this.img = food2_img
+		}
+		else if (randNum == 2) {
+			this.img = food3_img
+		}
 	}
 
 	update(player) {
@@ -184,7 +213,7 @@ class Food extends MassObject {
 		if (this.isEaten) {
 			return;
 		}
-		drawCircle(context, this.position, this.size, this.color);
+		drawImg(context, this.img, this.position, this.size, 1.0)
 	}
 
 	checkDistanceToPlayer(player) {
