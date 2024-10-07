@@ -79,7 +79,16 @@ function resizeNode(mouseX, mouseY, delta) {
 			Math.max(closestNode.size + delta / 50, minNodeSize),
 			maxNodeSize
 		);
-		closestNode.size = newSize;
+
+		if (newSize > closestNode.size) {
+			if (modificationPoints > 0) {
+				closestNode.size = newSize;
+				updateModificationPoints(-1);
+			}
+		} else if (newSize < closestNode.size) {
+			closestNode.size = newSize;
+			updateModificationPoints(1);
+		}
 	}
 }
 

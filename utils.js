@@ -1,4 +1,5 @@
 let inGame = false;
+let modificationPoints = 0; // "Money"
 
 const resouceUrl =
 	"https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/";
@@ -14,4 +15,9 @@ function htmlToPlainString(html) {
 	var tempElement = document.createElement("div");
 	tempElement.innerHTML = html;
 	return tempElement.textContent || tempElement.innerText || "";
+}
+
+function updateModificationPoints(amount) {
+	modificationPoints += amount;
+	document.getElementById("money-text").innerHTML = modificationPoints;
 }

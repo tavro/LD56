@@ -43,6 +43,15 @@ body {
   z-index: 2;
 }
 
+#money-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
 #mail-header {
   display: flex;
   flex-direction: row;
