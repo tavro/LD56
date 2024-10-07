@@ -328,6 +328,7 @@ document
 	});
 
 document.querySelector("#login-btn").addEventListener("click", function () {
+	document.getElementById("money-wrapper").style.display = "flex";
 	const u = document.getElementById("username").value;
 	const p = document.getElementById("password").value;
 

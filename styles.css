@@ -1,13 +1,29 @@
+/* === GLOBAL STYLING === */
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f2f2f2;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
 /* === OS STYLING === */
 
 #desktop-wrapper {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
   background-image: url("https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/wallpaper.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -15,141 +31,186 @@ body {
   width: 100vw;
 }
 
-/* === MAIL STYLING === */
-
-.back-btn-wrapper {
-  margin: 8px;
-  height: 16px;
+.app {
+  width: 128px;
+  height: 128px;
   display: flex;
-  flex-direction: row;
-  align-content: center;
-}
-
-.back-btn-wrapper:hover, .back-btn-wrapper-alt {
-  cursor: pointer;
-}
-
-.back-btn-wrapper img, .back-btn-wrapper-alt img {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-}
-
-.back-btn-wrapper-alt {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  z-index: 2;
-}
-
-#money-wrapper {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  z-index: 2;
-}
-
-#mail-header {
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-}
-
-#opened-mail {
-  display: none;
   flex-direction: column;
-  background-color: white;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-#mail-inbox {
-  width: 100vw;
-}
-
-#mail-info-wrapper {
-  margin: 32px;
-}
-
-#category-primary {
-  border-bottom: 2px solid black;
-}
-
-#mm-inbox:hover, #mm-favorites:hover, #mm-important:hover {
+.app:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
 
-#category-primary:hover, #category-campaigns:hover, #category-social:hover {
-  cursor: pointer;
+.app img {
+  width: 64px;
+  height: 64px;
+  user-drag: none;
+  pointer-events: none;
 }
 
-#mm-inbox {
+.app h1 {
+  font-size: 16px;
   font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  margin-top: 10px;
+  text-align: center;
 }
+
+.non-draggable {
+  user-drag: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.non-selectable {
+  user-select: none;
+}
+
+/* === MAIL STYLING === */
 
 #mail-wrapper {
   display: none;
   flex-direction: row;
-  background-color: white;
   height: 100vh;
 }
 
 #mail-menu {
+  background-color: #0078d4;
+  width: 20vw;
+  padding: 20px;
+  color: white;
   display: flex;
   flex-direction: column;
-  background-color: #f2f2f2;
-  width: 20vw;
-  height: 100vh;
+  justify-content: flex-start;
+}
+
+#mail-menu p {
+  margin: 5px 0;
+  padding: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#mail-menu p:hover {
+  background-color: black;
+}
+
+#mail-inbox {
+  width: 80vw;
+  background-color: white;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .category1 {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 16px;
+  height: 24px;
   margin: 8px;
 }
 
 .category1 img {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
 }
 
 #category-wrapper {
   display: flex;
-  flex-direction: row;
+  justify-content: space-around;
+  padding: 10px 0;
   border-bottom: 1px solid black;
 }
 
 .category2 {
+  width: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  width: 320px;
-  margin: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.category2:hover {
+  background-color: #f5f5f5;
 }
 
 .category2 img {
   width: 32px;
   height: 32px;
-  margin-right: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-.mail-preview:hover {
-  cursor: pointer;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+.c2-text-wrapper {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
 }
 
 .mail-preview {
   display: flex;
-  flex-direction: row;
-  border-bottom: 1px solid black;
-  height: 32px;
   align-items: center;
   justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s ease;
+}
+
+.mail-preview:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.mail-preview .mp-icons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mail-preview .sender {
+  font-weight: bold;
+  color: black;
+  flex: 1;
+}
+
+.mail-preview .mp-text-wrapper {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mail-preview .topic {
+  font-weight: bold;
+  margin: 0;
+}
+
+.mail-preview .content {
+  font-style: italic;
+  color: gray;
+  margin: 0;
+}
+
+.mail-preview .timestamp {
+  color: gray;
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .mail-preview img {
@@ -159,95 +220,139 @@ body {
   margin-right: 8px;
 }
 
-.c2-text-wrapper {
-  display: flex;
-  flex-direction: column;
+#opened-mail {
+  display: none;
+  background-color: white;
+  height: 100vh;
+  padding: 20px;
 }
 
-.c2-text-wrapper p {
-  margin: 0;
-  padding: 0;
-}
-
-.summary, .content {
-  font-style: italic;
-  color: gray;
-}
-
-/* TODO: Style this so it works when scaling, same goes for categories */
-.mp-icons-wrapper {
-  width: 10%;
-}
-
-.mp-text-wrapper {
+.back-btn-wrapper {
+  margin: 8px;
+  height: 16px;
   display: flex;
   flex-direction: row;
-  width: 50%;
+  align-content: center;
 }
 
-.sender {
+#mail-info-wrapper {
+  margin-top: 64px;
+}
+
+#mail-header {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  height: 32px;
-  width: 30%;
+  align-content: center;
 }
 
-.timestamp {
-  margin-right: 8px;
-  width: 20%;
-  text-align: end;
-}
-
-.read {
-  background-color: #D3D3D3;
-}
-
-/* === TELESCOPE STYLING === */
-
-#telescope-wrapper {
-  display: none;
-  flex-direction: column;
-  height: 100vh; 
-}
-
-canvas {
-  display: block;
-  background-color: #f0f0f0;
-}
-
-#builder-wrapper {
-  display: none;
-  flex-direction: column;
-  height: 100vh; 
-}
-
-.app {
-  margin: 0;
-  width: 128px;
-  height: 128px;
+#mail-header .back-btn-wrapper {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: absolute;
+  cursor: pointer;
+  margin-right: 40px;
 }
 
-.app:hover {
+#mail-header .back-btn-wrapper img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+#category-primary {
+  border-bottom: 2px solid black;
+}
+
+#category-primary:hover, #category-campaigns:hover, #category-social:hover {
   cursor: pointer;
 }
 
-.app img {
-  width: 64px;
-  height: 64px;
+.read {
+  background-color: #f2f2f2;
 }
 
-.app h1 {
+.summary {
+  font-style: italic;
+  font-weight: 100;
+  color: gray;
+}
+
+#om-content {
+  margin: 32px;
+}
+
+#om-content h1 {
+  margin: 1em 0;
+  padding: 0;
+}
+
+#om-content h2 {
+  margin: 0.83em 0;
+  padding: 0;
+}
+
+#om-content h3 {
+  margin: 0.67em 0;
+  padding: 0;
+}
+
+#om-content p {
+  margin: 1em 0;
+  padding: 0;
+}
+
+/* === LOGIN STYLING === */
+
+#login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f4f4f4;
+}
+
+#login-form {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#login-form img {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+#login-form h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 16px;
-  font-weight: bold;
+}
+
+#login-form button {
+  width: 110%;
+  padding: 10px;
+  background-color: #7696dd;
   color: white;
-  font-style: Sans-serif;
-  text-transform: uppercase;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+#login-form button:hover {
+  background-color: #0056b3;
 }
 
 .post-it {
@@ -266,6 +371,43 @@ canvas {
   background-size: cover;
 }
 
+/* === MICROSCOPE STYLING === */
+
+#telescope-wrapper {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+}
+
+/* === BUILDER STYLING === */
+
+#builder-wrapper {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #fafafa;
+}
+
+#builder-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+/* === ASSIGNMENT STYLING === */
+
 #assignment-container {
   display: none;
   position: fixed;
@@ -280,7 +422,6 @@ canvas {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   font-family: 'Lobster', cursive;
   border: 1px solid #fdd835;
-  /* TODO: Add paper texture=> background-image: url(''); */
   background-size: cover;
 }
 
@@ -304,6 +445,8 @@ canvas {
   line-height: 1.4;
 }
 
+/* === OVERLAY STYLING === */
+
 .overlay {
   position: fixed;
   bottom: 20px;
@@ -319,13 +462,14 @@ canvas {
 }
 
 .overlay-header {
-  background-color: #0078d4;
+  background-color: #7696dd;
   color: white;
   display: flex;
   align-items: center;
   padding: 10px 15px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  z-index: 1000;
 }
 
 .overlay-icon {
@@ -350,137 +494,178 @@ canvas {
   transition: color 0.3s;
 }
 
-.close-btn:hover {
+#closeNodeInfoButton {
+  color: white;
+}
+
+#closeNodeInfoButton:hover {
   color: red;
 }
 
-.scratches {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: url('https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/glass.png') no-repeat center center/cover;
-  opacity: 0.25;
-  z-index: 0;
-}
+/* === PLUS SIGN BUTTON === */
 
-.non-draggable {
-  user-drag: none;
-  -webkit-user-drag: none;
-  pointer-events: none;
-}
-
-.non-selectable {
-  user-select: none;
-}
-
-#builder-overlay {
-  display: none;
+.plus-sign-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 0;
-}
-
-/* === LOGIN STYLING === */
-
-#login-wrapper {
-  display: flex;
+  bottom: 20px;
+  right: 20px;
+  display: none;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #f4f4f4;
 }
 
-#login-form {
-  display: flex;
-  flex-direction: column;
-}
-
-#login-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-family: Arial, sans-serif;
-}
-
-#login-form label {
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: #333;
-}
-
-#login-form input {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-#login-form button {
-  padding: 10px;
-  background-color: #7696DD;
+.plus-sign {
+  font-size: 30px;
+  background-color: #000;
   color: white;
-  border: none;
-  border-radius: 5px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
   cursor: pointer;
-  font-size: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease;
 }
 
-#login-form button:hover {
-  background-color: #0056b3;
+.plus-sign:hover {
+  background-color: #333;
+}
+
+/* === BACK BUTTON STYLING === */
+
+.back-btn-wrapper:hover, .back-btn-wrapper-alt {
+  cursor: pointer;
+}
+
+.back-btn-wrapper img, .back-btn-wrapper-alt img {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.back-btn-wrapper-alt {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+/* === MONEY WRAPPER === */
+
+#money-wrapper {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#money-wrapper img {
+  width: 24px;
+  height: auto;
+  margin-right: 10px;
+}
+
+#money-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+}
+
+/* === MODAL STYLES === */
+#nodeInfoContainer {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1000;
+	background-color: #ffffff;
+	border-radius: 5px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+	width: 400px;
+	font-family: Arial, sans-serif;
+}
+
+/* === HEADER STYLES === */
+.overlay-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.overlay-icon {
+	width: 30px;
+	height: 30px;
+}
+
+.overlay-title {
+	font-size: 20px;
+	color: white;
+	margin: 0;
+}
+
+.close-btn {
+	cursor: pointer;
+	font-size: 20px;
+	color: white;
+	transition: color 0.3s;
+}
+
+.close-btn:hover {
+	color: #ff0000;
+}
+
+/* === CONTENT STYLES === */
+
+.overlay-content {
+	padding: 15px;
+}
+
+.overlay-content p {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 #nodeInfoContainer input[type="number"],
 #nodeInfoContainer select,
 #nodeInfoContainer input[type="color"],
 #nodeInfoContainer button {
-    width: calc(100% - 20px);
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+	width: calc(100% - 20px);
+	margin-top: 10px;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
 }
 
 #nodeInfoContainer button {
-    background-color: #0078d4;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: #7696dd;
+	color: white;
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	padding: 12px;
+	transition: background-color 0.3s, transform 0.1s;
 }
 
 #nodeInfoContainer button:hover {
-    background-color: #0056b3;
+	background-color: #0056b3;
+	transform: translateY(-1px);
 }
 
-.plus-sign-container {
-  position: absolute;
-  display: none;
-  text-align: center;
-}
-
-.plus-sign {
-  width: 30px;
-  height: 30px;
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  line-height: 30px;
-  border-radius: 50%;
-  font-size: 24px;
-  cursor: pointer;
-  margin: 0 auto;
-}
-
-.add-node-label {
-  color: black;
-  font-size: 14px;
-  margin-top: 5px;
+.error-message {
+	color: red;
+	display: none;
+	margin-top: 10px;
 }

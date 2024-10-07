@@ -422,7 +422,7 @@ function updatePlusButtonPosition() {
     const plusButtonContainer = document.getElementById("plus-button-container");
 
     plusButtonContainer.style.left = `${screenPos.x - 15}px`;
-    plusButtonContainer.style.top = `${screenPos.y - 70}px`;
+    plusButtonContainer.style.top = `${screenPos.y - 100}px`;
     plusButtonContainer.style.display = "block";
 }
 
