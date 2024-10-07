@@ -346,7 +346,9 @@ class UIBar {
 		pixelLength,
 		pixelHeight,
 		color,
-		isVertical
+		isVertical,
+		dividerPosA,
+		dividerPosB
 	) {
 		this.screenPosition = screenPosition;
 		this.value = value;
@@ -354,6 +356,8 @@ class UIBar {
 		this.color = color;
 		this.pixelHeight = pixelHeight;
 		this.isVertical = isVertical;
+		this.dividerPosA = dividerPosA;
+		this.dividerPosB = dividerPosB;
 	}
 
 	addValue(offset) {
@@ -419,9 +423,38 @@ class UIBar {
 				this.pixelLength * this.value,
 				this.pixelHeight
 			);
+			
+			context.strokeStyle = "black"
+			context.beginPath();
+
+			context.moveTo(
+				this.screenPosition.x + this.pixelLength * this.dividerPosA,
+				this.screenPosition.y
+			);
+			context.lineTo(
+				this.screenPosition.x + this.pixelLength * this.dividerPosA,
+				this.screenPosition.y + this.pixelHeight
+			);
+			context.stroke();
+			context.closePath();
+
+			context.beginPath();
+
+			context.moveTo(
+				this.screenPosition.x + this.pixelLength * this.dividerPosB,
+				this.screenPosition.y
+			);
+			context.lineTo(
+				this.screenPosition.x + this.pixelLength * this.dividerPosB,
+				this.screenPosition.y + this.pixelHeight
+			);
+			context.stroke();
+			context.closePath();
 		}
 	}
 }
+
+startedPhaseHeat = true;
 
 const getVirus = (position) => {
 	virusList.push(new Virus(position));
@@ -649,7 +682,10 @@ let hotValueBar = new UIBar(
 	0,
 	200,
 	20,
-	"red"
+	"red",
+	false,
+	0.4,
+	0.6
 );
 
 let hotResistanceBar = new UIBar(
@@ -665,7 +701,10 @@ let coldValueBar = new UIBar(
 	0,
 	200,
 	20,
-	"blue"
+	"blue",
+	false,
+	0.4,
+	0.6
 );
 
 let coldResistanceBar = new UIBar(

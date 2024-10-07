@@ -100,14 +100,14 @@ class PlayerController {
 			this.coldValue = 0;
 		}
 
-		if (this.coldValue > 0.42 && this.coldValue < 0.58) {
+		if (this.coldValue > 0.4 && this.coldValue < 0.6) {
 			this.coldResistance += (1 / 60) * 0.1;
 			coldValueBar.color = "#46f065";
 		} else {
 			coldValueBar.color = "#81d4f0";
 		}
 
-		if (this.hotValue > 0.42 && this.hotValue < 0.58) {
+		if (this.hotValue > 0.4 && this.hotValue < 0.6) {
 			this.hotResistance += (1 / 60) * 0.1;
 			hotValueBar.color = "#46f065";
 		} else {
