@@ -129,9 +129,8 @@ const mailObj = {
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
     <p>Thank you for participating in this exciting new venture into the future of <strong>bio-chemistry</strong>!</p>
-    <p>As we have already discussed over the phone, you can now begin feeding the organism. The required materials for developing the organism have been sent and should have already arrived. Here are the next steps:</p>
+    <p>As we have already discussed over the phone, you can now begin feeding the organism.</p>
     <ol>
-        <li><strong>Use the DNA Modificator:</strong> Place the given part onto the organism using your DNA Modificator device.</li>
         <li><strong>Test the organism’s functionality:</strong> To confirm the process works, the organism should now be able to consume food. Test the organism’s ability to consume food using the microscope.</li>
     </ol>
 	<a href="#" id="task1" class="sign-up-btn">Sign up for assignment</a>
@@ -145,13 +144,6 @@ const mailObj = {
 		favorite: false,
 		important: true,
 		assignments: [
-			/*{
-        title: "Attach Mouth",
-        amount: 1,
-        id: "mouth",
-        condition: function(mouthAmount) { return mouthAmount >= 1; },
-        completed: false
-      },*/
 			{
 				title: "Eat food",
 				amount: 10,
@@ -168,12 +160,13 @@ const mailObj = {
 
 function handleMail() {
   const obj = mailQueue.pop();
+  if(obj) {
 	mailObj["mail" + currentKey] = obj;
 	currentKey++;
 	const overlay = document.getElementById("overlay");
 
-  document.getElementById("overlay-sender").innerHTML = obj.sender + " (" + obj.email + ")"; 
-  document.getElementById("overlay-subject").innerHTML = obj.topic;
+  	document.getElementById("overlay-sender").innerHTML = obj.sender + " (" + obj.email + ")"; 
+  	document.getElementById("overlay-subject").innerHTML = obj.topic;
 
 	document.getElementById("primary-summary").innerHTML = truncateString(obj.sender, 16) + " - " + truncateString(obj.topic, 16);
 
@@ -189,15 +182,17 @@ function handleMail() {
 		}, 5000);
 	}, 30000);
 }
+}
 
 function checkAwaitingMail() {
-	const interval = setInterval(() => {
-		if (awaitingMail) {
-			handleMail();
-			awaitingMail = false;
-			clearInterval(interval);
-		}
-	}, 1000);
+    const interval = setInterval(() => {
+        if (awaitingMail) {
+            handleMail();
+            awaitingMail = false;
+            clearInterval(interval);
+            checkAwaitingMail();
+        }
+    }, 1000);
 }
 checkAwaitingMail();
 
