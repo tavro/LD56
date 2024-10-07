@@ -150,13 +150,11 @@ class PlayerController {
 		}
 
 		if (!this.isColdResistant && this.coldValue > 1) {
-			console.log("You froze to death :c");
 			this.kill();
 			this.coldValue = 1;
 		}
 
 		if (!this.isHotResistant && this.hotValue >= 1) {
-			console.log("You burned up :c");
 			this.kill();
 			this.hotValue = 1;
 		}
@@ -236,12 +234,8 @@ class PlayerController {
 		this.hungerValue = 0;
 		this.isDead = true;
 		deathCount++;
-		console.log("Player died. death count: " + deathCount);
 
 		if (deathCount >= maxDeaths) {
-			console.log("DIED MAX AMOUNTH DEATHS");
-			console.log("GAME OVER");
-			// TODO Send game over trigger
 			isEndingGame = true;
 		}
 	}
@@ -585,8 +579,6 @@ class PlayerBody {
 		}
 
 		this.draw();
-
-		// animationFrameId = requestAnimationFrame(() => this.animateNodes());
 	}
 }
 

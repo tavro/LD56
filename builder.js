@@ -108,8 +108,6 @@ function showNodeInfo(node) {
 	const bodyPartDropdown = document.getElementById("bodyPartDropdown");
 	const colorPicker = document.getElementById("colorPicker");
 
-	console.log(node);
-
 	nodeLevelInput.max = node.maxLevel;
 	nodeLevelInput.value = node.level || 1;
 	bodyPartDropdown.value = node.type || "";
@@ -286,15 +284,6 @@ class Particle {
 			this.y = canvas.height + margin
 		}
 
-
-		//// Isak code, for bouncing
-		// if (this.x > canvas.width || this.x < 0) {
-		// 	this.velocity.x *= -1;
-		// }
-		// if (this.y > canvas.height || this.y < 0) {
-		// 	this.velocity.y *= -1;
-		// }
-
 		this.angle += this.angleSpeed * 0.5 + (Math.random() - 0.5) * 0.01;
 
 		this.draw(context);
@@ -425,20 +414,15 @@ function updatePlusButtonPosition() {
     plusButtonContainer.style.left = `${screenPos.x - 15}px`;
     plusButtonContainer.style.top = `${screenPos.y - 100}px`;
     plusButtonContainer.style.display = "block";
-}
 
+    plusButtonContainer.style.pointerEvents = 'none';
+
+    plusButton.style.pointerEvents = 'auto';
+}
 
 const plusButton = document.getElementById("plus-button");
 const plusButtonContainer = document.getElementById("plus-button-container");
 
 plusButton.addEventListener("click", () => {
     addNode();
-});
-
-plusButtonContainer.addEventListener("mouseenter", () => {
-    plusButton.style.pointerEvents = 'auto';
-});
-
-plusButtonContainer.addEventListener("mouseleave", () => {
-    plusButton.style.pointerEvents = 'none';
 });

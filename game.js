@@ -563,18 +563,6 @@ function GameUpdate() {
 			virus.update(player_new);
 		});
 	}
-
-	// if (!startedPhaseHeat) {
-	// 	console.log("STARTED PHASE Heat");
-	// 	startedPhaseHeat = true;
-	// 	startPhaseHot();
-	// }
-
-	// if (!startedPhaseVirus) {
-	// 	console.log("STARTED PHASE Virus");
-	// 	startedPhaseVirus = true;
-	// 	startPhaseVirus();
-	// }
 }
 
 function startPhaseHot() {
@@ -692,7 +680,6 @@ function GameDraw() {
 			ctx.fillText("You're out of organisms... Game over!  Restarting game...", 200, 200);
 		}
 		if (endingGameTimer > endingGameTimerLimit) {
-			console.log("ENDED GAME")
 			window.removeEventListener('beforeunload', beforeUnloadFunc);
 			window.location.href = window.location.href;
 			inGame = false

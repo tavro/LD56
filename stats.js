@@ -25,15 +25,11 @@ function checkAssignments(amount, id) {
         }
 
         if (activeAssignments.length === 0) {
-            console.log("Finished assignments");
             const temp = document.querySelector("#assignment-container");
             if (temp) {
                 temp.style.display = "none";
             }
             awaitingMail = true;
-			// if (id == "food" || id == "warmth" || id == "cold") {
-			// 	phaseNumber++;
-			// }
 			updateModificationPoints(achievedPoints);
 			achievedPoints = 0;
             return true;

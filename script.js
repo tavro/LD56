@@ -196,7 +196,6 @@ function attachMailListeners(key, category) {
 									"block";
 								document.querySelector("#assignment-container").innerHTML =
 									generateAssignmentHTML(activeAssignments);
-								console.log(activeAssignments);
 								event.target.removeEventListener("click", handleClick);
 							});
 							button.listenerAttached = true;
@@ -328,17 +327,13 @@ document
 	});
 
 document.querySelector("#login-btn").addEventListener("click", function () {
-	document.getElementById("money-wrapper").style.display = "flex";
 	const u = document.getElementById("username").value;
 	const p = document.getElementById("password").value;
-
-	//	Auto login for quicker dev. fix before deployment
-	changeScreen("login-wrapper", "os-wrapper");
-
-	// // ___ Original code
-	// if (u == "username" && p == "password") {
-	// 	changeScreen("login-wrapper", "os-wrapper");
-	// }
+	
+	if(u == "username" && p == "password") {
+		changeScreen("login-wrapper", "os-wrapper");
+		document.getElementById("money-wrapper").style.display = "flex";
+	}
 });
 
 document.querySelector("#restart").addEventListener("click", function () {

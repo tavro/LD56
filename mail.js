@@ -54,49 +54,6 @@ const mailQueue = [
 			},
 		],
 	},
-	// {
-	// 	email: "noreply@tinylabs.org",
-	// 	sender: "Tiny Labs",
-	// 	topic: "Immunity",
-	// 	buttonId: "task3",
-	// 	content: `<div>
-  //   <h2>Hello Mr. Doctor,</h2>
-  //   <p>Great job on the previous assignment!</p>
-  //   <p>Now, the organism might encounter dangers such as <strong>viruses</strong> and <strong>radioactivity</strong>. We simply want it to build up an immunity to them.</p>
-  //   <p>Go infect it, but be careful as not to kill it!</p>
-	// 	<p>Awesome work so far!</p>
-	// <a href="#" id="task3" class="sign-up-btn">Sign up for assignment</a>
-	// <p>Best regards,</p>
-  //   <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
-  //   </div>`,
-	// 	timestamp: "13:37",
-	// 	category: "primary",
-	// 	read: false,
-	// 	favorite: false,
-	// 	important: true,
-	// 	assignments: [
-	// 		{
-	// 			title: "Gain virus immunity",
-	// 			amount: 1,
-  //       id: "virus",
-	// 			condition: function (virusAmount) {
-	// 				return virusAmount >= 1;
-	// 			},
-	// 			reward: 75,
-	// 			completed: false,
-	// 		},
-	// 		{
-	// 			title: "Gain radioactivity immunity",
-	// 			amount: 1,
-  //       id: "radioactivity",
-	// 			condition: function (radioactivityAmount) {
-	// 				return radioactivityAmount >= 1;
-	// 			},
-	// 			reward: 75,
-	// 			completed: false,
-	// 		},
-	// 	],
-	// },
 	{
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
@@ -202,11 +159,6 @@ function handleMail() {
 			overlay.style.display = "none";
 		}, 5000);
 	}, 30000);
-}
-else {
-	console.log("LAST MISSION COMPLETED")
-	
-	// Game finished
 }
 }
 
@@ -759,7 +711,6 @@ const campaignMails = [
 
 function handleCampaignMail() {
 	if (campaignMails.length === 0) {
-		console.log("No more campaign mails to process.");
 		return;
 	}
 
@@ -792,7 +743,6 @@ function handleCampaignMail() {
 
 function handleSocialMail() {
 	if (socialMails.length === 0) {
-		console.log("No more social mails to process.");
 		return;
 	}
 

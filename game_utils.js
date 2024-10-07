@@ -147,9 +147,7 @@ class KeyboardManager {
 			this.keysPressed[key] = true;
 			if (key in this.keyDownCallbackList) {
 				const funcs = this.keyDownCallbackList[key];
-				console.log(funcs);
 				funcs.forEach((func) => {
-					console.log(func);
 					func();
 				});
 			}
@@ -162,9 +160,7 @@ class KeyboardManager {
 			delete this.keysPressed[key];
 			if (key in this.keyUpCallbackList) {
 				const funcs = this.keyUpCallbackList[key];
-				console.log(funcs);
 				funcs.forEach((func) => {
-					console.log(func);
 					func();
 				});
 			}

@@ -505,10 +505,10 @@ canvas {
 /* === PLUS SIGN BUTTON === */
 
 .plus-sign-container {
+  display: none;
   position: fixed;
   bottom: 20px;
   right: 20px;
-  display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
