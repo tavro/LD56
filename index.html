@@ -217,5 +217,12 @@
 		<script src="player.js"></script>
 		<script src="game.js"></script>
 		<script src="builder.js"></script>
+		<script>
+			window.addEventListener('beforeunload', function (event) {
+				const message = "Are you sure you want to leave? This will reset the state of the game!";
+				event.returnValue = message;
+				return message;
+			});
+		</script>
 	</body>
 </html>
