@@ -47,7 +47,7 @@ class PlayerController {
 	// Sets speed based on num attachements
 	setControlForce(numAttachments) {
 		// base speed + attachment multiplier + scaler
-		this.controlForce = (4 + numAttachments / 1.75) * 0.01;
+		this.controlForce = (4 + numAttachments / 2.5) * 0.01;
 	}
 
 	retractTongue() {
