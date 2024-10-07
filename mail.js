@@ -10,6 +10,7 @@ const mailQueue = [
     <p>Now, in the real world, this organism might encounter other organisms and it'll need to defend itself.</p>
     <p>To prove it's strength, we have sent you some other organisms for it to train against.</p>
 		<p>You are <i>killing</i> it! (no pun intended hehe)</p>
+	<a href="#" class="sign-up-btn">Sign up for assignment</a>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -41,7 +42,8 @@ const mailQueue = [
     <p>Now, the organism might encounter dangers such as <strong>viruses</strong> and <strong>radioactivity</strong>. We simply want it to build up an immunity to them.</p>
     <p>Go infect it, but be careful as not to kill it!</p>
 		<p>Awesome work so far!</p>
-    <p>Best regards,</p>
+	<a href="#" class="sign-up-btn">Sign up for assignment</a>
+	<p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
 		timestamp: "13:37",
@@ -81,7 +83,8 @@ const mailQueue = [
     <p>Great job on completing your first assignments!</p>
     <p>As we move forward, we will be planting the organism in both very warm and cold locations. It is essential for the organism to be resistant to both temperature extremes. Please place your organism in both warm and cold environments until it becomes fully resistant.</p>
     <p>Thank you for your continued efforts!</p>
-    <p>Best regards,</p>
+	<a href="#" class="sign-up-btn">Sign up for assignment</a>
+	<p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
 		timestamp: "13:37",
@@ -127,6 +130,7 @@ const mailObj = {
         <li><strong>Use the DNA Modificator:</strong> Place the given part onto the organism using your DNA Modificator device.</li>
         <li><strong>Test the organism’s functionality:</strong> To confirm the process works, the organism should now be able to consume food. Test the organism’s ability to consume food using the microscope.</li>
     </ol>
+	<a href="#" class="sign-up-btn">Sign up for assignment</a>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>
