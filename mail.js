@@ -166,7 +166,7 @@ function handleMail() {
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
 
-	soundManager.playSound("email")
+	soundManager.playSound("email");
 
 	setTimeout(function () {
 		overlay.style.opacity = "0";
@@ -559,13 +559,15 @@ function handleCampaignMail() {
 
 	const overlay = document.getElementById("overlay");
 
-  document.getElementById("overlay-sender").innerHTML = campaignEmail.sender + " (" + campaignEmail.email + ")"; 
-  document.getElementById("overlay-subject").innerHTML = campaignEmail.topic;
+  	document.getElementById("overlay-sender").innerHTML = campaignEmail.sender + " (" + campaignEmail.email + ")"; 
+  	document.getElementById("overlay-subject").innerHTML = campaignEmail.topic;
 	
 	document.getElementById("campaigns-summary").innerHTML = truncateString(campaignEmail.sender, 16) + " - " + truncateString(campaignEmail.topic, 16);
 
 	overlay.style.display = "block";
 	overlay.style.opacity = "1";
+
+	soundManager.playSound("email");
 
 	setTimeout(function () {
 		overlay.style.opacity = "0";
