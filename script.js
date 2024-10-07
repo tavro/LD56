@@ -330,13 +330,13 @@ document.querySelector("#login-btn").addEventListener("click", function () {
 	const u = document.getElementById("username").value;
 	const p = document.getElementById("password").value;
 
-	// Auto login for quicker dev. fix before deployment
-	// changeScreen("login-wrapper", "os-wrapper");
+	//	Auto login for quicker dev. fix before deployment
+	changeScreen("login-wrapper", "os-wrapper");
 
-	// ___ Original code
-	if (u == "username" && p == "password") {
-		changeScreen("login-wrapper", "os-wrapper");
-	}
+	// // ___ Original code
+	// if (u == "username" && p == "password") {
+	// 	changeScreen("login-wrapper", "os-wrapper");
+	// }
 });
 
 document.querySelector("#restart").addEventListener("click", function () {

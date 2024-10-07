@@ -265,18 +265,18 @@ class Node_New extends MassObject {
 				.difference(this.position)
 				.magnitude();
 
-			if (distanceToParent > this.size * 1) {
+			if (distanceToParent > this.size * 3) {
 				this.pushToPoint(
 					this.parent.position,
-					Math.sqrt(distanceToParent) * 0.001,
-					true,
+					Math.sqrt(distanceToParent) * 0.015,
+					false,
 					false
 				);
 			}
-			if (distanceToParent < this.size * 2) {
+			if (distanceToParent < this.size * 1.9){
 				this.pushToPoint(
 					this.parent.position,
-					Math.sqrt(distanceToParent) * 0.001,
+					0.1,
 					true,
 					true
 				);
