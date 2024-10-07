@@ -242,6 +242,7 @@ class PlayerController {
 
 	giveFood() {
 		data.foodAmount++;
+		updateModificationPoints(2);
 		this.hungerValue += 0.05;
 		if (this.hungerValue > 1.0) {
 			this.hungerValue = 1.0;
