@@ -317,17 +317,19 @@ function generateParticles() {
 setupBuilder();
 
 function animate2() {
-	builder_context.clearRect(0, 0, builder_canvas.width, builder_canvas.height);
+	if (inBuilder) {
+		builder_context.clearRect(0, 0, builder_canvas.width, builder_canvas.height);
 
-	drawBackgroundLight();
+		drawBackgroundLight();
 
-	particles.forEach((particle) => {
-		particle.update();
-	});
+		particles.forEach((particle) => {
+			particle.update();
+		});
 
-	player_new.draw(builder_context);
-	camera.followTarget(player_new.headPosition);
-	player_new.update();
+		player_new.draw(builder_context);
+		camera.followTarget(player_new.headPosition);
+		player_new.update();
+	}
 	requestAnimationFrame(animate2);
 }
 
