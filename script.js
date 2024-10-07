@@ -174,6 +174,9 @@ function attachMailListeners(key, category) {
 					if (button) {
 						if (!button.listenerAttached) {
 							button.addEventListener("click", function handleClick(event) {
+								if (mailObj[mailId].buttonId == "task1") {
+									data.foodAmount = 0; // Resets already eaten food if player has eaten before mission
+								}
 								if (mailObj[mailId].buttonId == "task2") {
 									startedPhaseHeat = true;
 								}
