@@ -48,11 +48,20 @@ class PlayerController {
 		}
 	}
 
+	updateBodyNodes() {
+		this.playerBody.nodes.forEach((node) => {
+			node.update();
+		});
+		this.headPosition = this.mainNode.position;
+	}
+
 	update() {
 		if (this.isDead) {
 			this.revive();
 			return;
 		}
+
+		this.updateBodyNodes()
 
 		if (isMouseDown) {
 			this.mainNode.pushToPoint(
@@ -71,12 +80,6 @@ class PlayerController {
 		} else {
 			this.retractTongue();
 		}
-
-		this.playerBody.nodes.forEach((node) => {
-			node.update();
-		});
-
-		this.headPosition = this.mainNode.position;
 
 		if (this.hotValue > 0) {
 			if (!this.isHotResistant) {

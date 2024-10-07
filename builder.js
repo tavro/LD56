@@ -339,8 +339,8 @@ function animate2() {
 		});
 
 		player_new.draw(builder_context);
+		player_new.updateBodyNodes();
 		camera.followTarget(player_new.headPosition);
-		player_new.update();
 	}
 	requestAnimationFrame(animate2);
 }
