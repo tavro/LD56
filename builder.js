@@ -55,6 +55,9 @@ function addNode() {
 		0,
 		newNode
 	);
+
+	newNode.parent = secondLastNode;
+	lastNode.parent = newNode;
 }
 
 function resizeNode(mouseX, mouseY, delta) {
