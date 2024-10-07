@@ -221,28 +221,28 @@ class Particle {
 		return controlPoints;
 	}
 
-	draw() {
-		builder_context.save();
-		builder_context.translate(this.x, this.y);
-		builder_context.rotate(this.angle);
+	draw(context) {
+		context.save();
+		context.translate(this.x, this.y);
+		context.rotate(this.angle);
 
-		builder_context.lineWidth = this.thickness;
-		builder_context.strokeStyle = this.color;
-		builder_context.globalAlpha = this.alpha;
-		builder_context.lineJoin = "round";
+		context.lineWidth = this.thickness;
+		context.strokeStyle = this.color;
+		context.globalAlpha = this.alpha;
+		context.lineJoin = "round";
 
-		builder_context.beginPath();
-		builder_context.moveTo(this.shape[0].x, this.shape[0].y);
+		context.beginPath();
+		context.moveTo(this.shape[0].x, this.shape[0].y);
 		for (let i = 1; i < this.shape.length; i++) {
-			builder_context.lineTo(this.shape[i].x, this.shape[i].y);
+			context.lineTo(this.shape[i].x, this.shape[i].y);
 		}
-		builder_context.stroke();
+		context.stroke();
 
-		builder_context.shadowColor = this.color;
-		builder_context.restore();
+		context.shadowColor = this.color;
+		context.restore();
 	}
 
-	update() {
+	update(context, canvas) {
 		this.elapsedTime += 33.33;
 
 		if (this.elapsedTime < this.lifetime / 4) {
@@ -260,16 +260,16 @@ class Particle {
 		this.velocity.x += (Math.random() - 0.5) * 0.1;
 		this.velocity.y += (Math.random() - 0.5) * 0.1;
 
-		if (this.x > builder_canvas.width || this.x < 0) {
+		if (this.x > canvas.width || this.x < 0) {
 			this.velocity.x *= -1;
 		}
-		if (this.y > builder_canvas.height || this.y < 0) {
+		if (this.y > canvas.height || this.y < 0) {
 			this.velocity.y *= -1;
 		}
 
 		this.angle += this.angleSpeed * 0.5 + (Math.random() - 0.5) * 0.01;
 
-		this.draw();
+		this.draw(context);
 	}
 
 	reset() {
@@ -309,7 +309,7 @@ function animate2() {
 		drawBackgroundLight();
 
 		particles.forEach((particle) => {
-			particle.update();
+			particle.update(builder_context, canvas);
 		});
 
 		player_new.draw(builder_context);

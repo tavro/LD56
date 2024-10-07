@@ -716,6 +716,9 @@ function animate() {
 	if (inGame) {
 		GameUpdate();
 		GameDraw();
+		particles.forEach((particle) => {
+			particle.update();
+		});
 	}
 	requestAnimationFrame(animate);
 }
@@ -723,6 +726,5 @@ function animate() {
 GameInit();
 animate();
 
-// __________________ Character builder
+// __________________ BACKGROUND
 
-const x = 5;
