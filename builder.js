@@ -323,6 +323,10 @@ animate2();
 generateParticles();
 
 document.getElementById("submitNodeButton").onclick = function () {
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.style.display = "none";
+    errorMessage.textContent = "";
+
     if (currentNode) {
         const nodeLevelInput = document.getElementById("nodeLevelInput");
         const newLevel = Math.min(
@@ -339,7 +343,8 @@ document.getElementById("submitNodeButton").onclick = function () {
                 currentNode.level = newLevel;
                 updateModificationPoints(-cost);
             } else {
-                alert("Not enough modification points to increase level.");
+                errorMessage.textContent = "Not enough modification points to increase level.";
+                errorMessage.style.display = "block";
                 return;
             }
         } else if (levelDifference < 0) {
@@ -355,7 +360,8 @@ document.getElementById("submitNodeButton").onclick = function () {
                 currentNode.type = newType;
                 updateModificationPoints(-50);
             } else {
-                alert("Not enough modification points to select a node type.");
+                errorMessage.textContent = "Not enough modification points to select a node type.";
+                errorMessage.style.display = "block";
                 return;
             }
         } else if (currentNode.type !== newType) {
@@ -363,5 +369,7 @@ document.getElementById("submitNodeButton").onclick = function () {
         }
 
         currentNode.color = document.getElementById("colorPicker").value;
+		document.getElementById("nodeInfoContainer").style.display = "none";
+		document.getElementById("builder-overlay").style.display = "none";
     }
 };

@@ -436,3 +436,26 @@ canvas {
 #login-form button:hover {
   background-color: #0056b3;
 }
+
+#nodeInfoContainer input[type="number"],
+#nodeInfoContainer select,
+#nodeInfoContainer input[type="color"],
+#nodeInfoContainer button {
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#nodeInfoContainer button {
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#nodeInfoContainer button:hover {
+    background-color: #0056b3;
+}

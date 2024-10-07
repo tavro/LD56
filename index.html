@@ -159,7 +159,7 @@
 			<!-- TODO: Make game over screen pretty -->
 		</div>
 		<div id="money-wrapper">
-			<!--<img src="" />-->
+			<img src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Cursor.svg" />
 			<div id="money-text">0</div>
 		</div>
 		<div id="builder-wrapper">
@@ -196,32 +196,42 @@
 				top: 50%;
 				left: 50%;
 				transform: translate(-50%, -50%);
-				z-index: 1;
+				z-index: 1000;
 				background-color: white;
-				padding: 20px;
-				border-radius: 10px;
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+				border-radius: 5px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+				width: 400px;
 			"
 		>
-			<h2>Node Info</h2>
-			<p>
-				<strong>Level:</strong>
-				<input type="number" id="nodeLevelInput" min="1" max="3" />
-			</p>
-			<p>
-				<strong>Type:</strong>
-				<select id="bodyPartDropdown">
-					<option value="" disabled selected>Select body part</option>
-					<option value="fins">Fins</option>
-					<option value="arms">Arms</option>
-				</select>
-			</p>
-			<p>
-				<strong>Color:</strong>
-				<input type="color" id="colorPicker" />
-			</p>
-			<button id="closeNodeInfoButton">Close</button>
-			<button id="submitNodeButton">Submit</button>
+			<div class="overlay-header">
+				<img
+					src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Cursor.svg"
+					class="overlay-icon"
+				/>
+				<h2 class="overlay-title">Node Info</h2>
+				<span class="close-btn" id="closeNodeInfoButton">✖</span>
+			</div>
+			<div class="overlay-content">
+				<p>
+					<strong>Level:</strong>
+					<input type="number" id="nodeLevelInput" min="1" max="3" />
+				</p>
+				<p>
+					<strong>Type:</strong>
+					<select id="bodyPartDropdown">
+						<option value="" disabled selected>Select body part</option>
+						<option value="fins">Fins</option>
+						<option value="arms">Arms</option>
+					</select>
+				</p>
+				<p>
+					<strong>Color:</strong>
+					<input type="color" id="colorPicker" />
+				</p>
+
+				<p id="errorMessage" style="color: red; display: none;"></p>
+				<button id="submitNodeButton">Submit</button>
+			</div>
 		</div>
 		<script src="utils.js"></script>
 		<script src="sound.js"></script>
