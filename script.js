@@ -51,6 +51,7 @@ function changeScreen(curId, othId) {
 
 	if (curId == "builder-wrapper") {
 		inBuilder = false;
+		document.querySelector("#plus-button-container").style.display = "none";
 	}
 
 	const cur = document.querySelector("#" + curId);
@@ -174,7 +175,7 @@ function attachMailListeners(key, category) {
 
 				if (
 					mailObj[mailId].important &&
-					mailObj[mailId].assignments.length > 0 &&
+					(mailObj[mailId].assignments && mailObj[mailId].assignments.length > 0) &&
 					mailObj[mailId].email.includes("noreply")
 				) {
 					const button = document.querySelector("#" + mailObj[mailId].buttonId);

@@ -15,11 +15,13 @@ function resizecanvas2() {
 window.addEventListener("resize", resizecanvas2);
 resizecanvas2();
 
+/*
 document.addEventListener("keydown", (event) => {
 	if (event.key === "n" || event.key === "N") {
 		addNode();
 	}
 });
+*/
 
 builder_canvas.addEventListener("wheel", (event) => {
 	const delta = event.deltaY > 0 ? -5 : 5;
@@ -341,6 +343,8 @@ function animate2() {
 		player_new.draw(builder_context);
 		player_new.updateBodyNodes();
 		camera.followTarget(player_new.headPosition);
+
+		updatePlusButtonPosition();
 	}
 	requestAnimationFrame(animate2);
 }
@@ -399,3 +403,30 @@ document.getElementById("submitNodeButton").onclick = function () {
 		document.getElementById("builder-overlay").style.display = "none";
     }
 };
+
+function updatePlusButtonPosition() {
+    const nodes = player_new.playerBody.nodes;
+    if (nodes.length < 2) {
+        document.getElementById("plus-button-container").style.display = "none";
+        return;
+    }
+
+    const lastNode = nodes[nodes.length - 1];
+    const secondLastNode = nodes[nodes.length - 2];
+
+    const middleX = (lastNode.position.x + secondLastNode.position.x) / 2;
+    const middleY = (lastNode.position.y + secondLastNode.position.y) / 2;
+
+    const screenPos = worldToScreenCoords(new Vector2(middleX, middleY));
+
+    const plusButtonContainer = document.getElementById("plus-button-container");
+
+    plusButtonContainer.style.left = `${screenPos.x - 15}px`;
+    plusButtonContainer.style.top = `${screenPos.y - 70}px`;
+    plusButtonContainer.style.display = "block";
+}
+
+
+document.getElementById("plus-button").addEventListener("click", () => {
+    addNode();
+});
