@@ -196,6 +196,9 @@ class Virus extends MassObject {
 	}
 
 	update(player) {
+		if (this.isDead) {
+			return
+		}
 		const delta = player.headPosition.difference(this.position);
 		const distanceToPlayer = delta.magnitude();
 
@@ -255,6 +258,7 @@ class Virus extends MassObject {
 		const deltaToPlayer = player_new.headPosition.difference(this.position);
 		this.pushToDirection(Math.atan2(deltaToPlayer.y, deltaToPlayer.x), force);
 		this.updatePhysics();
+		soundManager.playSound("attack")
 	}
 
 	kill() {
