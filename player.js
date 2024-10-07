@@ -19,6 +19,29 @@ class PlayerController {
 		this.playerBody = new PlayerBody();
 		this.mainNode = this.playerBody.nodes[0];
 		this.headPosition = this.mainNode.position;
+
+		this.tongueLength = 0.0;
+
+		this.tongueReachedForward = false;
+		this.tongueReachedBack = false;
+	}
+
+	retractTongue() {
+		this.tongueLength -= (1 / 60) * 4;
+		if (this.tongueLength < 0.0) {
+			this.tongueLength = 0;
+			this.tongueReachedBack = true;
+			this.tongueReachedForward = false;
+		}
+	}
+
+	extendTongue() {
+		this.tongueLength += (1 / 60) * 8;
+		if (this.tongueLength > 0.0) {
+			this.tongueLength = 1;
+			this.tongueReachedForward = true;
+			this.tongueReachedBack = false;
+		}
 	}
 
 	update() {
@@ -28,6 +51,16 @@ class PlayerController {
 				this.controlForce,
 				false
 			);
+		}
+
+		if (isMouseRightDown) {
+			if (!this.tongueReachedForward) {
+				this.extendTongue();
+			} else {
+				this.retractTongue();
+			}
+		} else {
+			this.retractTongue();
 		}
 
 		this.playerBody.nodes.forEach((node) => {
@@ -104,6 +137,22 @@ class PlayerController {
 
 	draw(context) {
 		this.playerBody.draw(context);
+		this.drawTongue(context);
+	}
+
+	drawTongue(context) {
+		const headPixelPosition = worldToScreenCoords(this.headPosition);
+		const delta = headPixelPosition.difference(mousePosition);
+
+		const tongueTipPosition = delta.scale(this.tongueLength);
+		const final = tongueTipPosition.add(headPixelPosition);
+
+		context.beginPath();
+		context.lineTo(headPixelPosition.x, headPixelPosition.y);
+		context.lineTo(final.x, final.y);
+		context.strokeStyle = "black";
+		context.closePath();
+		context.stroke();
 	}
 
 	getHungry(rate) {

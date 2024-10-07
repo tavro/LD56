@@ -25,3 +25,6 @@ function updateModificationPoints(amount) {
 	modificationPoints += amount;
 	document.getElementById("money-text").innerHTML = modificationPoints;
 }
+
+// Disables right click
+document.addEventListener("contextmenu", (event) => event.preventDefault());

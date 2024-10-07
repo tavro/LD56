@@ -164,6 +164,8 @@ class Zone extends MassObject {
 		}
 		this.updatePhysics();
 	}
+
+	checkMouseClick() {}
 }
 
 class Virus extends MassObject {
@@ -173,6 +175,9 @@ class Virus extends MassObject {
 		this.img = null;
 		this.opacity = 1.0;
 		this.size = 10;
+		this.health = 200;
+		this.isDead = false;
+		this.offset = new Vector2(0, 0);
 
 		// Select a random image from res
 		const randNum = Math.floor(Math.random() * 2);
@@ -184,10 +189,78 @@ class Virus extends MassObject {
 	}
 
 	draw(context) {
-		drawImg(context, this.img, this.position, this.size);
+		if (this.isDead) {
+			return;
+		}
+		drawImg(context, this.img, this.position.add(this.offset), this.size);
 	}
 
-	update() {}
+	update(player) {
+		const delta = player.headPosition.difference(this.position);
+
+		if (delta.magnitude() < camera.size / 2) {
+			this.pushToPoint(player.headPosition, 0.03, false);
+			this.updatePhysics();
+		}
+
+		if (this.health < 150) {
+			this.shake(0.25);
+		}
+		if (this.health < 100) {
+			this.shake(0.5);
+		}
+
+		if (this.health < 50) {
+			this.shake(1.0);
+		}
+
+		if (isMouseRightDown) {
+			if (this.containsPoint(mousePosition)) {
+				this.damage();
+			}
+		}
+	}
+
+	shake(amount) {
+		this.offset = new Vector2(
+			(Math.random() - 0.5) * amount,
+			(Math.random() - 0.5) * amount
+		);
+	}
+
+	damage() {
+		if (this.isDead) {
+			return;
+		}
+		this.health--;
+		if (this.health % 40 == 0) {
+			this.knockBack();
+		}
+		if (this.health <= 0) {
+			this.kill();
+		}
+	}
+
+	knockBack() {
+		const deltaToPlayer = player_new.headPosition.difference(this.position);
+		this.pushToDirection(Math.atan2(deltaToPlayer.y, deltaToPlayer.x), 0.3);
+		this.updatePhysics();
+	}
+
+	kill() {
+		data.killAmount++;
+		this.isDead = true;
+		console.log("Virus ded");
+	}
+
+	checkMouseClick() {}
+
+	containsPoint(checkPosition) {
+		const pixelPos = worldToScreenCoords(this.position);
+		const deltaPixels = checkPosition.difference(pixelPos);
+
+		return deltaPixels.magnitude() <= (this.size * pixelsPerUnit) / 4;
+	}
 }
 
 class Food extends MassObject {
@@ -253,6 +326,8 @@ class Food extends MassObject {
 		this.isEaten = true;
 		soundManager.playSound("eat");
 	}
+
+	checkMouseClick() {}
 }
 
 class UIBar {
@@ -340,7 +415,7 @@ class UIBar {
 }
 
 const getVirus = (position) => {
-	return new Virus(position);
+	virusList.push(new Virus(position));
 };
 
 const getZone = (position) => {
@@ -350,11 +425,11 @@ const getZone = (position) => {
 	} else {
 		newZone.setIsHot(false);
 	}
-	return newZone;
+	zoneList.push(newZone);
 };
 
 const getFood = (position) => {
-	return new Food(position);
+	foodList.push(new Food(position));
 };
 
 function spawnAround(position, radius, spawnFunc, amount, chance) {
@@ -372,8 +447,7 @@ function spawnAround(position, radius, spawnFunc, amount, chance) {
 				Math.sin(dirAngle + a - Math.PI / 2)
 			).scale(radius + 5 + (Math.random() * radius) / 2);
 			const spawnPoint = position.add(distance);
-			const newObject = spawnFunc(spawnPoint);
-			worldObjectList.push(newObject);
+			spawnFunc(spawnPoint);
 		}
 		return true;
 	}
@@ -388,7 +462,7 @@ function GameInit() {
 			(Math.random() - 0.5) * camera.size * camera.aspectRatio * 2;
 		const randomY = (Math.random() - 0.5) * camera.size * 2 + camera.size / 4;
 		let newFood = new Food(new Vector2(randomX, randomY));
-		worldObjectList.push(newFood);
+		foodList.push(newFood);
 	}
 }
 
@@ -411,8 +485,8 @@ function GameUpdate() {
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
 			getZone,
-			5,
-			0.1
+			2,
+			0.4
 		);
 	}
 
@@ -421,8 +495,8 @@ function GameUpdate() {
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
 			getVirus,
-			2,
-			0.2
+			4,
+			0.9
 		);
 	}
 
@@ -430,9 +504,21 @@ function GameUpdate() {
 		lastSpawnPoint = player_new.headPosition;
 	}
 
-	worldObjectList.forEach((worldObject) => {
-		worldObject.update(player_new);
+	foodList.forEach((food) => {
+		food.update(player_new);
 	});
+
+	if (startedPhaseHeat) {
+		zoneList.forEach((zone) => {
+			zone.update(player_new);
+		});
+	}
+
+	if (startedPhaseVirus) {
+		virusList.forEach((virus) => {
+			virus.update(player_new);
+		});
+	}
 
 	if (!startedPhaseHeat && phaseNumber == 1) {
 		console.log("STARTED PHASE Heat");
@@ -450,10 +536,25 @@ function GameUpdate() {
 let startedPhaseHeat = false;
 let startedPhaseVirus = false;
 
-phaseNumber = 1;
-
 function startPhaseHot() {
-	// Spwan hot spots
+	// spawns zones
+
+	for (let i = 0; i < 2; i++) {
+		const randomXoffset =
+			(Math.random() - 0.5) * camera.size * camera.aspectRatio * 2;
+		const randomYoffset = (Math.random() - 0.5) * camera.size * 2 + camera.size / 4;
+
+		const final = player_new.headPosition.add(new Vector2(randomXoffset, randomYoffset))
+
+		let newZone = new Zone(final);
+		if (i == 0) {
+			newZone.setIsHot(true)
+		}
+		else {
+			newZone.setIsHot(false)
+		}
+		foodList.push(newZone);
+	}
 }
 
 function startPhaseVirus() {
@@ -464,15 +565,32 @@ function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	player_new.draw(ctx);
 
-	worldObjectList.forEach((worldObject) => {
-		worldObject.draw(ctx);
+	foodList.forEach((food) => {
+		food.draw(ctx);
 	});
 
 	if (startedPhaseHeat) {
-		hotResistanceBar.draw(ctx);
-		hotValueBar.draw(ctx);
-		coldResistanceBar.draw(ctx);
-		coldValueBar.draw(ctx);
+		zoneList.forEach((zone) => {
+			zone.draw(ctx);
+		});
+	}
+
+	if (startPhaseVirus) {
+		virusList.forEach((virus) => {
+			virus.draw(ctx);
+		});
+	}
+
+	if (startedPhaseHeat) {
+		if (!player_new.isHotResistant) {
+			hotResistanceBar.draw(ctx);
+			hotValueBar.draw(ctx);
+		}
+
+		if (!player_new.isColdResistant) {
+			coldResistanceBar.draw(ctx);
+			coldValueBar.draw(ctx);
+		}
 	}
 	bars.forEach((bar) => {
 		bar.draw(ctx);
@@ -482,12 +600,15 @@ function GameDraw() {
 // _____________ Globals
 let mousePosition = new Vector2(0, 0);
 let isMouseDown = false;
+let isMouseRightDown = false;
 let camera = new Camera();
 let keyboard = new KeyboardManager();
 
 let bars = [];
 
-let worldObjectList = [];
+let foodList = [];
+let zoneList = [];
+let virusList = [];
 
 let areaExpoloredRect = new Rect();
 
@@ -536,17 +657,33 @@ let hungerBar = new UIBar(
 bars.push(hungerBar);
 
 // ____________ Events
+
+function game_mouseButtonDown(button) {}
+
+function game_mouseButtonUp(button) {}
+
 canvas.addEventListener("mousemove", (event) => {
 	mousePosition.x = event.clientX;
 	mousePosition.y = event.clientY;
 });
 
-canvas.addEventListener("mousedown", () => {
-	isMouseDown = true;
+canvas.addEventListener("mousedown", (event) => {
+	game_mouseButtonDown(event.button);
+	if (event.button == 0) {
+		isMouseDown = true;
+	} else if (event.button == 2) {
+		console.log("asfdasf");
+		isMouseRightDown = true;
+	}
 });
 
-canvas.addEventListener("mouseup", () => {
-	isMouseDown = false;
+canvas.addEventListener("mouseup", (event) => {
+	game_mouseButtonUp(event.button);
+	if (event.button == 0) {
+		isMouseDown = false;
+	} else if (event.button == 2) {
+		isMouseRightDown = false;
+	}
 });
 
 window.addEventListener("resize", () => {
