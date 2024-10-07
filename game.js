@@ -52,7 +52,7 @@ function worldToScreenCoords(worldCoords) {
 }
 
 function drawImg(context, img, worldPosition, worldSize, opacity = 1.0) {
-	opacity = opacity < 0 ? 0 : opacity
+	opacity = opacity < 0 ? 0 : opacity;
 
 	context.globalAlpha = opacity;
 
@@ -125,10 +125,10 @@ class Camera {
 }
 
 class Zone extends MassObject {
-	constructor(position, size) {
+	constructor(position) {
 		super();
 		this.position = position;
-		this.size = size;
+		this.size = Math.random() * 30 + 30;
 		this.isHot = true;
 		this.mass = 3;
 		this.drag = 1.012;
@@ -170,7 +170,24 @@ class Virus extends MassObject {
 	constructor(position) {
 		super();
 		this.position = position;
+		this.img = null;
+		this.opacity = 1.0;
+		this.size = 10;
+
+		// Select a random image from res
+		const randNum = Math.floor(Math.random() * 2);
+		if (randNum == 0) {
+			this.img = virus1_img;
+		} else if (randNum == 1) {
+			this.img = virus2_img;
+		}
 	}
+
+	draw(context) {
+		drawImg(context, this.img, this.position, this.size);
+	}
+
+	update() {}
 }
 
 class Food extends MassObject {
@@ -181,7 +198,7 @@ class Food extends MassObject {
 		this.color = "green";
 		this.isEaten = false;
 		this.img = null;
-		this.opacity = 1.0
+		this.opacity = 1.0;
 
 		// Select a random image from res
 		const randNum = Math.floor(Math.random() * 3);
@@ -195,7 +212,6 @@ class Food extends MassObject {
 	}
 
 	update(player) {
-		
 		if (!this.isEaten) {
 			this.pushToPoint(
 				this.position.add(
@@ -204,9 +220,8 @@ class Food extends MassObject {
 				0.01,
 				false
 			);
-		}
-		else {
-			this.opacity -= (1/60) * 10
+		} else {
+			this.opacity -= (1 / 60) * 10;
 		}
 
 		this.checkDistanceToPlayer(player);
@@ -221,12 +236,11 @@ class Food extends MassObject {
 		const distance = this.position.distance(player.headPosition);
 
 		if (distance < player.playerBody.headNode.size + 6) {
-			this.pushToPoint(player.headPosition, 0.15, false);
+			this.pushToPoint(player.headPosition, 0.18, false);
 		}
 
 		if (distance < player.playerBody.headNode.size) {
 			this.eat(player);
-			player.giveFood();
 			this.isEaten = true;
 		}
 	}
@@ -235,6 +249,7 @@ class Food extends MassObject {
 		if (this.isEaten) {
 			return;
 		}
+		player.giveFood();
 		this.isEaten = true;
 		soundManager.playSound("eat");
 	}
@@ -324,72 +339,45 @@ class UIBar {
 	}
 }
 
-class OrganismNode extends MassObject {
-	constructor(size, color, position) {
-		super();
-		this.position = position;
+const getVirus = (position) => {
+	return new Virus(position);
+};
 
-		this.size = size;
-		this.color = color;
-		this.parent = null;
+const getZone = (position) => {
+	let newZone = new Zone(position);
+	if (Math.random() > 0.5) {
+		newZone.setIsHot(true);
+	} else {
+		newZone.setIsHot(false);
 	}
+	return newZone;
+};
 
-	draw(context) {
-		drawCircle(context, this.position, this.size, this.color);
-	}
+const getFood = (position) => {
+	return new Food(position);
+};
 
-	update() {
-		if (this.parent) {
-			const distanceToParent = this.parent.position
-				.difference(this.position)
-				.magnitude();
-
-			if (distanceToParent > this.size * 4) {
-				this.pushToPoint(this.parent.position, 0.01, true);
-			}
-		}
-		this.updatePhysics();
-	}
-}
-
-let lastSpawnPoint = new Vector2(0, 0);
-function spawnAround(position, radius, isFood, isZone, isVirus) {
+function spawnAround(position, radius, spawnFunc, amount, chance) {
 	const delta = lastSpawnPoint.difference(position);
 
 	if (delta.magnitude() > radius) {
+		if (Math.random() > chance) {
+			return true;
+		}
 		const dirAngle = Math.atan2(delta.y, delta.x);
 
-		for (let a = 0; a < Math.PI; a += 0.3) {
+		for (let a = 0; a < Math.PI; a += 3 / amount) {
 			const distance = new Vector2(
 				Math.cos(dirAngle + a - Math.PI / 2),
 				Math.sin(dirAngle + a - Math.PI / 2)
-			).scale(radius + (Math.random() * radius) / 2);
+			).scale(radius + 5 + (Math.random() * radius) / 2);
 			const spawnPoint = position.add(distance);
-
-			if (isFood) {
-				let newFood = new Food(spawnPoint);
-				foods.push(newFood);
-			}
-			if (isZone) {
-				if (Math.random() < 0.15) {
-					let newZone = new Zone(spawnPoint, Math.random() * 30 + 30);
-					if (Math.random() > 0.5) {
-						newZone.setIsHot(true);
-					} else {
-						newZone.setIsHot(false);
-					}
-					zones.push(newZone);
-				}
-			}
-			if (isVirus) {
-				if (Math.random() < 0.05) {
-					let newVirus = new Virus(spawnPoint);
-					viruses.push(newVirus);
-				}
-			}
+			const newObject = spawnFunc(spawnPoint);
+			worldObjectList.push(newObject);
 		}
-		lastSpawnPoint = position;
+		return true;
 	}
+	return false;
 }
 
 // ____________ Game Logic
@@ -400,49 +388,69 @@ function GameInit() {
 			(Math.random() - 0.5) * camera.size * camera.aspectRatio * 2;
 		const randomY = (Math.random() - 0.5) * camera.size * 2 + camera.size / 4;
 		let newFood = new Food(new Vector2(randomX, randomY));
-		foods.push(newFood);
+		worldObjectList.push(newFood);
 	}
 }
 
 function GameUpdate() {
-	if (inGame) {
-		player_new.update();
-		camera.followTarget(player_new.headPosition);
+	player_new.update();
+	camera.followTarget(player_new.headPosition);
 
-		spawnAround(
+	let didSpawn = false;
+
+	didSpawn = spawnAround(
+		player_new.headPosition,
+		camera.getDiagonalLength() / 2,
+		getFood,
+		20,
+		1.0
+	);
+
+	if (phaseNumber == 1) {
+		didSpawn = spawnAround(
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
-			true,
-			startedPhaseHeat,
-			startedPhaseVirus
+			getZone,
+			5,
+			0.1
 		);
+	}
 
-		foods.forEach((food) => {
-			food.update(player_new);
-		});
+	if (phaseNumber == 2) {
+		didSpawn = spawnAround(
+			player_new.headPosition,
+			camera.getDiagonalLength() / 2,
+			getVirus,
+			2,
+			0.2
+		);
+	}
 
-		zones.forEach((zone) => {
-			zone.update(player_new);
-		});
+	if (didSpawn) {
+		lastSpawnPoint = player_new.headPosition;
+	}
 
-		if (!startedPhaseHeat && phaseNumber == 1) {
-			console.log("STARTED PHASE Heat");
-			startedPhaseHeat = true;
-			startPhaseHot();
-		}
+	worldObjectList.forEach((worldObject) => {
+		worldObject.update(player_new);
+	});
 
-		if (!startedPhaseVirus && phaseNumber == 2) {
-			console.log("STARTED PHASE Virus");
-			startedPhaseVirus = true;
-			startPhaseVirus();
-		}
+	if (!startedPhaseHeat && phaseNumber == 1) {
+		console.log("STARTED PHASE Heat");
+		startedPhaseHeat = true;
+		startPhaseHot();
+	}
+
+	if (!startedPhaseVirus && phaseNumber == 2) {
+		console.log("STARTED PHASE Virus");
+		startedPhaseVirus = true;
+		startPhaseVirus();
 	}
 }
 
 let startedPhaseHeat = false;
 let startedPhaseVirus = false;
 
-phaseNumber = 2;
+phaseNumber = 1;
 
 function startPhaseHot() {
 	// Spwan hot spots
@@ -456,12 +464,8 @@ function GameDraw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	player_new.draw(ctx);
 
-	foods.forEach((food) => {
-		food.draw(ctx);
-	});
-
-	zones.forEach((zone) => {
-		zone.draw(ctx);
+	worldObjectList.forEach((worldObject) => {
+		worldObject.draw(ctx);
 	});
 
 	if (startedPhaseHeat) {
@@ -481,11 +485,13 @@ let isMouseDown = false;
 let camera = new Camera();
 let keyboard = new KeyboardManager();
 
-let foods = [];
-let viruses = [];
 let bars = [];
 
+let worldObjectList = [];
+
 let areaExpoloredRect = new Rect();
+
+let lastSpawnPoint = new Vector2(0, 0);
 
 let hotValueBar = new UIBar(
 	new Vector2(canvas.width / 2 - 100, 10),
@@ -529,22 +535,6 @@ let hungerBar = new UIBar(
 );
 bars.push(hungerBar);
 
-let zones = [];
-
-// for (let i = 0; i < 20; i++) {
-// 	const randomX = (Math.random() - 0.5) * 50;
-// 	const randomY = (Math.random() - 0.5) * 50;
-// 	let newZone = new Zone(
-// 		new Vector2(randomX, randomY),
-// 		Math.random() * 10 + 10
-// 	);
-// 	if (Math.random() > 0.5) {
-// 		newZone.setIsHot(true);
-// 	} else {
-// 		newZone.setIsHot(false);
-// 	}
-// 	zones.push(newZone);
-// }
 // ____________ Events
 canvas.addEventListener("mousemove", (event) => {
 	mousePosition.x = event.clientX;
@@ -577,8 +567,10 @@ document.addEventListener("keyup", (event) => {
 // __________ Main function
 
 function animate() {
-	GameUpdate();
-	GameDraw();
+	if (inGame) {
+		GameUpdate();
+		GameDraw();
+	}
 	requestAnimationFrame(animate);
 }
 
