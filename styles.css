@@ -459,3 +459,28 @@ canvas {
 #nodeInfoContainer button:hover {
     background-color: #0056b3;
 }
+
+.plus-sign-container {
+  position: absolute;
+  display: none;
+  text-align: center;
+}
+
+.plus-sign {
+  width: 30px;
+  height: 30px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.add-node-label {
+  color: black;
+  font-size: 14px;
+  margin-top: 5px;
+}

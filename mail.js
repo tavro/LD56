@@ -3,6 +3,27 @@ const mailQueue = [
 	{
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
+		topic: "Congratulations, Mr. Doctor!",
+		content: `<div>
+	<h2>Hello Mr. Doctor,</h2>
+	<p>CONGRATULATIONS! You have done an incredible job developing your organism and making it perfectly optimized for its purpose.</p>
+	<p>Your organism is now ready to fulfill its mission in the world.</p>
+	<p>We at Tiny Labs are beyond thrilled with your progress, and we couldn't have done it without your expertise. You have truly shown that you have what it takes to create life!</p>
+	<p>While your organism is now fully prepared, remember that there is always room for exploration and improvement. Keep playing, tweaking, and evolving your creation! There's no limit to what you can achieve.</p>
+	<p>Thank you again for your dedication!</p>
+	<p>Best regards,</p>
+	<p><strong>Milo</strong><br>CEO of Tiny Labs</p>
+	</div>`,
+		timestamp: "13:37",
+		category: "primary",
+		read: false,
+		favorite: false,
+		important: true,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@tinylabs.org",
+		sender: "Tiny Labs",
 		topic: "To war!",
 		buttonId: "task3",
 		content: `<div>
