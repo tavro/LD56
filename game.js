@@ -454,8 +454,6 @@ class UIBar {
 	}
 }
 
-startedPhaseHeat = true;
-
 const getVirus = (position) => {
 	virusList.push(new Virus(position));
 };
@@ -647,12 +645,26 @@ function GameDraw() {
 
 		ctx.globalAlpha = 1.0;
 	}
+	
 	// Fill Tint BLUE when too cold
 	if (!player_new.isColdResistant && player_new.coldValue > 0.7) {
 		ctx.globalAlpha = (player_new.coldValue - 0.7) * 2;
 		ctx.beginPath();
 		ctx.rect(0, 0, canvas.width, canvas.height);
 		ctx.fillStyle = "#12d7ff";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.globalAlpha = 1.0;
+	}
+	
+	// Fill Tint BLACK when dead
+	if (player_new.isDead) {
+		console.log("screen")
+		ctx.globalAlpha = player_new.reviveTimer / player_new.reviveTimeLimit + 0.1;
+		ctx.beginPath();
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "black";
 		ctx.fill();
 		ctx.closePath();
 
