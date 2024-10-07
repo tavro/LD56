@@ -1,6 +1,9 @@
 let inGame = false;
 let modificationPoints = 0; // "Money"
 
+let deathCount = 0;
+let maxDeaths = 3;
+
 const resouceUrl =
 	"https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/";
 

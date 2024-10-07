@@ -44,6 +44,14 @@ function changeScreen(curId, othId) {
 	oth.style.display = "flex";
 }
 
+function increaseDeathCount() {
+	deathCount++;
+	if(deathCount >= maxDeaths) {
+		deathCount = 0;
+		changeScreen("telescope-wrapper", "gameover-wrapper");
+	}
+}
+
 function clickApp(id) {
 	changeScreen("os-wrapper", id + "-wrapper");
 }
@@ -276,6 +284,11 @@ document
 			"2px solid black";
 		filterInbox();
 	});
+
+document.querySelector("#restart").addEventListener("click", function () {
+	// TODO: Reset everything
+	changeScreen("gameover-wrapper", "os-wrapper");
+});
 
 document.querySelector("#back1").addEventListener("click", function () {
 	changeScreen("opened-mail", "mail-wrapper");
