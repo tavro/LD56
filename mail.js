@@ -182,6 +182,9 @@ function handleMail() {
 		}, 5000);
 	}, 30000);
 }
+else {
+	// Game finished
+}
 }
 
 function checkAwaitingMail() {

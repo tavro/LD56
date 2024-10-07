@@ -13,7 +13,7 @@ class PlayerController {
 		this.isColdResistant = false;
 
 		this.hungerValue = 1.0;
-		this.hungerRate = 0.02;
+		this.hungerRate = 0.01;
 		this.isStarved = false;
 
 		this.playerBody = new PlayerBody();
@@ -24,6 +24,8 @@ class PlayerController {
 
 		this.tongueReachedForward = false;
 		this.tongueReachedBack = false;
+
+		this.isDead = false;
 	}
 
 	retractTongue() {
@@ -132,7 +134,10 @@ class PlayerController {
 
 		hotResistanceBar.setValue(this.hotResistance);
 		coldResistanceBar.setValue(this.coldResistance);
-		this.getHungry(this.hungerRate);
+
+		if (!this.isDead) {
+			this.getHungry(this.hungerRate);
+		}
 	}
 
 	draw(context) {
@@ -150,9 +155,18 @@ class PlayerController {
 		context.beginPath();
 		context.lineTo(headPixelPosition.x, headPixelPosition.y);
 		context.lineTo(final.x, final.y);
-		context.strokeStyle = "black";
+		context.strokeStyle = "red";
 		context.closePath();
 		context.stroke();
+	}
+
+	setAlive() {
+		this.isDead = true;
+		this.hungerValue = 1.0;
+	}
+
+	damage(amount) {
+		this.hungerValue -= amount;
 	}
 
 	getHungry(rate) {
@@ -160,7 +174,9 @@ class PlayerController {
 		if (!this.isStarved && this.hungerValue < 0) {
 			this.hungerValue = 0;
 			this.isStarved = true;
-			console.log("YOU STARVED");
+			this.isDead = true;
+			data.killAmount++;
+			console.log("Player died");
 		}
 		hungerBar.setValue(this.hungerValue);
 	}
