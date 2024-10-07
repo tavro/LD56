@@ -174,19 +174,20 @@ document
 builder_canvas.width = window.innerWidth;
 builder_canvas.height = window.innerHeight;
 
-const particleCount = 50;
+const particleCount = 100;
+const particleSizeMultiplier = 0.5;
 const particles = [];
 
 const colors = ["#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE"];
 
-function drawBackgroundLight() {
-	const gradient = builder_context.createRadialGradient(
-		builder_canvas.width / 2,
-		builder_canvas.height / 2,
+function drawBackgroundLight(canvas, context) {
+	const gradient = context.createRadialGradient(
+		canvas.width / 2,
+		canvas.height / 2,
 		50,
-		builder_canvas.width / 2,
-		builder_canvas.height / 2,
-		builder_canvas.width / 2
+		canvas.width / 2,
+		canvas.height / 2,
+		canvas.width / 2
 	);
 
 	gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
@@ -194,15 +195,15 @@ function drawBackgroundLight() {
 	gradient.addColorStop(0.6, "rgba(255, 255, 0, 0.0125)");
 	gradient.addColorStop(1, "rgba(255, 255, 0, 0)");
 
-	builder_context.save();
-	builder_context.fillStyle = gradient;
-	builder_context.fillRect(0, 0, builder_canvas.width, builder_canvas.height);
-	builder_context.restore();
+	context.save();
+	context.fillStyle = gradient;
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	context.restore();
 }
 
 class Particle {
-	constructor() {
-		this.reset();
+	constructor(canvas) {
+		this.reset(canvas);
 	}
 
 	getRandomColor() {
@@ -210,9 +211,9 @@ class Particle {
 	}
 
 	generateShape() {
-		const segments = Math.floor(Math.random() * 5) + 5;
-		const amplitude = Math.random() * 20 + 10;
-		const waveLength = 15;
+		const segments = (Math.floor(Math.random() * 5) + 5) * particleSizeMultiplier;
+		const amplitude = (Math.random() * 20 + 10) * particleSizeMultiplier;
+		const waveLength = 15 * particleSizeMultiplier;
 		const controlPoints = [];
 
 		for (let i = 0; i <= segments; i++) {
@@ -245,7 +246,7 @@ class Particle {
 		context.restore();
 	}
 
-	update(context, canvas) {
+	update(context, canvas, windVelocity) {
 		this.elapsedTime += 33.33;
 
 		if (this.elapsedTime < this.lifetime / 4) {
@@ -254,30 +255,52 @@ class Particle {
 			this.alpha =
 				1 - (this.elapsedTime - this.lifetime / 4) / (this.lifetime * 0.75);
 		} else {
-			this.reset();
+			this.reset(canvas);
 		}
 
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
+		
+		this.velocity.x = windVelocity.x;
+		this.velocity.y = windVelocity.y;
 
 		this.velocity.x += (Math.random() - 0.5) * 0.1;
 		this.velocity.y += (Math.random() - 0.5) * 0.1;
 
-		if (this.x > canvas.width || this.x < 0) {
-			this.velocity.x *= -1;
+		const margin = 30
+
+		// Glaze code, for wrapping
+		if (this.x > canvas.width + margin) {
+			this.x = -margin;
 		}
-		if (this.y > canvas.height || this.y < 0) {
-			this.velocity.y *= -1;
+		else if (this.x < -margin) {
+			this.x = canvas.width + margin
 		}
+		
+		if (this.y > canvas.height + margin) {
+			this.y = -margin;
+		}
+		else if (this.y < -margin) {
+			this.y = canvas.height + margin
+		}
+
+
+		//// Isak code, for bouncing
+		// if (this.x > canvas.width || this.x < 0) {
+		// 	this.velocity.x *= -1;
+		// }
+		// if (this.y > canvas.height || this.y < 0) {
+		// 	this.velocity.y *= -1;
+		// }
 
 		this.angle += this.angleSpeed * 0.5 + (Math.random() - 0.5) * 0.01;
 
 		this.draw(context);
 	}
 
-	reset() {
-		this.x = Math.random() * builder_canvas.width;
-		this.y = Math.random() * builder_canvas.height;
+	reset(canvas) {
+		this.x = Math.random() * canvas.width;
+		this.y = Math.random() * canvas.height;
 		this.color = this.getRandomColor();
 		this.alpha = 0;
 		this.elapsedTime = 0;
@@ -291,14 +314,14 @@ class Particle {
 
 		this.lifetime = Math.random() * 5000 + 5000;
 		this.shape = this.generateShape();
-		this.thickness = Math.random() * 5 + 5;
+		this.thickness = (Math.random() * 5 + 5) * particleSizeMultiplier;
 	}
 }
 
 function generateParticles() {
 	for (let i = 0; i < particleCount; i++) {
 		if (particles.length < particleCount) {
-			particles.push(new Particle());
+			particles.push(new Particle(builder_canvas));
 		}
 	}
 }
@@ -309,10 +332,10 @@ function animate2() {
 	if (inBuilder) {
 		builder_context.clearRect(0, 0, builder_canvas.width, builder_canvas.height);
 
-		drawBackgroundLight();
+		drawBackgroundLight(builder_canvas, builder_context);
 
 		particles.forEach((particle) => {
-			particle.update(builder_context, builder_canvas);
+			particle.update(builder_context, builder_canvas, new Vector2(0, 0));
 		});
 
 		player_new.draw(builder_context);

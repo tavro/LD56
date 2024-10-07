@@ -1,8 +1,8 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const game_canvas = document.getElementById("canvas");
+const ctx = game_canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+game_canvas.width = window.innerWidth;
+game_canvas.height = window.innerHeight;
 
 // ______________ Resources
 
@@ -95,7 +95,7 @@ let worldToPixelFactor = window.innerHeight;
 class Camera {
 	constructor() {
 		this.position = new Vector2(0, 0);
-		this.aspectRatio = canvas.width / canvas.height;
+		this.aspectRatio = game_canvas.width / game_canvas.height;
 		this.size = 100;
 	}
 
@@ -119,7 +119,7 @@ class Camera {
 		const offsetY = this.size / 2;
 		const newDelta = this.position
 			.difference(targetCoords.add(new Vector2(-offsetX, -offsetY)))
-			.scale(0.1);
+			.scale(0.2);
 		this.position = this.position.add(newDelta);
 	}
 }
@@ -205,7 +205,7 @@ class Virus extends MassObject {
 		}
 
 		if (distanceToPlayer < player.playerBody.headNode.size + 2) {
-			this.damagePlayer(player)
+			this.damagePlayer(player);
 		}
 
 		if (this.health < 150) {
@@ -260,7 +260,6 @@ class Virus extends MassObject {
 	kill() {
 		data.killAmount++;
 		this.isDead = true;
-		console.log("Virus ded");
 	}
 
 	checkMouseClick() {}
@@ -571,7 +570,6 @@ function startPhaseVirus() {
 }
 
 function GameDraw() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	player_new.draw(ctx);
 
 	foodList.forEach((food) => {
@@ -624,7 +622,7 @@ let areaExpoloredRect = new Rect();
 let lastSpawnPoint = new Vector2(0, 0);
 
 let hotValueBar = new UIBar(
-	new Vector2(canvas.width / 2 - 100, 10),
+	new Vector2(game_canvas.width / 2 - 100, 10),
 	0,
 	200,
 	20,
@@ -632,7 +630,7 @@ let hotValueBar = new UIBar(
 );
 
 let hotResistanceBar = new UIBar(
-	new Vector2(canvas.width / 2 - 100, 30),
+	new Vector2(game_canvas.width / 2 - 100, 30),
 	0,
 	200,
 	10,
@@ -640,7 +638,7 @@ let hotResistanceBar = new UIBar(
 );
 
 let coldValueBar = new UIBar(
-	new Vector2(canvas.width / 2 - 100, 50),
+	new Vector2(game_canvas.width / 2 - 100, 50),
 	0,
 	200,
 	20,
@@ -648,7 +646,7 @@ let coldValueBar = new UIBar(
 );
 
 let coldResistanceBar = new UIBar(
-	new Vector2(canvas.width / 2 - 100, 70),
+	new Vector2(game_canvas.width / 2 - 100, 70),
 	0,
 	200,
 	10,
@@ -656,7 +654,7 @@ let coldResistanceBar = new UIBar(
 );
 
 let hungerBar = new UIBar(
-	new Vector2(20, canvas.height - 20),
+	new Vector2(20, game_canvas.height - 20),
 	0,
 	40,
 	400,
@@ -671,22 +669,21 @@ function game_mouseButtonDown(button) {}
 
 function game_mouseButtonUp(button) {}
 
-canvas.addEventListener("mousemove", (event) => {
+game_canvas.addEventListener("mousemove", (event) => {
 	mousePosition.x = event.clientX;
 	mousePosition.y = event.clientY;
 });
 
-canvas.addEventListener("mousedown", (event) => {
+game_canvas.addEventListener("mousedown", (event) => {
 	game_mouseButtonDown(event.button);
 	if (event.button == 0) {
 		isMouseDown = true;
 	} else if (event.button == 2) {
-		console.log("asfdasf");
 		isMouseRightDown = true;
 	}
 });
 
-canvas.addEventListener("mouseup", (event) => {
+game_canvas.addEventListener("mouseup", (event) => {
 	game_mouseButtonUp(event.button);
 	if (event.button == 0) {
 		isMouseDown = false;
@@ -696,10 +693,10 @@ canvas.addEventListener("mouseup", (event) => {
 });
 
 window.addEventListener("resize", () => {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+	game_canvas.width = window.innerWidth;
+	game_canvas.height = window.innerHeight;
 	worldToPixelFactor = window.innerHeight;
-	camera.aspectRatio = canvas.width / canvas.height;
+	camera.aspectRatio = game_canvas.width / game_canvas.height;
 });
 
 document.addEventListener("keydown", (event) => {
@@ -714,11 +711,18 @@ document.addEventListener("keyup", (event) => {
 
 function animate() {
 	if (inGame) {
+		const playerVel = player_new.playerBody.headNode.velocity.scale(-10); // change scale value for paralax effect
+		ctx.clearRect(0, 0, game_canvas.width, game_canvas.height);
+		drawBackgroundLight(game_canvas, ctx)
+		particles.forEach((particle) => {
+			particle.update(
+				ctx,
+				game_canvas,
+				playerVel
+			);
+		});
 		GameUpdate();
 		GameDraw();
-		// particles.forEach((particle) => {
-		// 	particle.update();
-		// });
 	}
 	requestAnimationFrame(animate);
 }
@@ -727,4 +731,3 @@ GameInit();
 animate();
 
 // __________________ BACKGROUND
-

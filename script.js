@@ -28,7 +28,9 @@ function changeScreen(curId, othId) {
 	} else if (othId == "telescope-wrapper") {
 		inBuilder = false;
 		inGame = true;
-		soundManager.loadMusic("https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Music/first-draft.mp3");
+		soundManager.loadMusic(
+			"https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Music/first-draft.mp3"
+		);
 		soundManager.setMusicVolume(0.3);
 		soundManager.playMusic();
 	} else if (othId == "builder-wrapper") {
@@ -52,7 +54,7 @@ function changeScreen(curId, othId) {
 
 function increaseDeathCount() {
 	deathCount++;
-	if(deathCount >= maxDeaths) {
+	if (deathCount >= maxDeaths) {
 		deathCount = 0;
 		changeScreen("telescope-wrapper", "gameover-wrapper");
 	}
@@ -67,10 +69,14 @@ function generateHtml(mail, id) {
   <div class="mail-preview ${mail.read ? "read" : ""}" id="${id}">
   <div class="mp-icons-wrapper">
   <img src="${
-		mail.favorite ? "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites_2.svg" : "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites.svg"
+		mail.favorite
+			? "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites_2.svg"
+			: "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_Favorites.svg"
 	}" id="${id}-favorite-btn" />
   <img src="${
-		mail.important ? "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarYellow.svg" : "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarWhite.svg"
+		mail.important
+			? "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarYellow.svg"
+			: "https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Icon_StarWhite.svg"
 	}" id="${id}-important-btn" />
   </div>
   <div style="display:flex;flex-direction:row;align-items:center;width:90%;" id="${id}-info-wrapper">
@@ -169,28 +175,31 @@ function attachMailListeners(key, category) {
 						if (!button.listenerAttached) {
 							button.addEventListener("click", function handleClick(event) {
 								if (mailObj[mailId].buttonId == "task2") {
-									startedPhaseHeat = true
+									startedPhaseHeat = true;
 								}
 								if (mailObj[mailId].buttonId == "task3") {
-									startedPhaseVirus = true									
+									startedPhaseVirus = true;
 								}
 								activeAssignments.push(mailObj[mailId].assignments);
-								document.querySelector("#assignment-container").style.display = "block";
+								document.querySelector("#assignment-container").style.display =
+									"block";
 								document.querySelector("#assignment-container").innerHTML =
 									generateAssignmentHTML(activeAssignments);
 								console.log(activeAssignments);
-								event.target.removeEventListener('click', handleClick);
+								event.target.removeEventListener("click", handleClick);
 							});
 							button.listenerAttached = true;
 						}
 					}
 				}
-				
+
 				mailObj[mailId].read = true;
 			});
 		}
 
-		const favoriteButton = document.querySelector("#" + mailId + "-favorite-btn");
+		const favoriteButton = document.querySelector(
+			"#" + mailId + "-favorite-btn"
+		);
 		if (favoriteButton) {
 			favoriteButton.addEventListener("click", () => {
 				mailObj[mailId].favorite = !mailObj[mailId].favorite;
@@ -199,7 +208,9 @@ function attachMailListeners(key, category) {
 			});
 		}
 
-		const importantButton = document.querySelector("#" + mailId + "-important-btn");
+		const importantButton = document.querySelector(
+			"#" + mailId + "-important-btn"
+		);
 		if (importantButton) {
 			importantButton.addEventListener("click", () => {
 				mailObj[mailId].important = !mailObj[mailId].important;
@@ -308,9 +319,13 @@ document
 document.querySelector("#login-btn").addEventListener("click", function () {
 	const u = document.getElementById("username").value;
 	const p = document.getElementById("password").value;
-	if(u == "username" && p == "password") {
-		changeScreen("login-wrapper", "os-wrapper");
-	}
+
+	// Auto login for quicker dev. fix before deployment
+	changeScreen("login-wrapper", "os-wrapper");
+
+	// if (u == "username" && p == "password") {
+	// 	changeScreen("login-wrapper", "os-wrapper");
+	// }
 });
 
 document.querySelector("#restart").addEventListener("click", function () {

@@ -518,7 +518,7 @@ class PlayerBody {
 
 			if (
 				this.nodes[i].position.x < 0 ||
-				this.nodes[i].position.x > canvas.width
+				this.nodes[i].position.x > builder_canvas.width
 			) {
 				this.nodes[i].xVelocity *= -1;
 			}
