@@ -52,6 +52,8 @@ function worldToScreenCoords(worldCoords) {
 }
 
 function drawImg(context, img, worldPosition, worldSize, opacity = 1.0) {
+	opacity = opacity < 0 ? 0 : opacity
+
 	context.globalAlpha = opacity;
 
 	const pixelSize = (worldToPixelFactor / camera.size) * worldSize;
@@ -168,7 +170,6 @@ class Virus extends MassObject {
 	constructor(position) {
 		super();
 		this.position = position;
-
 	}
 }
 
@@ -179,53 +180,63 @@ class Food extends MassObject {
 		this.size = Math.random() * 2 + 2;
 		this.color = "green";
 		this.isEaten = false;
-		this.img = null
+		this.img = null;
+		this.opacity = 1.0
 
 		// Select a random image from res
-		const randNum = Math.floor((Math.random() * 3))
+		const randNum = Math.floor(Math.random() * 3);
 		if (randNum == 0) {
-			this.img = food1_img
-		}
-		else if (randNum == 1) {
-			this.img = food2_img
-		}
-		else if (randNum == 2) {
-			this.img = food3_img
+			this.img = food1_img;
+		} else if (randNum == 1) {
+			this.img = food2_img;
+		} else if (randNum == 2) {
+			this.img = food3_img;
 		}
 	}
 
 	update(player) {
-		if (this.isEaten) {
-			return;
+		
+		if (!this.isEaten) {
+			this.pushToPoint(
+				this.position.add(
+					new Vector2(Math.random() - 0.5, Math.random() - 0.5)
+				),
+				0.01,
+				false
+			);
+		}
+		else {
+			this.opacity -= (1/60) * 10
 		}
 
 		this.checkDistanceToPlayer(player);
-
-		this.pushToPoint(
-			this.position.add(new Vector2(Math.random() - 0.5, Math.random() - 0.5)),
-			0.01,
-			true
-		);
 		this.updatePhysics();
 	}
 
 	draw(context) {
-		if (this.isEaten) {
-			return;
-		}
-		drawImg(context, this.img, this.position, this.size, 1.0)
+		drawImg(context, this.img, this.position, this.size, this.opacity);
 	}
 
 	checkDistanceToPlayer(player) {
 		const distance = this.position.distance(player.headPosition);
+
+		if (distance < player.playerBody.headNode.size + 6) {
+			this.pushToPoint(player.headPosition, 0.15, false);
+		}
+
 		if (distance < player.playerBody.headNode.size) {
-			this.eat();
+			this.eat(player);
 			player.giveFood();
+			this.isEaten = true;
 		}
 	}
 
-	eat() {
+	eat(player) {
+		if (this.isEaten) {
+			return;
+		}
 		this.isEaten = true;
+		soundManager.playSound("eat");
 	}
 }
 
