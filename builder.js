@@ -428,6 +428,17 @@ function updatePlusButtonPosition() {
 }
 
 
-document.getElementById("plus-button").addEventListener("click", () => {
+const plusButton = document.getElementById("plus-button");
+const plusButtonContainer = document.getElementById("plus-button-container");
+
+plusButton.addEventListener("click", () => {
     addNode();
+});
+
+plusButtonContainer.addEventListener("mouseenter", () => {
+    plusButton.style.pointerEvents = 'auto';
+});
+
+plusButtonContainer.addEventListener("mouseleave", () => {
+    plusButton.style.pointerEvents = 'none';
 });
