@@ -199,6 +199,181 @@ function checkAwaitingMail() {
 }
 checkAwaitingMail();
 
+const socialMails = [
+	{
+		email: "noreply@cheerychats.com",
+		sender: "Cheery Chats Club",
+		topic: "Virtual Tea Party Awaits!",
+		content: `<div>
+      <h2>Hello Tea Enthusiast!</h2>
+      <p>Put on your favorite hat and join us for a delightful Virtual Tea Party! ☕🎩</p>
+      <p>Share your favorite tea blends and delicious snacks with friends!</p>
+      <p>Don’t forget to wear your wackiest outfit—prizes for the best dressed!</p>
+      <p>See you in the cozy corner!</p>
+      <p>Warm wishes,</p>
+      <p><strong>Miss Teapot</strong><br>Chief Tea Officer at Cheery Chats Club</p>
+      </div>`,
+		timestamp: "10:00",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@happyhikers.com",
+		sender: "Happy Hikers Inc.",
+		topic: "Join Our Scenic Nature Walk!",
+		content: `<div>
+      <h2>Dear Nature Lover!</h2>
+      <p>Ready to explore the great outdoors? 🌳🥾 Join us for a scenic nature walk!</p>
+      <p>Let’s soak up the beauty of nature and share our favorite hiking spots!</p>
+      <p>Bring your best trail mix and let’s make it a day to remember!</p>
+      <p>Adventure awaits,</p>
+      <p><strong>Trailblazer Tilly</strong><br>Lead Guide at Happy Hikers Inc.</p>
+      </div>`,
+		timestamp: "14:15",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@craftyconnections.com",
+		sender: "Crafty Connections Co.",
+		topic: "Creative Craft Night Invitation!",
+		content: `<div>
+      <h2>Hey Craft Enthusiast!</h2>
+      <p>Unleash your creativity at our Creative Craft Night! 🎨✨</p>
+      <p>Join us for an evening of fun, laughter, and crafting!</p>
+      <p>Bring your supplies and let’s make some beautiful masterpieces together!</p>
+      <p>Can’t wait to create magic,</p>
+      <p><strong>Crafty Carla</strong><br>Head Artisan at Crafty Connections Co.</p>
+      </div>`,
+		timestamp: "18:30",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@festivefriends.com",
+		sender: "Festive Friends Group",
+		topic: "Get Ready for the Holiday Potluck!",
+		content: `<div>
+      <h2>Dear Foodie Friend!</h2>
+      <p>It’s time for our annual Holiday Potluck! 🎉🍽️</p>
+      <p>Bring your favorite dish to share and let’s celebrate together!</p>
+      <p>There will be games, laughter, and festive cheer!</p>
+      <p>Looking forward to feasting with you,</p>
+      <p><strong>Joyful Janie</strong><br>Event Coordinator at Festive Friends Group</p>
+      </div>`,
+		timestamp: "16:00",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@whimsicalwriters.com",
+		sender: "Whimsical Writers Guild",
+		topic: "Join Our Storytelling Night!",
+		content: `<div>
+      <h2>Dear Storyteller!</h2>
+      <p>Get ready for an enchanting evening at our Storytelling Night! 📖✨</p>
+      <p>Share your favorite tales or simply enjoy the magic of stories!</p>
+      <p>Snacks and beverages will be provided—let’s create wonderful memories together!</p>
+      <p>Can’t wait to hear your stories,</p>
+      <p><strong>Page Turner</strong><br>Head Storyteller at Whimsical Writers Guild</p>
+      </div>`,
+		timestamp: "19:45",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@musicmakers.com",
+		sender: "Music Makers Collective",
+		topic: "Open Mic Night: Share Your Talent!",
+		content: `<div>
+      <h2>Dear Music Enthusiast!</h2>
+      <p>It’s time to shine at our Open Mic Night! 🎤🎶</p>
+      <p>Whether you sing, play an instrument, or tell jokes, we want to see you!</p>
+      <p>Bring your friends and let’s create an unforgettable night of talent!</p>
+      <p>Cheers to creativity,</p>
+      <p><strong>Melody Maker</strong><br>Chief Music Officer at Music Makers Collective</p>
+      </div>`,
+		timestamp: "20:30",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@friendlygames.com",
+		sender: "Friendly Games Co.",
+		topic: "Game Night Extravaganza!",
+		content: `<div>
+      <h2>Hey Game Lover!</h2>
+      <p>Get ready for an epic Game Night! 🎲🎮</p>
+      <p>Join us for a night of board games, video games, and friendly competition!</p>
+      <p>Snacks will be provided—let’s see who can claim the title of Game Master!</p>
+      <p>Game on,</p>
+      <p><strong>Playful Pete</strong><br>Game Night Organizer at Friendly Games Co.</p>
+      </div>`,
+		timestamp: "19:00",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@bookclubcafe.com",
+		sender: "Book Club Café",
+		topic: "Monthly Book Club Gathering!",
+		content: `<div>
+      <h2>Dear Book Lover!</h2>
+      <p>Join us for our Monthly Book Club Gathering! 📚☕</p>
+      <p>This month, we’re diving into an exciting new read—bring your thoughts!</p>
+      <p>Snacks and coffee will be served—let’s share our love for books together!</p>
+      <p>Happy reading,</p>
+      <p><strong>Lit Lover</strong><br>Book Club Host at Book Club Café</p>
+      </div>`,
+		timestamp: "15:15",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+	{
+		email: "noreply@adventurouscuisine.com",
+		sender: "Adventurous Cuisine Society",
+		topic: "Culinary World Tour: Taste the Globe!",
+		content: `<div>
+      <h2>Dear Food Adventurer!</h2>
+      <p>Embark on a Culinary World Tour with us! 🍽️🌍</p>
+      <p>Join us for an evening of global flavors—bring a dish from your favorite country!</p>
+      <p>Let’s explore diverse cuisines and enjoy a feast together!</p>
+      <p>Bon appétit,</p>
+      <p><strong>Chef Explorer</strong><br>Head of Culinary Adventures at Adventurous Cuisine Society</p>
+      </div>`,
+		timestamp: "13:30",
+		category: "social",
+		read: false,
+		favorite: false,
+		important: false,
+		assignments: undefined,
+	},
+];
+
 const campaignMails = [
 	{
 		email: "noreply@wackycampaigns.com",
@@ -592,9 +767,49 @@ function handleCampaignMail() {
 	campaignMails.splice(randomIndex, 1);
 }
 
+function handleSocialMail() {
+	if (socialMails.length === 0) {
+		console.log("No more social mails to process.");
+		return;
+	}
+
+	const randomIndex = Math.floor(Math.random() * socialMails.length);
+	const socialMail = socialMails[randomIndex];
+	mailObj["mail" + currentKey] = socialMail;
+
+	const overlay = document.getElementById("overlay");
+
+  	document.getElementById("overlay-sender").innerHTML = socialMail.sender + " (" + socialMail.email + ")"; 
+  	document.getElementById("overlay-subject").innerHTML = socialMail.topic;
+	
+	document.getElementById("social-summary").innerHTML = truncateString(socialMail.sender, 16) + " - " + truncateString(socialMail.topic, 16);
+
+	overlay.style.display = "block";
+	overlay.style.opacity = "1";
+
+	soundManager.playSound("email");
+
+	setTimeout(function () {
+		overlay.style.opacity = "0";
+		setTimeout(function () {
+			overlay.style.display = "none";
+		}, 5000);
+	}, 30000);
+
+	currentKey++;
+	socialMails.splice(randomIndex, 1);
+}
+
 function checkRandomCampaignMail() {
 	setInterval(() => {
 		handleCampaignMail();
 	}, Math.floor(Math.random() * (150000 - 60000 + 1)) + 60000);
 }
 checkRandomCampaignMail();
+
+function checkRandomSocialMail() {
+	setInterval(() => {
+		handleSocialMail();
+	}, Math.floor(Math.random() * (150000 - 60000 + 1)) + 60000);
+}
+checkRandomSocialMail();
