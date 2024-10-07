@@ -197,10 +197,15 @@ class Virus extends MassObject {
 
 	update(player) {
 		const delta = player.headPosition.difference(this.position);
+		const distanceToPlayer = delta.magnitude();
 
-		if (delta.magnitude() < camera.size / 2) {
+		if (distanceToPlayer < (camera.size * camera.aspectRatio) / 2) {
 			this.pushToPoint(player.headPosition, 0.03, false);
 			this.updatePhysics();
+		}
+
+		if (distanceToPlayer < player.playerBody.headNode.size + 2) {
+			this.damagePlayer(player)
 		}
 
 		if (this.health < 150) {
@@ -216,7 +221,7 @@ class Virus extends MassObject {
 
 		if (isMouseRightDown) {
 			if (this.containsPoint(mousePosition)) {
-				this.damage();
+				this.damageSelf();
 			}
 		}
 	}
@@ -228,22 +233,27 @@ class Virus extends MassObject {
 		);
 	}
 
-	damage() {
+	damagePlayer(player) {
+		this.knockBack(2);
+		player.damage(0.075);
+	}
+
+	damageSelf() {
 		if (this.isDead) {
 			return;
 		}
 		this.health--;
-		if (this.health % 40 == 0) {
-			this.knockBack();
+		if (this.health % 20 == 0) {
+			this.knockBack(0.4);
 		}
 		if (this.health <= 0) {
 			this.kill();
 		}
 	}
 
-	knockBack() {
+	knockBack(force) {
 		const deltaToPlayer = player_new.headPosition.difference(this.position);
-		this.pushToDirection(Math.atan2(deltaToPlayer.y, deltaToPlayer.x), 0.3);
+		this.pushToDirection(Math.atan2(deltaToPlayer.y, deltaToPlayer.x), force);
 		this.updatePhysics();
 	}
 
@@ -539,16 +549,18 @@ function startPhaseHot() {
 	for (let i = 0; i < 2; i++) {
 		const randomXoffset =
 			(Math.random() - 0.5) * camera.size * camera.aspectRatio * 2;
-		const randomYoffset = (Math.random() - 0.5) * camera.size * 2 + camera.size / 4;
+		const randomYoffset =
+			(Math.random() - 0.5) * camera.size * 2 + camera.size / 4;
 
-		const final = player_new.headPosition.add(new Vector2(randomXoffset, randomYoffset))
+		const final = player_new.headPosition.add(
+			new Vector2(randomXoffset, randomYoffset)
+		);
 
 		let newZone = new Zone(final);
 		if (i == 0) {
-			newZone.setIsHot(true)
-		}
-		else {
-			newZone.setIsHot(false)
+			newZone.setIsHot(true);
+		} else {
+			newZone.setIsHot(false);
 		}
 		foodList.push(newZone);
 	}
