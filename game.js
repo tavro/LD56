@@ -716,9 +716,9 @@ function animate() {
 	if (inGame) {
 		GameUpdate();
 		GameDraw();
-		particles.forEach((particle) => {
-			particle.update();
-		});
+		// particles.forEach((particle) => {
+		// 	particle.update();
+		// });
 	}
 	requestAnimationFrame(animate);
 }

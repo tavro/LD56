@@ -309,7 +309,7 @@ function animate2() {
 		drawBackgroundLight();
 
 		particles.forEach((particle) => {
-			particle.update(builder_context, canvas);
+			particle.update(builder_context, builder_canvas);
 		});
 
 		player_new.draw(builder_context);
