@@ -12,9 +12,8 @@ class PlayerController {
 		this.isHotResistant = false;
 		this.isColdResistant = false;
 
-		this.hungerValue = 1.0;
-		this.hungerRate = 0.01;
-		this.isStarved = false;
+		this.hungerValue = 0.75;
+		this.hungerRate = 0.02;
 
 		this.playerBody = new PlayerBody();
 		this.mainNode = this.playerBody.nodes[0];
@@ -26,6 +25,9 @@ class PlayerController {
 		this.tongueReachedBack = false;
 
 		this.isDead = false;
+
+		this.reviveTimer = 0;
+		this.reviveTimeLimit = 3;
 	}
 
 	retractTongue() {
@@ -47,6 +49,11 @@ class PlayerController {
 	}
 
 	update() {
+		if (this.isDead) {
+			this.revive();
+			return;
+		}
+
 		if (isMouseDown) {
 			this.mainNode.pushToPoint(
 				mousePositionToWorldCoords(),
@@ -171,14 +178,38 @@ class PlayerController {
 
 	getHungry(rate) {
 		this.hungerValue -= (1 / 60) * rate;
-		if (!this.isStarved && this.hungerValue < 0) {
-			this.hungerValue = 0;
-			this.isStarved = true;
-			this.isDead = true;
-			data.killAmount++;
-			console.log("Player died");
+		if (this.hungerValue < 0.3) {
+			hungerBar.color = "red";
 		}
+		if (this.hungerValue > 0.4) {
+			hungerBar.color = "#2dcf56";
+		}
+
+		if (this.hungerValue < 0) {
+			this.kill();
+		}
+
 		hungerBar.setValue(this.hungerValue);
+	}
+
+	revive() {
+		this.reviveTimer += 1 / 60;
+		if (this.reviveTimer > this.reviveTimeLimit) {
+			this.isDead = false;
+			this.hungerValue = 1.0;
+			this.position = new Vector2(0, 0);
+			camera.position = new Vector2(0, 0);
+			this.reviveTimer = 0;
+		}
+	}
+
+	kill() {
+		this.hungerValue = 0;
+		this.isDead = true;
+		deathCount++
+		console.log("Player died. death count: " + deathCount);
+
+		// TODO Send game over trigger
 	}
 
 	giveFood() {

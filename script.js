@@ -323,6 +323,7 @@ document.querySelector("#login-btn").addEventListener("click", function () {
 	// Auto login for quicker dev. fix before deployment
 	changeScreen("login-wrapper", "os-wrapper");
 
+	//// ___ Original code
 	// if (u == "username" && p == "password") {
 	// 	changeScreen("login-wrapper", "os-wrapper");
 	// }
