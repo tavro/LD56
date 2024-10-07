@@ -61,7 +61,7 @@ class PlayerController {
 			return;
 		}
 
-		this.updateBodyNodes()
+		this.updateBodyNodes();
 
 		if (isMouseDown) {
 			this.mainNode.pushToPoint(
@@ -218,7 +218,12 @@ class PlayerController {
 		deathCount++;
 		console.log("Player died. death count: " + deathCount);
 
-		// TODO Send game over trigger
+		if (deathCount >= maxDeaths) {
+			console.log("DIED MAX AMOUNTH DEATHS")
+			console.log("GAME OVER")
+			// TODO Send game over trigger
+			isEndingGame = true
+		}
 	}
 
 	giveFood() {
@@ -273,13 +278,8 @@ class Node_New extends MassObject {
 					false
 				);
 			}
-			if (distanceToParent < this.size * 1.9){
-				this.pushToPoint(
-					this.parent.position,
-					0.1,
-					true,
-					true
-				);
+			if (distanceToParent < this.size * 1.9) {
+				this.pushToPoint(this.parent.position, 0.1, true, true);
 			}
 		}
 		this.updatePhysics();

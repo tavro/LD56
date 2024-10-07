@@ -663,8 +663,7 @@ function GameDraw() {
 	}
 	
 	// Fill Tint BLACK when dead
-	if (player_new.isDead) {
-		console.log("screen")
+	if (!isEndingGame && player_new.isDead) {
 		ctx.globalAlpha = player_new.reviveTimer / player_new.reviveTimeLimit + 0.1;
 		ctx.beginPath();
 		ctx.rect(0, 0, canvas.width, canvas.height);
@@ -674,6 +673,34 @@ function GameDraw() {
 
 		ctx.globalAlpha = 1.0;
 	}
+
+	// Fill Tint BLACK ending game
+	if (isEndingGame) {
+		endingGameTimer += (1/60)
+		ctx.globalAlpha = (endingGameTimer / endingGameTimerLimit) * 4;
+		ctx.beginPath();
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.globalAlpha = 1.0;
+
+		if (endingGameTimer > 2 ) {
+			ctx.fillStyle = "white"
+			ctx.font = "24pt bold arial"
+			ctx.fillText("You're out of organisms... Game over!  Restarting game...", 200, 200);
+		}
+		if (endingGameTimer > endingGameTimerLimit) {
+			console.log("ENDED GAME")
+			window.removeEventListener('beforeunload', beforeUnloadFunc);
+			window.location.href = window.location.href;
+			inGame = false
+			isEndingGame = false
+		}
+	}
+
+	
 }
 
 // _____________ Globals
@@ -692,6 +719,10 @@ let virusList = [];
 let areaExpoloredRect = new Rect();
 
 let lastSpawnPoint = new Vector2(0, 0);
+
+let isEndingGame = false
+let endingGameTimer = 0
+let endingGameTimerLimit = 10
 
 let hotValueBar = new UIBar(
 	new Vector2(game_canvas.width / 2 - 100, 10),
