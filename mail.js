@@ -183,6 +183,8 @@ function handleMail() {
 	}, 30000);
 }
 else {
+	console.log("LAST MISSION COMPLETED")
+	
 	// Game finished
 }
 }
