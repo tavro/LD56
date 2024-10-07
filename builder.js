@@ -1,5 +1,6 @@
 const minNodeSize = 1;
 const maxNodeSize = 5;
+const levelCost = 50;
 
 const builder_canvas = document.getElementById("canvas2");
 const builder_context = builder_canvas.getContext("2d");
@@ -111,21 +112,6 @@ function showNodeInfo(node) {
 
 	nodeInfoContainer.style.display = "block";
 }
-
-document.getElementById("submitNodeButton").onclick = function () {
-	if (currentNode) {
-		const nodeLevelInput = document.getElementById("nodeLevelInput");
-
-		const newLevel = Math.min(
-			Math.max(parseInt(nodeLevelInput.value), 1),
-			currentNode.maxLevel
-		);
-		currentNode.level = newLevel;
-
-		currentNode.type = document.getElementById("bodyPartDropdown").value;
-		currentNode.color = document.getElementById("colorPicker").value;
-	}
-};
 
 document.getElementById("closeNodeInfoButton").onclick = function () {
 	document.getElementById("nodeInfoContainer").style.display = "none";
@@ -335,3 +321,47 @@ function animate2() {
 
 animate2();
 generateParticles();
+
+document.getElementById("submitNodeButton").onclick = function () {
+    if (currentNode) {
+        const nodeLevelInput = document.getElementById("nodeLevelInput");
+        const newLevel = Math.min(
+            Math.max(parseInt(nodeLevelInput.value), 1),
+            currentNode.maxLevel
+        );
+
+        const currentLevel = currentNode.level || 1;
+        const levelDifference = newLevel - currentLevel;
+        const cost = Math.abs(levelDifference) * levelCost;
+
+        if (levelDifference > 0) {
+            if (modificationPoints >= cost) {
+                currentNode.level = newLevel;
+                updateModificationPoints(-cost);
+            } else {
+                alert("Not enough modification points to increase level.");
+                return;
+            }
+        } else if (levelDifference < 0) {
+            currentNode.level = newLevel;
+            updateModificationPoints(cost);
+        } else {
+            currentNode.level = newLevel;
+        }
+
+        const newType = document.getElementById("bodyPartDropdown").value;
+        if (!currentNode.type && newType) {
+            if (modificationPoints >= 50) {
+                currentNode.type = newType;
+                updateModificationPoints(-50);
+            } else {
+                alert("Not enough modification points to select a node type.");
+                return;
+            }
+        } else if (currentNode.type !== newType) {
+            currentNode.type = newType;
+        }
+
+        currentNode.color = document.getElementById("colorPicker").value;
+    }
+};

@@ -142,6 +142,10 @@ function generateMailPreviews(key, category) {
 		.querySelector("#mail-inbox")
 		.insertAdjacentHTML("beforeend", mailHtml);
 
+	attachMailListeners(key, category);
+}
+
+function attachMailListeners(key, category) {
 	for (const mailId in mailObj) {
 		const elem = document.querySelector("#" + mailId + "-info-wrapper");
 		if (elem) {
@@ -154,27 +158,33 @@ function generateMailPreviews(key, category) {
 				document.querySelector("#om-content").innerHTML =
 					mailObj[mailId].content;
 				changeScreen("mail-wrapper", "opened-mail");
+
 				if (
 					mailObj[mailId].important &&
 					mailObj[mailId].assignments.length > 0 &&
-					mailObj[mailId].email.includes("noreply") &&
-					!mailObj[mailId].read
+					mailObj[mailId].email.includes("noreply")
 				) {
-					activeAssignments.push(mailObj[mailId].assignments);
-					document.querySelector("#assignment-container").style.display =
-						"block";
-					document.querySelector("#assignment-container").innerHTML =
-						generateAssignmentHTML(activeAssignments);
-					console.log(activeAssignments);
+					const button = document.querySelector("#" + mailObj[mailId].buttonId);
+					if (button) {
+						if (!button.listenerAttached) {
+							button.addEventListener("click", function handleClick(event) {
+								activeAssignments.push(mailObj[mailId].assignments);
+								document.querySelector("#assignment-container").style.display = "block";
+								document.querySelector("#assignment-container").innerHTML =
+									generateAssignmentHTML(activeAssignments);
+								console.log(activeAssignments);
+								event.target.removeEventListener('click', handleClick);
+							});
+							button.listenerAttached = true;
+						}
+					}
 				}
+				
 				mailObj[mailId].read = true;
 			});
 		}
 
-		const favoriteButton = document.querySelector(
-			"#" + mailId + "-favorite-btn"
-		);
-
+		const favoriteButton = document.querySelector("#" + mailId + "-favorite-btn");
 		if (favoriteButton) {
 			favoriteButton.addEventListener("click", () => {
 				mailObj[mailId].favorite = !mailObj[mailId].favorite;
@@ -183,9 +193,7 @@ function generateMailPreviews(key, category) {
 			});
 		}
 
-		const importantButton = document.querySelector(
-			"#" + mailId + "-important-btn"
-		);
+		const importantButton = document.querySelector("#" + mailId + "-important-btn");
 		if (importantButton) {
 			importantButton.addEventListener("click", () => {
 				mailObj[mailId].important = !mailObj[mailId].important;

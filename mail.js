@@ -4,13 +4,14 @@ const mailQueue = [
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
 		topic: "To war!",
+		buttonId: "task4",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
     <p>GREAT JOB! We at Tiny Labs are super impressed by your work!</p>
     <p>Now, in the real world, this organism might encounter other organisms and it'll need to defend itself.</p>
     <p>To prove it's strength, we have sent you some other organisms for it to train against.</p>
 		<p>You are <i>killing</i> it! (no pun intended hehe)</p>
-	<a href="#" class="sign-up-btn">Sign up for assignment</a>
+	<a href="#" id="task4" class="sign-up-btn">Sign up for assignment</a>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -36,13 +37,14 @@ const mailQueue = [
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
 		topic: "Immunity",
+		buttonId: "task3",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
     <p>Great job on the previous assignment!</p>
     <p>Now, the organism might encounter dangers such as <strong>viruses</strong> and <strong>radioactivity</strong>. We simply want it to build up an immunity to them.</p>
     <p>Go infect it, but be careful as not to kill it!</p>
 		<p>Awesome work so far!</p>
-	<a href="#" class="sign-up-btn">Sign up for assignment</a>
+	<a href="#" id="task3" class="sign-up-btn">Sign up for assignment</a>
 	<p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -78,12 +80,13 @@ const mailQueue = [
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
 		topic: "Next steps for planting your organism",
+		buttonId: "task2",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
     <p>Great job on completing your first assignments!</p>
     <p>As we move forward, we will be planting the organism in both very warm and cold locations. It is essential for the organism to be resistant to both temperature extremes. Please place your organism in both warm and cold environments until it becomes fully resistant.</p>
     <p>Thank you for your continued efforts!</p>
-	<a href="#" class="sign-up-btn">Sign up for assignment</a>
+	<a href="#" id="task2" class="sign-up-btn">Sign up for assignment</a>
 	<p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -122,15 +125,15 @@ const mailObj = {
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
 		topic: "An exiting new start!",
+		buttonId: "task1",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
     <p>Thank you for participating in this exciting new venture into the future of <strong>bio-chemistry</strong>!</p>
-    <p>As we have already discussed over the phone, you can now begin feeding the organism. The required materials for developing the organism have been sent and should have already arrived. Here are the next steps:</p>
+    <p>As we have already discussed over the phone, you can now begin feeding the organism.</p>
     <ol>
-        <li><strong>Use the DNA Modificator:</strong> Place the given part onto the organism using your DNA Modificator device.</li>
         <li><strong>Test the organism’s functionality:</strong> To confirm the process works, the organism should now be able to consume food. Test the organism’s ability to consume food using the microscope.</li>
     </ol>
-	<a href="#" class="sign-up-btn">Sign up for assignment</a>
+	<a href="#" id="task1" class="sign-up-btn">Sign up for assignment</a>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>
@@ -141,13 +144,6 @@ const mailObj = {
 		favorite: false,
 		important: true,
 		assignments: [
-			/*{
-        title: "Attach Mouth",
-        amount: 1,
-        id: "mouth",
-        condition: function(mouthAmount) { return mouthAmount >= 1; },
-        completed: false
-      },*/
 			{
 				title: "Eat food",
 				amount: 10,
@@ -164,12 +160,13 @@ const mailObj = {
 
 function handleMail() {
   const obj = mailQueue.pop();
+  if(obj) {
 	mailObj["mail" + currentKey] = obj;
 	currentKey++;
 	const overlay = document.getElementById("overlay");
 
-  document.getElementById("overlay-sender").innerHTML = obj.sender + " (" + obj.email + ")"; 
-  document.getElementById("overlay-subject").innerHTML = obj.topic;
+  	document.getElementById("overlay-sender").innerHTML = obj.sender + " (" + obj.email + ")"; 
+  	document.getElementById("overlay-subject").innerHTML = obj.topic;
 
 	document.getElementById("primary-summary").innerHTML = truncateString(obj.sender, 16) + " - " + truncateString(obj.topic, 16);
 
@@ -185,15 +182,17 @@ function handleMail() {
 		}, 5000);
 	}, 30000);
 }
+}
 
 function checkAwaitingMail() {
-	const interval = setInterval(() => {
-		if (awaitingMail) {
-			handleMail();
-			awaitingMail = false;
-			clearInterval(interval);
-		}
-	}, 1000);
+    const interval = setInterval(() => {
+        if (awaitingMail) {
+            handleMail();
+            awaitingMail = false;
+            clearInterval(interval);
+            checkAwaitingMail();
+        }
+    }, 1000);
 }
 checkAwaitingMail();
 
