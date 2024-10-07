@@ -7,7 +7,7 @@
 		<title>Title</title>
 	</head>
 	<body>
-		<div id="os-wrapper">
+		<div id="os-wrapper" style="display:none;">
 			<div id="desktop-wrapper">
 				<div class="app" id="mail" draggable="true">
 					<img
@@ -138,23 +138,22 @@
 			</div>
 			<canvas id="canvas"></canvas>
 		</div>
-		<!--
 		<div id="login-wrapper">
 			<form id="login-form">
 				<img
-					src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/"
+				src="https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/logo.png"
 				/>
-				<h2>Login</h2>
+				<h2>TinyLabs Login</h2>
 				<input type="text" id="username" name="username" placeholder="Enter your username" required>
 				<input type="password" id="password" name="password" placeholder="Enter your password" required>
-				<button type="submit">Login</button>
+				<button type="button" id="login-btn">Login</button>
 			</form>
 			<div class="post-it">
+				<h1>Login Details</h1>
 				<h2>Username: username</h2>
 				<h2>Password: password</h2>
 			</div>
 		</div>
-		-->
 		<div id="gameover-wrapper" style="display: none;">
 			<div>Game Over</div>
 			<div id="restart">Click here to start over</div>

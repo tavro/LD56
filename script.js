@@ -285,6 +285,14 @@ document
 		filterInbox();
 	});
 
+document.querySelector("#login-btn").addEventListener("click", function () {
+	const u = document.getElementById("username").value;
+	const p = document.getElementById("password").value;
+	if(u == "username" && p == "password") {
+		changeScreen("login-wrapper", "os-wrapper");
+	}
+});
+
 document.querySelector("#restart").addEventListener("click", function () {
 	// TODO: Reset everything
 	changeScreen("gameover-wrapper", "os-wrapper");

@@ -251,7 +251,6 @@ canvas {
 }
 
 .post-it {
-  display: none;
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -391,6 +390,8 @@ canvas {
 
 #login-wrapper {
   display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
   width: 100vw;
   background-color: #f4f4f4;
@@ -423,7 +424,7 @@ canvas {
 
 #login-form button {
   padding: 10px;
-  background-color: #007BFF;
+  background-color: #7696DD;
   color: white;
   border: none;
   border-radius: 5px;
