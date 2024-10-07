@@ -388,6 +388,7 @@ document.getElementById("submitNodeButton").onclick = function () {
         if (!currentNode.type && newType) {
             if (modificationPoints >= 50) {
                 currentNode.type = newType;
+								player_new.reCountAttachments() // Gives info to player over how many fins and arms there is
                 updateModificationPoints(-50);
             } else {
                 errorMessage.textContent = "Not enough modification points to select a node type.";

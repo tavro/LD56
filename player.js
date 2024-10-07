@@ -28,6 +28,26 @@ class PlayerController {
 
 		this.reviveTimer = 0;
 		this.reviveTimeLimit = 3;
+
+		this.numAttachments = 0;
+		this.setControlForce(0)
+	}
+
+	// Call this everytime nodes changes types
+	reCountAttachments() {
+		this.numAttachments = 0
+		this.playerBody.nodes.forEach((element) => {
+			if (element.type != null) {
+				this.numAttachments++
+			}
+		})
+		this.setControlForce(this.numAttachments)
+	}
+
+	// Sets speed based on num attachements
+	setControlForce(numAttachments) {
+		// base speed + attachment multiplier + scaler
+		this.controlForce = (4 + numAttachments / 2.5) * 0.01;
 	}
 
 	retractTongue() {
@@ -219,10 +239,10 @@ class PlayerController {
 		console.log("Player died. death count: " + deathCount);
 
 		if (deathCount >= maxDeaths) {
-			console.log("DIED MAX AMOUNTH DEATHS")
-			console.log("GAME OVER")
+			console.log("DIED MAX AMOUNTH DEATHS");
+			console.log("GAME OVER");
 			// TODO Send game over trigger
-			isEndingGame = true
+			isEndingGame = true;
 		}
 	}
 
