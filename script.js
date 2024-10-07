@@ -26,16 +26,22 @@ function changeScreen(curId, othId) {
 
 		generateMailPreviews(undefined, category);
 	} else if (othId == "telescope-wrapper") {
+		inBuilder = false;
 		inGame = true;
 		soundManager.loadMusic("https://raw.githubusercontent.com/tavro/LD56/refs/heads/pages/Res/Music/first-draft.mp3");
 		soundManager.setMusicVolume(0.3);
 		soundManager.playMusic();
 	} else if (othId == "builder-wrapper") {
+		inBuilder = true;
 		inGame = false;
 	}
 
 	if (curId == "telescope-wrapper") {
 		inGame = false;
+	}
+
+	if (curId == "builder-wrapper") {
+		inBuilder = false;
 	}
 
 	const cur = document.querySelector("#" + curId);

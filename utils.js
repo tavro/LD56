@@ -1,4 +1,5 @@
 let inGame = false;
+let inBuilder = false;
 let modificationPoints = 0; // "Money"
 
 let deathCount = 0;
