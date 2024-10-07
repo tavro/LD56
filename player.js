@@ -30,8 +30,10 @@ class PlayerController {
 		this.reviveTimeLimit = 3;
 
 		this.numAttachments = 0;
+		this.setControlForce(0)
 	}
 
+	// Call this everytime nodes changes types
 	reCountAttachments() {
 		this.numAttachments = 0
 		this.playerBody.nodes.forEach((element) => {
@@ -39,6 +41,13 @@ class PlayerController {
 				this.numAttachments++
 			}
 		})
+		this.setControlForce(this.numAttachments)
+	}
+
+	// Sets speed based on num attachements
+	setControlForce(numAttachments) {
+		// base speed + attachment multiplier + scaler
+		this.controlForce = (4 + numAttachments / 1.75) * 0.01;
 	}
 
 	retractTongue() {
