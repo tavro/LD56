@@ -1,5 +1,6 @@
 var awaitingMail = false;
 
+var achievedPoints = 0;
 var activeAssignments = [];
 function checkAssignments(amount, id) {
     if (activeAssignments.length > 0) {
@@ -8,9 +9,12 @@ function checkAssignments(amount, id) {
 
             assignmentList = assignmentList.filter(assignment => {
                 if (assignment.id === id) {
-                    return !assignment.condition(amount);
+                    if(assignment.condition(amount)) {
+						achievedPoints+=assignment.reward;
+					}
+					return !assignment.condition(amount);
                 }
-                return true;
+				return true;
             });
             
             if (assignmentList.length === 0) {
@@ -27,9 +31,11 @@ function checkAssignments(amount, id) {
                 temp.style.display = "none";
             }
             awaitingMail = true;
-						if (id == "food" || id == "warmth" || id == "cold") {
-							phaseNumber++;
-						}
+			if (id == "food" || id == "warmth" || id == "cold") {
+				phaseNumber++;
+			}
+			updateModificationPoints(achievedPoints);
+			achievedPoints = 0;
             return true;
         }
         
