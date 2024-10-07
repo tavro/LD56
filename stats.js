@@ -31,9 +31,9 @@ function checkAssignments(amount, id) {
                 temp.style.display = "none";
             }
             awaitingMail = true;
-			if (id == "food" || id == "warmth" || id == "cold") {
-				phaseNumber++;
-			}
+			// if (id == "food" || id == "warmth" || id == "cold") {
+			// 	phaseNumber++;
+			// }
 			updateModificationPoints(achievedPoints);
 			achievedPoints = 0;
             return true;
@@ -43,7 +43,7 @@ function checkAssignments(amount, id) {
     }
 }
 
-let phaseNumber = 0
+// let phaseNumber = 0
 
 var mouthAmount = 0;
 var foodAmount = 0;

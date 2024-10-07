@@ -4,14 +4,14 @@ const mailQueue = [
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",
 		topic: "To war!",
-		buttonId: "task4",
+		buttonId: "task3",
 		content: `<div>
     <h2>Hello Mr. Doctor,</h2>
     <p>GREAT JOB! We at Tiny Labs are super impressed by your work!</p>
     <p>Now, in the real world, this organism might encounter other organisms and it'll need to defend itself.</p>
     <p>To prove it's strength, we have sent you some other organisms for it to train against.</p>
 		<p>You are <i>killing</i> it! (no pun intended hehe)</p>
-	<a href="#" id="task4" class="sign-up-btn">Sign up for assignment</a>
+	<a href="#" id="task3" class="sign-up-btn">Sign up for assignment</a>
     <p>Best regards,</p>
     <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
     </div>`,
@@ -22,7 +22,7 @@ const mailQueue = [
 		important: true,
 		assignments: [
 			{
-				title: "Kill 5 other organisms",
+				title: "Kill 5 viruses",
 				amount: 5,
         id: "kill",
 				condition: function (killAmount) {
@@ -33,49 +33,49 @@ const mailQueue = [
 			},
 		],
 	},
-	{
-		email: "noreply@tinylabs.org",
-		sender: "Tiny Labs",
-		topic: "Immunity",
-		buttonId: "task3",
-		content: `<div>
-    <h2>Hello Mr. Doctor,</h2>
-    <p>Great job on the previous assignment!</p>
-    <p>Now, the organism might encounter dangers such as <strong>viruses</strong> and <strong>radioactivity</strong>. We simply want it to build up an immunity to them.</p>
-    <p>Go infect it, but be careful as not to kill it!</p>
-		<p>Awesome work so far!</p>
-	<a href="#" id="task3" class="sign-up-btn">Sign up for assignment</a>
-	<p>Best regards,</p>
-    <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
-    </div>`,
-		timestamp: "13:37",
-		category: "primary",
-		read: false,
-		favorite: false,
-		important: true,
-		assignments: [
-			{
-				title: "Gain virus immunity",
-				amount: 1,
-        id: "virus",
-				condition: function (virusAmount) {
-					return virusAmount >= 1;
-				},
-				reward: 75,
-				completed: false,
-			},
-			{
-				title: "Gain radioactivity immunity",
-				amount: 1,
-        id: "radioactivity",
-				condition: function (radioactivityAmount) {
-					return radioactivityAmount >= 1;
-				},
-				reward: 75,
-				completed: false,
-			},
-		],
-	},
+	// {
+	// 	email: "noreply@tinylabs.org",
+	// 	sender: "Tiny Labs",
+	// 	topic: "Immunity",
+	// 	buttonId: "task3",
+	// 	content: `<div>
+  //   <h2>Hello Mr. Doctor,</h2>
+  //   <p>Great job on the previous assignment!</p>
+  //   <p>Now, the organism might encounter dangers such as <strong>viruses</strong> and <strong>radioactivity</strong>. We simply want it to build up an immunity to them.</p>
+  //   <p>Go infect it, but be careful as not to kill it!</p>
+	// 	<p>Awesome work so far!</p>
+	// <a href="#" id="task3" class="sign-up-btn">Sign up for assignment</a>
+	// <p>Best regards,</p>
+  //   <p><strong>Milo</strong><br>CEO of Tiny Labs</p>
+  //   </div>`,
+	// 	timestamp: "13:37",
+	// 	category: "primary",
+	// 	read: false,
+	// 	favorite: false,
+	// 	important: true,
+	// 	assignments: [
+	// 		{
+	// 			title: "Gain virus immunity",
+	// 			amount: 1,
+  //       id: "virus",
+	// 			condition: function (virusAmount) {
+	// 				return virusAmount >= 1;
+	// 			},
+	// 			reward: 75,
+	// 			completed: false,
+	// 		},
+	// 		{
+	// 			title: "Gain radioactivity immunity",
+	// 			amount: 1,
+  //       id: "radioactivity",
+	// 			condition: function (radioactivityAmount) {
+	// 				return radioactivityAmount >= 1;
+	// 			},
+	// 			reward: 75,
+	// 			completed: false,
+	// 		},
+	// 	],
+	// },
 	{
 		email: "noreply@tinylabs.org",
 		sender: "Tiny Labs",

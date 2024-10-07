@@ -168,6 +168,12 @@ function attachMailListeners(key, category) {
 					if (button) {
 						if (!button.listenerAttached) {
 							button.addEventListener("click", function handleClick(event) {
+								if (mailObj[mailId].buttonId == "task2") {
+									startedPhaseHeat = true
+								}
+								if (mailObj[mailId].buttonId == "task3") {
+									startedPhaseVirus = true									
+								}
 								activeAssignments.push(mailObj[mailId].assignments);
 								document.querySelector("#assignment-container").style.display = "block";
 								document.querySelector("#assignment-container").innerHTML =

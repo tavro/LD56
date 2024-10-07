@@ -480,7 +480,7 @@ function GameUpdate() {
 		1.0
 	);
 
-	if (phaseNumber == 1) {
+	if (startedPhaseHeat) {
 		didSpawn = spawnAround(
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
@@ -490,7 +490,7 @@ function GameUpdate() {
 		);
 	}
 
-	if (phaseNumber == 2) {
+	if (startedPhaseVirus) {
 		didSpawn = spawnAround(
 			player_new.headPosition,
 			camera.getDiagonalLength() / 2,
@@ -520,21 +520,18 @@ function GameUpdate() {
 		});
 	}
 
-	if (!startedPhaseHeat && phaseNumber == 1) {
-		console.log("STARTED PHASE Heat");
-		startedPhaseHeat = true;
-		startPhaseHot();
-	}
+	// if (!startedPhaseHeat) {
+	// 	console.log("STARTED PHASE Heat");
+	// 	startedPhaseHeat = true;
+	// 	startPhaseHot();
+	// }
 
-	if (!startedPhaseVirus && phaseNumber == 2) {
-		console.log("STARTED PHASE Virus");
-		startedPhaseVirus = true;
-		startPhaseVirus();
-	}
+	// if (!startedPhaseVirus) {
+	// 	console.log("STARTED PHASE Virus");
+	// 	startedPhaseVirus = true;
+	// 	startPhaseVirus();
+	// }
 }
-
-let startedPhaseHeat = false;
-let startedPhaseVirus = false;
 
 function startPhaseHot() {
 	// spawns zones
@@ -569,13 +566,13 @@ function GameDraw() {
 		food.draw(ctx);
 	});
 
-	if (startedPhaseHeat) {
+	if (startedPhaseHeat && !startedPhaseVirus) {
 		zoneList.forEach((zone) => {
 			zone.draw(ctx);
 		});
 	}
 
-	if (startPhaseVirus) {
+	if (startedPhaseVirus) {
 		virusList.forEach((virus) => {
 			virus.draw(ctx);
 		});
